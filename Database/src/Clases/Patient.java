@@ -1,6 +1,8 @@
 package Clases;
 import java.time.LocalDate;
 
+import Enums.Sex;
+
 public class Patient {
 	  //atributos
     private String name;
