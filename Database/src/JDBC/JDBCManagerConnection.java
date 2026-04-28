@@ -32,10 +32,10 @@ public class JDBCManagerConnection {
                     "surname TEXT, " +
                     "date_of_birth DATE, " +
                     "sex TEXT, " +
-                    "height INT, " +
-                    "weight INT, " +
+                    "height INTEGER, " +
+                    "weight INTEGER, " +
                     "photo BLOB, " +
-                    "phone_number INT, " +
+                    "phone_number INTEGER, " +
                     "email TEXT, " +
                     "address TEXT, " +
                     "payment_method TEXT, " +
@@ -43,47 +43,47 @@ public class JDBCManagerConnection {
                     "personal_information TEXT)";
 
             String doctorTable = "CREATE TABLE IF NOT EXISTS Doctor (" +
-                    "medical_license_number INT PRIMARY KEY, " +
+                    "medical_license_number INTEGER PRIMARY KEY, " +
                     "name TEXT, " +
                     "surname TEXT, " +
                     "photo BLOB, " +
                     "sex TEXT, " +
                     "date_of_birth DATE, " +
-                    "phone_number INT, " +
+                    "phone_number INTEGER, " +
                     "email TEXT, " +
                     "speciality TEXT, " +
                     "salary DOUBLE, " +
                     "amount_of_surgeries INT)";
             
             String appointmentTable = "CREATE TABLE IF NOT EXISTS Appointment (" +
-                    "identificator INT PRIMARY KEY, " +
+                    "identificator INTEGER PRIMARY KEY, " +
                     "type TEXT, " +
                     "date DATE, " +
                     "turn TEXT, " +
                     "price FLOAT, " +
                     "payment_status TEXT, " +
                     "patient_dni TEXT, " +
-                    "doctor_license INT, " +
+                    "doctor_license INTEGER, " +
                     "FOREIGN KEY (patient_dni) REFERENCES Patient(dni), " +
                     "FOREIGN KEY (doctor_license) REFERENCES Doctor(medical_license_number))";
 
             String surgeryTable = "CREATE TABLE IF NOT EXISTS Surgery (" +
-                    "identificator INT PRIMARY KEY, " +
+                    "identificator INTEGER PRIMARY KEY, " +
                     "type TEXT, " +
                     "date DATE, " +
                     "turn TEXT, " +
                     "price FLOAT, " +
-                    "amount_of_hours INT, " +
-                    "tariff INT, " +
+                    "amount_of_hours INTEGER, " +
+                    "tariff INTEGER, " +
                     "payment_status TEXT, " +
                     "patient_dni TEXT, " +
                     "FOREIGN KEY (patient_dni) REFERENCES Patient(dni))";
 
 
             String stockTable = "CREATE TABLE IF NOT EXISTS Stock (" +
-                    "reference_code INT PRIMARY KEY, " +
+                    "reference_code INTEGER PRIMARY KEY, " +
                     "type TEXT, " +
-                    "amount INT, " +
+                    "amount INTEGER, " +
                     "price FLOAT, " +
                     "origin TEXT, " +
                     "description TEXT)";

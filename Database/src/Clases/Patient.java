@@ -6,7 +6,7 @@ import java.util.Objects;
 import Enums.Sex;
 
 public class Patient {
-	  //atributos
+	
     private String name;
     private String surname;
     private String dni;
@@ -22,10 +22,10 @@ public class Patient {
     private String clinical_history;
     private String personal_information;
     
-    //constructor
+   
     public Patient(String name, String surname, String dni, LocalDate date_of_birth,
-            Sex sex, Integer height, Integer weight, byte[] photo,
-            Integer phone_number, String email, String address,
+            Sex sex, int height, int weight, byte[] photo,
+            int phone_number, String email, String address,
             String payment_method, String clinical_history,
             String personal_information) {
 
@@ -46,7 +46,7 @@ public class Patient {
 
 
 }
-    //getters y setters
+
     public String getName() {
         return name;
     }
@@ -87,7 +87,7 @@ public class Patient {
         this.sex = sex;
     }
 
-    public Integer getHeight() {
+    public int getHeight() {
         return height;
     }
 
@@ -95,7 +95,7 @@ public class Patient {
         this.height = height;
     }
 
-    public Integer getWeight() {
+    public int getWeight() {
         return weight;
     }
 
@@ -111,7 +111,7 @@ public class Patient {
         this.photo = photo;
     }
 
-    public Integer getPhone_number() {
+    public int getPhone_number() {
         return phone_number;
     }
 
@@ -147,8 +147,8 @@ public class Patient {
         return clinical_history;
     }
 
-    public void setClinical_story(String clinical_history) {
-        this.clinical_history= clinical_history;
+    public void setClinical_history(String clinical_history) {
+        this.clinical_history = clinical_history;
     }
 
     public String getPersonal_information() {
