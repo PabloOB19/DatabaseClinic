@@ -2,6 +2,7 @@ package Clases;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Objects;
 
 import Enums.Payment_status;
 import Enums.Turn;
@@ -123,6 +124,19 @@ public class Surgery {
     public void setPayment(Payment_status payment) {
         this.payment = payment;
     }
-    //PRUEBA
+
     
-}
+    @Override
+    public boolean equals(Object object) {
+        if (this == object) return true;
+        if (object == null || getClass() != object.getClass()) return false;
+        Surgery surgery = (Surgery) object;
+        return identificator == surgery.identificator && Float.compare(price, surgery.price) == 0 && amount_of_hours == surgery.amount_of_hours && tariff == surgery.tariff && type == surgery.type && Objects.equals(date, surgery.date) && turn == surgery.turn && Objects.equals(patient, surgery.patient) && Objects.equals(doctors, surgery.doctors) && Objects.equals(stocks, surgery.stocks) && payment == surgery.payment;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(identificator, type, date, turn, price, amount_of_hours, tariff, patient, doctors, stocks, payment);
+    }
+ 
+    }
