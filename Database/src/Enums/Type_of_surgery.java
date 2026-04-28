@@ -1,10 +1,6 @@
 package Enums;
 
-<<<<<<< HEAD
-public enum Type_surgery{
-=======
 public enum Type_of_surgery {
->>>>>>> branch 'main' of https://github.com/PabloOB19/DatabaseClinic.git
 	RHINOPLASTY,
 	BLEPHAROPLOASTY,
 	FACELIFT,

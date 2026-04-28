@@ -1,29 +1,7 @@
 package Clases;
-
-<<<<<<< HEAD
-public class Stock {
-	private  int reference_code;
-    private int stock_code;
-    float price;
-     type;
-    Origin origin;
-    String description;
-}
-
-
-        public Stock(int reference_code, Type type, int amount, float price, Enum origin, String description) {
-
-            this.reference_code = reference_code;
-            this.amount = amount;
-            this.description = description;
-            this.type = type;
-            this.origin = origin;
-        }
-
-
-=======
 import Enums.Origin;
-import Enums.Type_of_material;
+import Enums.Type_of_material; 
+
 
 public class Stock {
 	
@@ -90,6 +68,5 @@ public class Stock {
     public void setDescription(String description) {
         this.description = description;
     }
->>>>>>> branch 'main' of https://github.com/PabloOB19/DatabaseClinic.git
 
 }
