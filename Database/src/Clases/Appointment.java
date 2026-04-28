@@ -1,6 +1,7 @@
 package Clases;
 
 import java.time.LocalDate;
+import java.util.Objects;
 
 import Enums.Type_of_appointment;
 import Enums.Turn;
@@ -96,5 +97,18 @@ public class Appointment {
 
     public void setPayment_status(Payment_status payment_status) {
         this.payment_status = payment_status;
+    }
+    
+    @Override
+    public boolean equals(Object object) {
+        if (this == object) return true;
+        if (object == null || getClass() != object.getClass()) return false;
+        Appointment that = (Appointment) object;
+        return identificator == that.identificator && Float.compare(price, that.price) == 0 && type == that.type && Objects.equals(date, that.date) && turn == that.turn && Objects.equals(patient, that.patient) && Objects.equals(doctor, that.doctor) && payment_status == that.payment_status;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(identificator, type, date, turn, price, patient, doctor, payment_status);
     }
 }

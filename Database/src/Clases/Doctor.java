@@ -1,5 +1,7 @@
 package Clases;
 import java.time.LocalDate;
+import java.util.Arrays;
+import java.util.Objects;
 
 import Enums.Sex;
 
@@ -124,5 +126,22 @@ public class Doctor {
     public void setAmount_of_surgeries(int amount_of_surgeries) {
         this.amount_of_surgeries = amount_of_surgeries;
     }
+    
+    @Override
+    public boolean equals(Object object) 
+    {
+        if (this == object) return true;
+        if (object == null || getClass() != object.getClass()) return false;
+        Doctor doctor = (Doctor) object;
+        return medical_license_number == doctor.medical_license_number && phone_number == doctor.phone_number && Double.compare(salary, doctor.salary) == 0 && amount_of_surgeries == doctor.amount_of_surgeries && Objects.equals(name, doctor.name) && Objects.equals(surname, doctor.surname) && sex == doctor.sex && Objects.equals(date_of_birth, doctor.date_of_birth) && Objects.equals(email, doctor.email) && Objects.equals(speciality, doctor.speciality) && Arrays.equals(photo, doctor.photo);
+    }
+
+    @Override
+    public int hashCode() 
+    {
+        int result = Objects.hash(medical_license_number, name, surname, sex, date_of_birth, phone_number, email, speciality, salary, amount_of_surgeries);
+        result = 31 * result + Arrays.hashCode(photo);
+        return result;
+    } 
     
 }
