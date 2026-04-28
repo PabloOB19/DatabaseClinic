@@ -123,6 +123,5 @@ public class Surgery {
     public void setPayment(Payment_status payment) {
         this.payment = payment;
     }
-    //PRUEBA
-    
+   
 }
