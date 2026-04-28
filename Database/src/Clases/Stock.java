@@ -1,4 +1,6 @@
 package Clases;
+import java.util.Objects;
+
 import Enums.Origin;
 import Enums.Type_of_material; 
 
@@ -68,6 +70,19 @@ public class Stock {
 
     public void setDescription(String description) {
         this.description = description;
+    }
+    
+    @Override
+    public boolean equals(Object object) {
+        if (this == object) return true;
+        if (object == null || getClass() != object.getClass()) return false;
+        Stock stock = (Stock) object;
+        return reference_code == stock.reference_code && amount == stock.amount && Float.compare(price, stock.price) == 0 && type == stock.type && origin == stock.origin && Objects.equals(description, stock.description);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(reference_code, type, amount, price, origin, description);
     }
 
 }
