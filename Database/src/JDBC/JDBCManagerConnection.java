@@ -39,7 +39,7 @@ public class JDBCManagerConnection {
                     "email TEXT, " +
                     "address TEXT, " +
                     "payment_method TEXT, " +
-                    "clinical_story TEXT, " +
+                    "clinical_history TEXT, " +
                     "personal_information TEXT)";
 
             String doctorTable = "CREATE TABLE IF NOT EXISTS Doctor (" +
@@ -47,10 +47,12 @@ public class JDBCManagerConnection {
                     "name TEXT, " +
                     "surname TEXT, " +
                     "photo BLOB, " +
+                    "sex TEXT" +
+                    "date_of_birth DATE" +
                     "phone_number INT, " +
                     "email TEXT, " +
                     "speciality TEXT, " +
-                    "salary FLOAT, " +
+                    "salary DOUBLE, " +
                     "amount_of_surgeries INT)";
 
             String appointmentTable = "CREATE TABLE IF NOT EXISTS Appointment (" +
@@ -77,12 +79,6 @@ public class JDBCManagerConnection {
                     "patient_dni TEXT, " +
                     "FOREIGN KEY (patient_dni) REFERENCES Patient(dni))";
 
-            String surgeryDoctorTable = "CREATE TABLE IF NOT EXISTS Surgery_Doctor (" +
-                    "surgery_id INT, " +
-                    "doctor_license INT, " +
-                    "PRIMARY KEY (surgery_id, doctor_license), " +
-                    "FOREIGN KEY (surgery_id) REFERENCES Surgery(identificator), " +
-                    "FOREIGN KEY (doctor_license) REFERENCES Doctor(medical_license_number))";
 
             String stockTable = "CREATE TABLE IF NOT EXISTS Stock (" +
                     "reference_code INT PRIMARY KEY, " +
@@ -92,20 +88,34 @@ public class JDBCManagerConnection {
                     "origin TEXT, " +
                     "description TEXT)";
 
-            String surgeryStockTable = "CREATE TABLE IF NOT EXISTS Surgery_Stock (" +
-                    "surgery_id INT, " +
-                    "stock_code INT, " +
-                    "amount_used INT, " +
-                    "PRIMARY KEY (surgery_id, stock_code), " +
-                    "FOREIGN KEY (surgery_id) REFERENCES Surgery(identificator), " +
-                    "FOREIGN KEY (stock_code) REFERENCES Stock(reference_code))";
+            String doctorSurgeryTable = "CREATE TABLE IF NOT EXISTS DOCTOR_SURGERY (" +
+                    "doctor_medical_license_number TEXT NOT NULL, " +
+                    "surgery_identificator INTEGER NOT NULL, " +
+                    "PRIMARY KEY (doctor_medical_license_number, surgery_identificator), " +
+                    "FOREIGN KEY (doctor_medical_license_number) REFERENCES DOCTOR(medical_license_number), " +
+                    "FOREIGN KEY (surgery_identificator) REFERENCES SURGERY(identificator))";
 
+            String doctorStockTable = "CREATE TABLE IF NOT EXISTS DOCTOR_STOCK (" +
+                    "doctor_medical_license_number TEXT NOT NULL, " +
+                    "stock_reference_code TEXT NOT NULL, " +
+                    "PRIMARY KEY (doctor_medical_license_number, stock_reference_code), " +
+                    "FOREIGN KEY (doctor_medical_license_number) REFERENCES DOCTOR(medical_license_number), " +
+                    "FOREIGN KEY (stock_reference_code) REFERENCES STOCK(reference_code))";
+
+            String surgeryStockTable = "CREATE TABLE IF NOT EXISTS SURGERY_STOCK (" +
+                    "surgery_identificator INTEGER NOT NULL, " +
+                    "stock_reference_code TEXT NOT NULL, " +
+                    "PRIMARY KEY (surgery_identificator, stock_reference_code), " +
+                    "FOREIGN KEY (stock_reference_code) REFERENCES STOCK(reference_code), " +
+                    "FOREIGN KEY (surgery_identificator) REFERENCES SURGERY(identificator))";
+          
             s.executeUpdate(patientTable);
             s.executeUpdate(doctorTable);
             s.executeUpdate(appointmentTable);
             s.executeUpdate(surgeryTable);
-            s.executeUpdate(surgeryDoctorTable);
             s.executeUpdate(stockTable);
+            s.executeUpdate(doctorSurgeryTable);
+            s.executeUpdate(doctorStockTable);
             s.executeUpdate(surgeryStockTable);
 
             s.close();
