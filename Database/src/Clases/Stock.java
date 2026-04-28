@@ -6,7 +6,7 @@ import Enums.Type_of_material;
 public class Stock {
 	
 	//kk2
-	
+	//kk4
 	//kk3   	
 	private int reference_code;
 	private Type_of_material type;

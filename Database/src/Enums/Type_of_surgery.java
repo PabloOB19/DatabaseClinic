@@ -1,6 +1,7 @@
 package Enums;
 
 public enum Type_of_surgery {
+
 	RHINOPLASTY,
 	BLEPHAROPLOASTY,
 	FACELIFT,
@@ -13,5 +14,4 @@ public enum Type_of_surgery {
 	BREAST_REDUCTION,
 	BREAST_LIFT,
 	GYNECOMASTIA_SURGERY
-
 }
