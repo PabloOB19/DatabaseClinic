@@ -1,5 +1,7 @@
 package Clases;
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 
 import Enums.Sex;
 
@@ -16,6 +18,8 @@ public class Doctor {
     private byte[] photo;
     private double salary;
 	private int amount_of_surgeries;
+	private List<Appointment> appointments;
+	private List<Surgery> surgeries;
 	
 	
     //constructor
@@ -34,6 +38,9 @@ public class Doctor {
   this.photo = photo;
   this.salary = salary;
   this.amount_of_surgeries = amount_of_surgeries;
+  this.appointments = new ArrayList<>();
+  this.surgeries = new ArrayList<>();
+
 }
 
  //getters y setters
@@ -124,5 +131,22 @@ public class Doctor {
     public void setAmount_of_surgeries(int amount_of_surgeries) {
         this.amount_of_surgeries = amount_of_surgeries;
     }
+    
+    public List<Appointment> getAppointments() {
+    	return appointments;
+    }
+    
+    public void setAppointments(List<Appointment> appointments) {
+        this.appointments = appointments;
+    }
+
+    public List<Surgery> getSurgeries() {
+        return surgeries;
+    }
+
+    public void setSurgeries(List<Surgery> surgeries) {
+        this.surgeries = surgeries;
+    }
+
     
 }

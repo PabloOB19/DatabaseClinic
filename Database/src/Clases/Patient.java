@@ -1,5 +1,7 @@
 package Clases;
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 
 import Enums.Sex;
 
@@ -19,6 +21,8 @@ public class Patient {
     private String payment_method;
     private String clinical_history;
     private String personal_information;
+    private List<Appointment> appointments;
+    private List<Surgery> surgeries;
     
     //constructor
     public Patient(String name, String surname, String dni, LocalDate date_of_birth,
@@ -41,6 +45,8 @@ public class Patient {
  this.payment_method = payment_method;
  this.clinical_history = clinical_history;
  this.personal_information = personal_information;
+ this.appointments = new ArrayList<>();
+ this.surgeries = new ArrayList<>();
 
 
 }
@@ -155,6 +161,22 @@ public class Patient {
 
     public void setPersonal_information(String personal_information) {
         this.personal_information = personal_information;
+    }
+    
+    public List<Appointment> getAppointments() {
+    	return appointments;
+    }
+    
+    public void setAppointments(List<Appointment> appointments) {
+        this.appointments = appointments;
+    }
+
+    public List<Surgery> getSurgeries() {
+        return surgeries;
+    }
+
+    public void setSurgeries(List<Surgery> surgeries) {
+        this.surgeries = surgeries;
     }
 
 }
