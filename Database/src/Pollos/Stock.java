@@ -1,4 +1,4 @@
-package Clases;
+package Pollos;
 import java.util.Objects;
 
 import Enums.Origin;

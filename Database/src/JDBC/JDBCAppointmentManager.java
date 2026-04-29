@@ -5,8 +5,8 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.time.LocalDate;
 
-import Clases.Doctor;
 import Enums.Turn;
+import Pollos.Doctor;
 
 public class JDBCAppointmentManager {
 	

@@ -1,4 +1,4 @@
-package Clases;
+package Pollos;
 
 import java.time.LocalDate;
 import java.util.Objects;

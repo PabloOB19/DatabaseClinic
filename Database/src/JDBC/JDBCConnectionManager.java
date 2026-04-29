@@ -5,7 +5,7 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.Statement;
 
-public class JDBCManagerConnection {
+public class JDBCConnectionManager {
 
     private Connection c;
 
