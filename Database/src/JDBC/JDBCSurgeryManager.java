@@ -15,9 +15,9 @@ import Enums.Type_of_material;
 import POJOS.Doctor;
 import POJOS.Stock;
 
-public class JDBCSurgeryManager {
-
-    private Connection c;
+public class JDBCSurgeryManager 
+{
+	private Connection c;
     private int surgery_identificator;
 
     public JDBCSurgeryManager(Connection c, int surgery_identificator) 
@@ -198,5 +198,5 @@ public class JDBCSurgeryManager {
 
         return materials;
     }
-    //
+   
 }

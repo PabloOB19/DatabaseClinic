@@ -1,8 +1,9 @@
 package Jpa;
 //Siempre poner get transaction.commit() al final cuando cambiamos cosas, como con preparestatement en jdbc
 //sin quiero leer uso query como statement 
-//clase persistance, cmabio ruta base de datos 
-//en user meter @entity 
+//fichero persistance, cmabio ruta base de datos, nombre, ruta de db 
+//en user y role :meter @entity, ,table, @id, @createtable 
+// user y role pollos son clases narmales pera añadiendo pto anterior
 //cre entitymanager 
 //XML:crear carpeta vacía de xml
 //anotaciones de xml en los pollos para pasarlos a xml 
@@ -24,7 +25,7 @@ public class user implements UserManager{
 em.close();
 
 }
-createRole(Role role)´{
+createRole(Role role){
 	em.detTransaction
 	em.persist(role)
 	em.getTransaction.commit()
@@ -44,5 +45,10 @@ public User login(name.password) {
 	
 
 }
+
+<<<<<<< HEAD
+
+=======
+>>>>>>> branch 'main' of https://github.com/PabloOB19/DatabaseClinic.git
 
 */
