@@ -6,7 +6,7 @@ import java.sql.ResultSet;
 import java.time.LocalDate;
 
 import Enums.Turn;
-import Pollos.Doctor;
+import POJOS.Doctor;
 
 public class JDBCAppointmentManager {
 	

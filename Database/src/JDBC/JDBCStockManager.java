@@ -63,11 +63,11 @@ public class JDBCStockManager {
 		          }
 		          }
 
-		      float calculate_total_price(int amount_required_for_surgery){
+		   // float calculate_total_price(int amount_required_for_surgery){
 		    	  
 		      }
 
 
 
 
-}
+// }

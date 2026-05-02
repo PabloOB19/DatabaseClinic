@@ -16,11 +16,11 @@ import Enums.Turn;
 import Enums.Type_of_appointment;
 import Enums.Type_of_material;
 import Enums.Type_of_surgery;
-import Pollos.Appointment;
-import Pollos.Doctor;
-import Pollos.Patient;
-import Pollos.Stock;
-import Pollos.Surgery;
+import POJOS.Appointment;
+import POJOS.Doctor;
+import POJOS.Patient;
+import POJOS.Stock;
+import POJOS.Surgery;
 
 public class JDBCPatientManager {
 

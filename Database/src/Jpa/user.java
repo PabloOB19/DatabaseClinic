@@ -11,6 +11,7 @@ package Jpa;
 
 import javax.management.relation.Role;
 
+/*
 public class user implements UserManager{
 	EntityManager sm;
 	em = Persistance.createdEntity("nombre de XML ")
@@ -43,3 +44,5 @@ public User login(name.password) {
 	
 
 }
+
+*/
