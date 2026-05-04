@@ -139,4 +139,4 @@ public class Surgery {
         return Objects.hash(identificator, type, date, turn, price, amount_of_hours, tariff, patient, doctors, stocks, payment);
     }
  
-    }
+}
