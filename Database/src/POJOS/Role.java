@@ -1,4 +1,4 @@
-package Pollos;
+package POJOS;
 
 /*
 public class Role {
