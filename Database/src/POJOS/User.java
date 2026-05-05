@@ -3,21 +3,17 @@ package POJOS;
 import java.io.Serializable;
 import java.util.Objects;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.Table;
+import javax.persistence.*;
+
 
 @Entity
 @Table(name = "users")
-public class user implements Serializable {
+public class User implements Serializable {
 
     private static final long serialVersionUID = 8455994121618917288L;
 
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "user_id")
     private Integer userId;
 
@@ -34,16 +30,16 @@ public class user implements Serializable {
     @JoinColumn(name = "role_id")
     private Role role;
 
-    public user() {
+    public User() {
     }
 
-    public user(String username, String password, String email) {
+    public User(String username, String password, String email) {
         this.username = username;
         this.password = password;
         this.email = email;
     }
 
-    public user(Integer userId, String username, String password, String email, Role role) {
+    public User(Integer userId, String username, String password, String email, Role role) {
         this.userId = userId;
         this.username = username;
         this.password = password;
@@ -95,7 +91,7 @@ public class user implements Serializable {
     public boolean equals(Object object) {
         if (this == object) return true;
         if (object == null || getClass() != object.getClass()) return false;
-        user user = (user) object;
+        User user = (User) object;
         return Objects.equals(userId, user.userId);
     }
 
