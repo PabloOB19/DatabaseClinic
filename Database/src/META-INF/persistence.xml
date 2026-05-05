@@ -2,25 +2,18 @@
              version="2.2">
 
     <persistence-unit name="miUnidad">
-
-        <!-- Proveedor JPA -->
         <provider>org.eclipse.persistence.jpa.PersistenceProvider</provider>
 
-        <!-- Entidades (puedes añadir más) -->
-        <!-- <class>modelo.Usuario</class> -->
+        <class>POJOS.user</class>
+        <class>POJOS.Role</class>
 
         <properties>
-            <!-- Conexión a la base de datos -->
-            <property name="javax.persistence.jdbc.driver" value="com.mysql.cj.jdbc.Driver"/>
-            <property name="javax.persistence.jdbc.url" value="jdbc:mysql://localhost:3306/tu_basedatos"/>
-            <property name="javax.persistence.jdbc.user" value="root"/>
-            <property name="javax.persistence.jdbc.password" value=""/>
+            <property name="javax.persistence.jdbc.driver" value="org.sqlite.JDBC"/>
+            <property name="javax.persistence.jdbc.url" value="jdbc:sqlite:database.db"/>
 
-            <!-- Configuración EclipseLink -->
-            <property name="eclipselink.ddl-generation" value="create-tables"/>
+            <property name="eclipselink.ddl-generation" value="create-or-extend-tables"/>
             <property name="eclipselink.logging.level" value="FINE"/>
         </properties>
-
     </persistence-unit>
 
 </persistence>
