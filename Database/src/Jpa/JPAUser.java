@@ -23,6 +23,7 @@ public class JPAUser {
 
         em.getTransaction().begin();
         em.createNativeQuery("PRAGMA foreign_keys=ON").executeUpdate();
+        createTables();
         em.getTransaction().commit();
 
         if (getRoles().isEmpty()) {
@@ -36,9 +37,29 @@ public class JPAUser {
         em.close();
     }
 
+    private void createTables() {
+        String roleTable = "CREATE TABLE IF NOT EXISTS roles (" +
+                "role_id INTEGER PRIMARY KEY AUTOINCREMENT, " +
+                "name TEXT NOT NULL UNIQUE)";
+
+        String userTable = "CREATE TABLE IF NOT EXISTS users (" +
+                "user_id INTEGER PRIMARY KEY AUTOINCREMENT, " +
+                "username TEXT NOT NULL UNIQUE, " +
+                "email TEXT NOT NULL UNIQUE, " +
+                "password TEXT NOT NULL, " +
+                "role_id INTEGER, " +
+                "FOREIGN KEY (role_id) REFERENCES roles(role_id))";
+
+        em.createNativeQuery(roleTable).executeUpdate();
+        em.createNativeQuery(userTable).executeUpdate();
+    }
+
     public void register(user user) {
         try {
             em.getTransaction().begin();
+            if (user.getUserId() == null) {
+                user.setUserId(getNextUserId());
+            }
             user.setPassword(hashPassword(user.getPassword()));
             em.persist(user);
             em.getTransaction().commit();
@@ -57,6 +78,9 @@ public class JPAUser {
 
     public void createRole(Role role) {
         em.getTransaction().begin();
+        if (role.getRoleId() == null) {
+            role.setRoleId(getNextRoleId());
+        }
         em.persist(role);
         em.getTransaction().commit();
     }
@@ -182,5 +206,17 @@ public class JPAUser {
 
     private boolean checkPassword(String password, String hashedPassword) {
         return hashPassword(password).equals(hashedPassword);
+    }
+
+    private int getNextUserId() {
+        Query q = em.createNativeQuery("SELECT COALESCE(MAX(user_id), 0) + 1 FROM users");
+        Number nextId = (Number) q.getSingleResult();
+        return nextId.intValue();
+    }
+
+    private int getNextRoleId() {
+        Query q = em.createNativeQuery("SELECT COALESCE(MAX(role_id), 0) + 1 FROM roles");
+        Number nextId = (Number) q.getSingleResult();
+        return nextId.intValue();
     }
 }

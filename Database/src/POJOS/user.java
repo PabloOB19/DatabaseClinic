@@ -6,12 +6,10 @@ import java.util.Objects;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
-import javax.persistence.TableGenerator;
 
 @Entity
 @Table(name = "users")
@@ -20,9 +18,6 @@ public class user implements Serializable {
     private static final long serialVersionUID = 8455994121618917288L;
 
     @Id
-    @GeneratedValue(generator = "users")
-    @TableGenerator(name = "users", table = "sqlite_sequence",
-        pkColumnName = "name", valueColumnName = "seq", pkColumnValue = "users")
     @Column(name = "user_id")
     private Integer userId;
 

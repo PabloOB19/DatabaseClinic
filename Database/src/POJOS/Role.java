@@ -8,11 +8,9 @@ import java.util.Objects;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
-import javax.persistence.TableGenerator;
 
 @Entity
 @Table(name = "roles")
@@ -21,9 +19,6 @@ public class Role implements Serializable {
     private static final long serialVersionUID = -8877691943368665971L;
 
     @Id
-    @GeneratedValue(generator = "roles")
-    @TableGenerator(name = "roles", table = "sqlite_sequence",
-        pkColumnName = "name", valueColumnName = "seq", pkColumnValue = "roles")
     @Column(name = "role_id")
     private Integer roleId;
 
@@ -31,7 +26,7 @@ public class Role implements Serializable {
     private String name;
 
     @OneToMany(mappedBy = "role", fetch = FetchType.LAZY)
-    private ArrayList<user> users;
+    private List<user> users;
 
     public Role() {
         this.users = new ArrayList<>();
@@ -48,7 +43,7 @@ public class Role implements Serializable {
         this.users = new ArrayList<>();
     }
 
-    public Role(Integer roleId, String name, ArrayList<user> users) {
+    public Role(Integer roleId, String name, List<user> users) {
         this.roleId = roleId;
         this.name = name;
         this.users = users;
@@ -74,7 +69,7 @@ public class Role implements Serializable {
         return users;
     }
 
-    public void setUsers(ArrayList<user> users) {
+    public void setUsers(List<user> users) {
         this.users = users;
     }
 

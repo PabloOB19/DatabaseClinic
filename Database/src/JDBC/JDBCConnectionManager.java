@@ -105,6 +105,7 @@ public class JDBCConnectionManager {
             String surgeryStockTable = "CREATE TABLE IF NOT EXISTS SURGERY_STOCK (" +
                     "surgery_identificator INTEGER NOT NULL, " +
                     "stock_reference_code INTEGER NOT NULL, " +
+                    "amount INTEGER NOT NULL, " +
                     "PRIMARY KEY (surgery_identificator, stock_reference_code), " +
                     "FOREIGN KEY (stock_reference_code) REFERENCES Stock(reference_code), " +
                     "FOREIGN KEY (surgery_identificator) REFERENCES Surgery(identificator))";
