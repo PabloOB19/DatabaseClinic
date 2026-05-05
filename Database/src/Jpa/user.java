@@ -14,7 +14,7 @@ package Jpa;
 // no hay métodos en xml, solo atributos
 // elementos: cosas dentro de otras (hospital : dentro maquinas) y hay muchos  , hospital id : atributo
 //@xmlElementWraper : "envoltorio de elementos"
-
+////crear manager de XML 
 //MANAGER
 //import y un export 
 //necesito un contexto para marshall ; en el context meto una instancia del pollo modificado con xml
