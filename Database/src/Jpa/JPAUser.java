@@ -184,11 +184,3 @@ public class JPAUser {
         return hashPassword(password).equals(hashedPassword);
     }
 }
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-=======
-
->>>>>>> Stashed changes
-=======
-
->>>>>>> Stashed changes
