@@ -26,10 +26,36 @@ public class JDBCDoctorManager {
     private Connection c;
 
     public JDBCDoctorManager(Connection c) {
+        if (c == null) {
+            NullPointerException nullPointerException =
+                    new NullPointerException("Connection cannot be null");
+            throw nullPointerException;
+        }
+
         this.c = c;
     }
 
-    public void change_appointment_date(int appointment_identificator, LocalDate newDate, Turn turn) {
+    public void change_appointment_date(int appointment_identificator, LocalDate newDate, Turn turn)
+            throws IllegalArgumentException, NullPointerException {
+
+        if (appointment_identificator < 0) {
+            IllegalArgumentException illegalArgumentException =
+                    new IllegalArgumentException("Appointment identificator cannot be negative");
+            throw illegalArgumentException;
+        }
+
+        if (newDate == null) {
+            NullPointerException nullPointerException =
+                    new NullPointerException("New appointment date cannot be null");
+            throw nullPointerException;
+        }
+
+        if (turn == null) {
+            NullPointerException nullPointerException =
+                    new NullPointerException("Turn cannot be null");
+            throw nullPointerException;
+        }
+
         String sql = "UPDATE Appointment SET date = ?, turn = ? WHERE identificator = ?";
 
         try (PreparedStatement ps = c.prepareStatement(sql)) {
@@ -44,7 +70,15 @@ public class JDBCDoctorManager {
         }
     }
 
-    public void cancel_appointment(int appointment_identificator) {
+    public void cancel_appointment(int appointment_identificator)
+            throws IllegalArgumentException {
+
+        if (appointment_identificator < 0) {
+            IllegalArgumentException illegalArgumentException =
+                    new IllegalArgumentException("Appointment identificator cannot be negative");
+            throw illegalArgumentException;
+        }
+
         String sql = "DELETE FROM Appointment WHERE identificator = ?";
 
         try (PreparedStatement ps = c.prepareStatement(sql)) {
@@ -56,7 +90,51 @@ public class JDBCDoctorManager {
         }
     }
 
-    public void order_stock(Stock stock, int amount) {
+    public void order_stock(Stock stock, int amount)
+            throws IllegalArgumentException, NullPointerException {
+
+        if (stock == null) {
+            NullPointerException nullPointerException =
+                    new NullPointerException("Stock cannot be null");
+            throw nullPointerException;
+        }
+
+        if (amount < 0) {
+            IllegalArgumentException illegalArgumentException =
+                    new IllegalArgumentException("Stock amount cannot be negative");
+            throw illegalArgumentException;
+        }
+
+        if (stock.getReference_code() < 0) {
+            IllegalArgumentException illegalArgumentException =
+                    new IllegalArgumentException("Stock reference code cannot be negative");
+            throw illegalArgumentException;
+        }
+
+        if (stock.getType() == null) {
+            NullPointerException nullPointerException =
+                    new NullPointerException("Stock type cannot be null");
+            throw nullPointerException;
+        }
+
+        if (stock.getOrigin() == null) {
+            NullPointerException nullPointerException =
+                    new NullPointerException("Stock origin cannot be null");
+            throw nullPointerException;
+        }
+
+        if (stock.getPrice() < 0) {
+            IllegalArgumentException illegalArgumentException =
+                    new IllegalArgumentException("Stock price cannot be negative");
+            throw illegalArgumentException;
+        }
+
+        if (stock.getDescription() == null) {
+            NullPointerException nullPointerException =
+                    new NullPointerException("Stock description cannot be null");
+            throw nullPointerException;
+        }
+
         if (stockExists(stock.getReference_code())) {
             updateStockAmount(stock.getReference_code(), amount);
         } else {
@@ -64,7 +142,21 @@ public class JDBCDoctorManager {
         }
     }
 
-    public boolean is_available(LocalDate date, Turn turn) {
+    public boolean is_available(LocalDate date, Turn turn)
+            throws NullPointerException {
+
+        if (date == null) {
+            NullPointerException nullPointerException =
+                    new NullPointerException("Date cannot be null");
+            throw nullPointerException;
+        }
+
+        if (turn == null) {
+            NullPointerException nullPointerException =
+                    new NullPointerException("Turn cannot be null");
+            throw nullPointerException;
+        }
+
         String appointmentSql = "SELECT identificator FROM Appointment WHERE date = ? AND turn = ?";
         String surgerySql = "SELECT identificator FROM Surgery WHERE date = ? AND turn = ?";
 
@@ -85,7 +177,15 @@ public class JDBCDoctorManager {
         return true;
     }
 
-    public Patient patien_information(int patient_dni) {
+    public Patient patien_information(int patient_dni)
+            throws IllegalArgumentException {
+
+        if (patient_dni < 0) {
+            IllegalArgumentException illegalArgumentException =
+                    new IllegalArgumentException("Patient DNI cannot be negative");
+            throw illegalArgumentException;
+        }
+
         try {
             return getPatientByDni(String.valueOf(patient_dni));
         } catch (SQLException e) {
@@ -131,7 +231,21 @@ public class JDBCDoctorManager {
         return appointments;
     }
 
-    public List<Stock> see_stock_for_surgery(Surgery surgery) {
+    public List<Stock> see_stock_for_surgery(Surgery surgery)
+            throws NullPointerException, IllegalArgumentException {
+
+        if (surgery == null) {
+            NullPointerException nullPointerException =
+                    new NullPointerException("Surgery cannot be null");
+            throw nullPointerException;
+        }
+
+        if (surgery.getIdentificator() < 0) {
+            IllegalArgumentException illegalArgumentException =
+                    new IllegalArgumentException("Surgery identificator cannot be negative");
+            throw illegalArgumentException;
+        }
+
         List<Stock> stocks = new ArrayList<>();
         String sql = "SELECT s.* FROM Stock s "
                 + "JOIN SURGERY_STOCK ss ON s.reference_code = ss.stock_reference_code "
@@ -153,7 +267,15 @@ public class JDBCDoctorManager {
         return stocks;
     }
 
-    private boolean stockExists(int reference_code) {
+    private boolean stockExists(int reference_code)
+            throws IllegalArgumentException {
+
+        if (reference_code < 0) {
+            IllegalArgumentException illegalArgumentException =
+                    new IllegalArgumentException("Stock reference code cannot be negative");
+            throw illegalArgumentException;
+        }
+
         String sql = "SELECT reference_code FROM Stock WHERE reference_code = ?";
 
         try (PreparedStatement ps = c.prepareStatement(sql)) {
@@ -169,7 +291,21 @@ public class JDBCDoctorManager {
         }
     }
 
-    private void updateStockAmount(int reference_code, int amount) {
+    private void updateStockAmount(int reference_code, int amount)
+            throws IllegalArgumentException {
+
+        if (reference_code < 0) {
+            IllegalArgumentException illegalArgumentException =
+                    new IllegalArgumentException("Stock reference code cannot be negative");
+            throw illegalArgumentException;
+        }
+
+        if (amount < 0) {
+            IllegalArgumentException illegalArgumentException =
+                    new IllegalArgumentException("Stock amount cannot be negative");
+            throw illegalArgumentException;
+        }
+
         String sql = "UPDATE Stock SET amount = amount + ? WHERE reference_code = ?";
 
         try (PreparedStatement ps = c.prepareStatement(sql)) {
@@ -183,7 +319,51 @@ public class JDBCDoctorManager {
         }
     }
 
-    private void insertStock(Stock stock, int amount) {
+    private void insertStock(Stock stock, int amount)
+            throws NullPointerException, IllegalArgumentException {
+
+        if (stock == null) {
+            NullPointerException nullPointerException =
+                    new NullPointerException("Stock cannot be null");
+            throw nullPointerException;
+        }
+
+        if (amount < 0) {
+            IllegalArgumentException illegalArgumentException =
+                    new IllegalArgumentException("Stock amount cannot be negative");
+            throw illegalArgumentException;
+        }
+
+        if (stock.getReference_code() < 0) {
+            IllegalArgumentException illegalArgumentException =
+                    new IllegalArgumentException("Stock reference code cannot be negative");
+            throw illegalArgumentException;
+        }
+
+        if (stock.getType() == null) {
+            NullPointerException nullPointerException =
+                    new NullPointerException("Stock type cannot be null");
+            throw nullPointerException;
+        }
+
+        if (stock.getOrigin() == null) {
+            NullPointerException nullPointerException =
+                    new NullPointerException("Stock origin cannot be null");
+            throw nullPointerException;
+        }
+
+        if (stock.getPrice() < 0) {
+            IllegalArgumentException illegalArgumentException =
+                    new IllegalArgumentException("Stock price cannot be negative");
+            throw illegalArgumentException;
+        }
+
+        if (stock.getDescription() == null) {
+            NullPointerException nullPointerException =
+                    new NullPointerException("Stock description cannot be null");
+            throw nullPointerException;
+        }
+
         String sql = "INSERT INTO Stock (reference_code, type, amount, price, origin, description) "
                 + "VALUES (?, ?, ?, ?, ?, ?)";
 
@@ -202,7 +382,27 @@ public class JDBCDoctorManager {
         }
     }
 
-    private boolean existsEventAtDateAndTurn(String sql, LocalDate date, Turn turn) throws SQLException {
+    private boolean existsEventAtDateAndTurn(String sql, LocalDate date, Turn turn)
+            throws SQLException, NullPointerException {
+
+        if (sql == null) {
+            NullPointerException nullPointerException =
+                    new NullPointerException("SQL query cannot be null");
+            throw nullPointerException;
+        }
+
+        if (date == null) {
+            NullPointerException nullPointerException =
+                    new NullPointerException("Date cannot be null");
+            throw nullPointerException;
+        }
+
+        if (turn == null) {
+            NullPointerException nullPointerException =
+                    new NullPointerException("Turn cannot be null");
+            throw nullPointerException;
+        }
+
         try (PreparedStatement ps = c.prepareStatement(sql)) {
             ps.setDate(1, Date.valueOf(date));
             ps.setString(2, turn.name());
@@ -213,7 +413,33 @@ public class JDBCDoctorManager {
         }
     }
 
-    private Appointment readAppointment(ResultSet rs) throws SQLException {
+    private Appointment readAppointment(ResultSet rs)
+            throws SQLException, NullPointerException, IllegalArgumentException {
+
+        if (rs == null) {
+            NullPointerException nullPointerException =
+                    new NullPointerException("ResultSet cannot be null");
+            throw nullPointerException;
+        }
+
+        if (rs.getInt("identificator") < 0) {
+            IllegalArgumentException illegalArgumentException =
+                    new IllegalArgumentException("Appointment identificator cannot be negative");
+            throw illegalArgumentException;
+        }
+
+        if (rs.getFloat("price") < 0) {
+            IllegalArgumentException illegalArgumentException =
+                    new IllegalArgumentException("Appointment price cannot be negative");
+            throw illegalArgumentException;
+        }
+
+        if (rs.getInt("doctor_license") < 0) {
+            IllegalArgumentException illegalArgumentException =
+                    new IllegalArgumentException("Doctor medical license number cannot be negative");
+            throw illegalArgumentException;
+        }
+
         Patient patient = getPatientByDni(rs.getString("patient_dni"));
         Doctor doctor = getDoctorByLicense(rs.getInt("doctor_license"));
 
@@ -228,7 +454,21 @@ public class JDBCDoctorManager {
                 Payment_status.valueOf(rs.getString("payment_status")));
     }
 
-    private Patient getPatientByDni(String dni) throws SQLException {
+    private Patient getPatientByDni(String dni)
+            throws SQLException, NullPointerException, IllegalArgumentException {
+
+        if (dni == null) {
+            NullPointerException nullPointerException =
+                    new NullPointerException("Patient DNI cannot be null");
+            throw nullPointerException;
+        }
+
+        if (dni.isBlank()) {
+            IllegalArgumentException illegalArgumentException =
+                    new IllegalArgumentException("Patient DNI cannot be blank");
+            throw illegalArgumentException;
+        }
+
         String sql = "SELECT * FROM Patient WHERE dni = ?";
 
         try (PreparedStatement ps = c.prepareStatement(sql)) {
@@ -244,7 +484,63 @@ public class JDBCDoctorManager {
         return null;
     }
 
-    private Patient readPatient(ResultSet rs) throws SQLException {
+    private Patient readPatient(ResultSet rs)
+            throws SQLException, NullPointerException, IllegalArgumentException {
+
+        if (rs == null) {
+            NullPointerException nullPointerException =
+                    new NullPointerException("ResultSet cannot be null");
+            throw nullPointerException;
+        }
+
+        if (rs.getString("name") == null) {
+            NullPointerException nullPointerException =
+                    new NullPointerException("Patient name cannot be null");
+            throw nullPointerException;
+        }
+
+        if (rs.getString("surname") == null) {
+            NullPointerException nullPointerException =
+                    new NullPointerException("Patient surname cannot be null");
+            throw nullPointerException;
+        }
+
+        if (rs.getString("dni") == null) {
+            NullPointerException nullPointerException =
+                    new NullPointerException("Patient DNI cannot be null");
+            throw nullPointerException;
+        }
+
+        if (rs.getDate("date_of_birth") == null) {
+            NullPointerException nullPointerException =
+                    new NullPointerException("Patient date of birth cannot be null");
+            throw nullPointerException;
+        }
+
+        if (rs.getString("sex") == null) {
+            NullPointerException nullPointerException =
+                    new NullPointerException("Patient sex cannot be null");
+            throw nullPointerException;
+        }
+
+        if (rs.getInt("height") < 0) {
+            IllegalArgumentException illegalArgumentException =
+                    new IllegalArgumentException("Patient height cannot be negative");
+            throw illegalArgumentException;
+        }
+
+        if (rs.getInt("weight") < 0) {
+            IllegalArgumentException illegalArgumentException =
+                    new IllegalArgumentException("Patient weight cannot be negative");
+            throw illegalArgumentException;
+        }
+
+        if (rs.getInt("phone_number") < 0) {
+            IllegalArgumentException illegalArgumentException =
+                    new IllegalArgumentException("Patient phone number cannot be negative");
+            throw illegalArgumentException;
+        }
+
         return new Patient(
                 rs.getString("name"),
                 rs.getString("surname"),
@@ -262,7 +558,15 @@ public class JDBCDoctorManager {
                 rs.getString("personal_information"));
     }
 
-    private Doctor getDoctorByLicense(int medical_license_number) throws SQLException {
+    private Doctor getDoctorByLicense(int medical_license_number)
+            throws SQLException, IllegalArgumentException {
+
+        if (medical_license_number < 0) {
+            IllegalArgumentException illegalArgumentException =
+                    new IllegalArgumentException("Doctor medical license number cannot be negative");
+            throw illegalArgumentException;
+        }
+
         String sql = "SELECT * FROM Doctor WHERE medical_license_number = ?";
 
         try (PreparedStatement ps = c.prepareStatement(sql)) {
@@ -270,6 +574,49 @@ public class JDBCDoctorManager {
 
             try (ResultSet rs = ps.executeQuery()) {
                 if (rs.next()) {
+
+                    if (rs.getString("name") == null) {
+                        NullPointerException nullPointerException =
+                                new NullPointerException("Doctor name cannot be null");
+                        throw nullPointerException;
+                    }
+
+                    if (rs.getString("surname") == null) {
+                        NullPointerException nullPointerException =
+                                new NullPointerException("Doctor surname cannot be null");
+                        throw nullPointerException;
+                    }
+
+                    if (rs.getString("sex") == null) {
+                        NullPointerException nullPointerException =
+                                new NullPointerException("Doctor sex cannot be null");
+                        throw nullPointerException;
+                    }
+
+                    if (rs.getDate("date_of_birth") == null) {
+                        NullPointerException nullPointerException =
+                                new NullPointerException("Doctor date of birth cannot be null");
+                        throw nullPointerException;
+                    }
+
+                    if (rs.getInt("phone_number") < 0) {
+                        IllegalArgumentException illegalArgumentException =
+                                new IllegalArgumentException("Doctor phone number cannot be negative");
+                        throw illegalArgumentException;
+                    }
+
+                    if (rs.getDouble("salary") < 0) {
+                        IllegalArgumentException illegalArgumentException =
+                                new IllegalArgumentException("Doctor salary cannot be negative");
+                        throw illegalArgumentException;
+                    }
+
+                    if (rs.getInt("amount_of_surgeries") < 0) {
+                        IllegalArgumentException illegalArgumentException =
+                                new IllegalArgumentException("Doctor amount of surgeries cannot be negative");
+                        throw illegalArgumentException;
+                    }
+
                     return new Doctor(
                             rs.getInt("medical_license_number"),
                             rs.getString("name"),
@@ -289,7 +636,51 @@ public class JDBCDoctorManager {
         return null;
     }
 
-    private Stock readStock(ResultSet rs) throws SQLException {
+    private Stock readStock(ResultSet rs)
+            throws SQLException, NullPointerException, IllegalArgumentException {
+
+        if (rs == null) {
+            NullPointerException nullPointerException =
+                    new NullPointerException("ResultSet cannot be null");
+            throw nullPointerException;
+        }
+
+        if (rs.getInt("reference_code") < 0) {
+            IllegalArgumentException illegalArgumentException =
+                    new IllegalArgumentException("Stock reference code cannot be negative");
+            throw illegalArgumentException;
+        }
+
+        if (rs.getString("type") == null) {
+            NullPointerException nullPointerException =
+                    new NullPointerException("Stock type cannot be null");
+            throw nullPointerException;
+        }
+
+        if (rs.getInt("amount") < 0) {
+            IllegalArgumentException illegalArgumentException =
+                    new IllegalArgumentException("Stock amount cannot be negative");
+            throw illegalArgumentException;
+        }
+
+        if (rs.getFloat("price") < 0) {
+            IllegalArgumentException illegalArgumentException =
+                    new IllegalArgumentException("Stock price cannot be negative");
+            throw illegalArgumentException;
+        }
+
+        if (rs.getString("origin") == null) {
+            NullPointerException nullPointerException =
+                    new NullPointerException("Stock origin cannot be null");
+            throw nullPointerException;
+        }
+
+        if (rs.getString("description") == null) {
+            NullPointerException nullPointerException =
+                    new NullPointerException("Stock description cannot be null");
+            throw nullPointerException;
+        }
+
         return new Stock(
                 rs.getInt("reference_code"),
                 Type_of_material.valueOf(rs.getString("type")),
