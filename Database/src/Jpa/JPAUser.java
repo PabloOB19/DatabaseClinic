@@ -184,25 +184,3 @@ public class JPAUser {
         return hashPassword(password).equals(hashedPassword);
     }
 }
-
-<<<<<<< Updated upstream
-private void assignrole() {
-	
-}
-
-public User getuser() {
-	Query q = em.createNativeQuery("query")
-
-	q.setParameter(name);
-}
-public User login(name.password) {
-
-	Query q = em.createNativeQuery("query")
-   q.setParameter(name);
-	
-
-}
-
-*/
-=======
->>>>>>> Stashed changes
