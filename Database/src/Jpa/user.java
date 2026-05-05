@@ -8,7 +8,18 @@ package Jpa;
 //XML:crear carpeta vacía de xml
 //anotaciones de xml en los pollos para pasarlos a xml 
 //crear manager de XML 
-//Marshall transforma lo de java a xml 
+//XML
+//crear carpeta para ficheros xml 
+//rute element(el hospital) , elements, atributes, Type(orden en el que se ponen las cosas ) poner estos cosos con @xml 
+// no hay métodos en xml, solo atributos
+// elementos: cosas dentro de otras (hospital : dentro maquinas) y hay muchos  , hospital id : atributo
+//@xmlElementWraper : "envoltorio de elementos"
+
+//MANAGER
+//import y un export 
+//necesito un contexto para marshall ; en el context meto una instancia del pollo modificado con xml
+//unmarshall le meto un file y me lo traduce a un objeto 
+//Marshall transforma lo de java a xml, unmarshall al revés(converir todos los elementos), van en el manager
 
 import javax.management.relation.Role;
 
