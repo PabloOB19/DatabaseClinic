@@ -1,9 +1,14 @@
 package POJOS;
 import java.time.LocalDate;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Arrays;
 import java.util.Objects;
+//@rute element(Doctor doctor)
+//@elements
+//@atributes
+//@Type(orden en el que se ponen las cosas )//
 
 import Enums.Sex;
 
@@ -53,13 +58,7 @@ public class Patient {
 
 }
 
-    public Patient(String name2, String surname2, String dni2, LocalDate date, Sex male, int height2, int weight2,
-			String string, int phone_number2, String email2, String address2, String payment_method2,
-			String clinical_history2, String personal_information2) {
-		// TODO Auto-generated constructor stub --> CAMBIARLO
-	}
-
-	public String getName() {
+    public String getName() {
         return name;
     }
 

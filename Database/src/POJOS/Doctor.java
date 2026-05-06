@@ -1,10 +1,14 @@
 package POJOS;
 import java.time.LocalDate;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Arrays;
 import java.util.Objects;
-
+//@XmlRootElement(Doctor doctor)
+//@XmlElement
+//@XmlAtributes
+//@XmlType(orden en el que se ponen las cosas )//
 import Enums.Sex;
 
 public class Doctor {
@@ -45,14 +49,7 @@ public class Doctor {
 
 }
 
- public Doctor(int medical_license_number2, String name2, String surname2, Sex female, LocalDate date,
-			int phone_number2, String email2, String speciality2, String string, double salary2,
-			int amount_of_surgeries2) {
-		// TODO Auto-generated constructor stub --- > Esto hay que cambiarlo
-	
-	}
-
-	//getters y setters
+ //getters y setters
     public int getMedical_license_number() {
         return medical_license_number;
     }
