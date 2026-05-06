@@ -129,4 +129,5 @@ public class Appointment {
     public int hashCode() {
         return Objects.hash(identificator, type, date, turn, price, patient, doctor, payment_status);
     }
+
 }
