@@ -15,6 +15,8 @@ import Enums.Sex;
 import Enums.Turn;
 import Enums.Type_of_appointment;
 import Enums.Type_of_material;
+import Exceptions.InvalidIdentificator;
+import Exceptions.InvalidPrice;
 import POJOS.Appointment;
 import POJOS.Doctor;
 import POJOS.Patient;
@@ -213,7 +215,7 @@ public class JDBCDoctorManager {
         return patients;
     }
 
-    public List<Appointment> see_appointments() {
+    public List<Appointment> see_appointments() throws NullPointerException, IllegalArgumentException, InvalidIdentificator, InvalidPrice {
         List<Appointment> appointments = new ArrayList<>();
         String sql = "SELECT * FROM Appointment";
 
@@ -414,7 +416,7 @@ public class JDBCDoctorManager {
     }
 
     private Appointment readAppointment(ResultSet rs)
-            throws SQLException, NullPointerException, IllegalArgumentException {
+            throws SQLException, NullPointerException, IllegalArgumentException, InvalidIdentificator, InvalidPrice {
 
         if (rs == null) {
             NullPointerException nullPointerException =

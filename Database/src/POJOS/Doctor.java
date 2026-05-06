@@ -45,7 +45,14 @@ public class Doctor {
 
 }
 
- //getters y setters
+ public Doctor(int medical_license_number2, String name2, String surname2, Sex female, LocalDate date,
+			int phone_number2, String email2, String speciality2, String string, double salary2,
+			int amount_of_surgeries2) {
+		// TODO Auto-generated constructor stub --- > Esto hay que cambiarlo
+	
+	}
+
+	//getters y setters
     public int getMedical_license_number() {
         return medical_license_number;
     }

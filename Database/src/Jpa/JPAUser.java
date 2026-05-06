@@ -1,4 +1,4 @@
-package Jpa;
+package JPA;
 
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
@@ -94,7 +94,7 @@ public class JPAUser {
         }
     }
 
-    @SuppressWarnings("unchecked")
+    @SuppressWarnings("unchecked") // --> Revisar que es
     public List<Role> getRoles() {
         Query q = em.createNativeQuery("SELECT * FROM roles", Role.class);
         return (List<Role>) q.getResultList();
@@ -219,7 +219,8 @@ public class JPAUser {
         return hashPassword(password).equals(hashedPassword);
     }
 
-    private void rollback() {
+    private void rollback() //--> Revisar
+    {
         if (em.getTransaction().isActive()) {
             em.getTransaction().rollback();
         }

@@ -53,7 +53,13 @@ public class Patient {
 
 }
 
-    public String getName() {
+    public Patient(String name2, String surname2, String dni2, LocalDate date, Sex male, int height2, int weight2,
+			String string, int phone_number2, String email2, String address2, String payment_method2,
+			String clinical_history2, String personal_information2) {
+		// TODO Auto-generated constructor stub --> CAMBIARLO
+	}
+
+	public String getName() {
         return name;
     }
 
