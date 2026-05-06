@@ -1,4 +1,4 @@
-package Jpa;
+package JPA;
 //Siempre poner get transaction.commit() al final cuando cambiamos cosas, como con preparestatement en jdbc
 //sin quiero leer uso query como statement 
 //fichero persistance, cmabio ruta base de datos, nombre, ruta de db 
