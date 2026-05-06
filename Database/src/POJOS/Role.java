@@ -5,14 +5,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.OneToMany;
-import javax.persistence.Table;
-import javax.persistence.TableGenerator;
+import javax.persistence.*;
 
 @Entity
 @Table(name = "roles")
@@ -21,9 +14,7 @@ public class Role implements Serializable {
     private static final long serialVersionUID = -8877691943368665971L;
 
     @Id
-    @GeneratedValue(generator = "roles")
-    @TableGenerator(name = "roles", table = "sqlite_sequence",
-        pkColumnName = "name", valueColumnName = "seq", pkColumnValue = "roles")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "role_id")
     private Integer roleId;
 
@@ -31,7 +22,7 @@ public class Role implements Serializable {
     private String name;
 
     @OneToMany(mappedBy = "role", fetch = FetchType.LAZY)
-    private ArrayList<user> users;
+    private List<User> users;
 
     public Role() {
         this.users = new ArrayList<>();
@@ -48,7 +39,7 @@ public class Role implements Serializable {
         this.users = new ArrayList<>();
     }
 
-    public Role(Integer roleId, String name, ArrayList<user> users) {
+    public Role(Integer roleId, String name, List<User> users) {
         this.roleId = roleId;
         this.name = name;
         this.users = users;
@@ -70,15 +61,15 @@ public class Role implements Serializable {
         this.name = name;
     }
 
-    public List<user> getUsers() {
+    public List<User> getUsers() {
         return users;
     }
 
-    public void setUsers(ArrayList<user> users) {
+    public void setUsers(List<User> users) {
         this.users = users;
     }
 
-    public void addUser(user user) {
+    public void addUser(User user) {
         if (this.users == null) {
             this.users = new ArrayList<>();
         }

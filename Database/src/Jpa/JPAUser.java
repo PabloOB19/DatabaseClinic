@@ -9,10 +9,9 @@ import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
 import javax.persistence.Persistence;
 import javax.persistence.Query;
-import javax.persistence.RollbackException;
 
 import POJOS.Role;
-import POJOS.user;
+import POJOS.User;
 
 public class JPAUser {
 
@@ -23,6 +22,7 @@ public class JPAUser {
 
         em.getTransaction().begin();
         em.createNativeQuery("PRAGMA foreign_keys=ON").executeUpdate();
+        createTables();
         em.getTransaction().commit();
 
         if (getRoles().isEmpty()) {
@@ -36,42 +36,62 @@ public class JPAUser {
         em.close();
     }
 
-    public void register(user user) {
+    private void createTables() {
+        String roleTable = "CREATE TABLE IF NOT EXISTS roles (" +
+                "role_id INTEGER PRIMARY KEY AUTOINCREMENT, " +
+                "name TEXT NOT NULL UNIQUE)";
+
+        String userTable = "CREATE TABLE IF NOT EXISTS users (" +
+                "user_id INTEGER PRIMARY KEY AUTOINCREMENT, " +
+                "username TEXT NOT NULL UNIQUE, " +
+                "email TEXT NOT NULL UNIQUE, " +
+                "password TEXT NOT NULL, " +
+                "role_id INTEGER, " +
+                "FOREIGN KEY (role_id) REFERENCES roles(role_id))";
+
+        em.createNativeQuery(roleTable).executeUpdate();
+        em.createNativeQuery(userTable).executeUpdate();
+    }
+
+    public void register(User user) {
         try {
             em.getTransaction().begin();
             user.setPassword(hashPassword(user.getPassword()));
             em.persist(user);
             em.getTransaction().commit();
-        } catch (RollbackException e) {
-            if (em.getTransaction().isActive()) {
-                em.getTransaction().rollback();
-            }
-            System.out.println("Username or email already exists");
         } catch (Exception e) {
-            if (em.getTransaction().isActive()) {
-                em.getTransaction().rollback();
-            }
-            e.printStackTrace();
+            rollback();
+            System.out.println("Username or email already exists");
         }
     }
 
     public void createRole(Role role) {
-        em.getTransaction().begin();
-        em.persist(role);
-        em.getTransaction().commit();
+        try {
+            em.getTransaction().begin();
+            em.persist(role);
+            em.getTransaction().commit();
+        } catch (Exception e) {
+            rollback();
+            System.out.println("Role already exists");
+        }
     }
 
-    public void assignRole(user user, Role role) {
-        em.getTransaction().begin();
+    public void assignRole(User user, Role role) {
+        try {
+            em.getTransaction().begin();
 
-        user managedUser = em.find(user.class, user.getUserId());
-        Role managedRole = em.find(Role.class, role.getRoleId());
+            User managedUser = em.find(User.class, user.getUserId());
+            Role managedRole = em.find(Role.class, role.getRoleId());
 
-        if (managedUser != null && managedRole != null) {
-            managedRole.addUser(managedUser);
+            if (managedUser != null && managedRole != null) {
+                managedRole.addUser(managedUser);
+            }
+
+            em.getTransaction().commit();
+        } catch (Exception e) {
+            rollback();
+            e.printStackTrace();
         }
-
-        em.getTransaction().commit();
     }
 
     @SuppressWarnings("unchecked")
@@ -90,11 +110,11 @@ public class JPAUser {
         }
     }
 
-    public user login(String username, String password) {
+    public User login(String username, String password) {
         try {
-            Query q = em.createNativeQuery("SELECT * FROM users WHERE username = ?", user.class);
+            Query q = em.createNativeQuery("SELECT * FROM users WHERE username = ?", User.class);
             q.setParameter(1, username);
-            user user = (user) q.getSingleResult();
+            User user = (User) q.getSingleResult();
 
             if (checkPassword(password, user.getPassword())) {
                 return user;
@@ -106,58 +126,73 @@ public class JPAUser {
         }
     }
 
-    public user getUser(String username, String email) {
+    public User getUser(String username, String email) {
         try {
-            Query q = em.createNativeQuery("SELECT * FROM users WHERE username = ? AND email = ?", user.class);
+            Query q = em.createNativeQuery("SELECT * FROM users WHERE username = ? AND email = ?", User.class);
             q.setParameter(1, username);
             q.setParameter(2, email);
-            return (user) q.getSingleResult();
+            return (User) q.getSingleResult();
         } catch (NoResultException e) {
             return null;
         }
     }
 
-    public void updateUser(user user, String newUsername) {
-        em.getTransaction().begin();
+    public void updateUser(User user, String newUsername) {
+        try {
+            em.getTransaction().begin();
 
-        user managedUser = em.find(user.class, user.getUserId());
-        if (managedUser != null) {
-            managedUser.setUsername(newUsername);
+            User managedUser = em.find(User.class, user.getUserId());
+            if (managedUser != null) {
+                managedUser.setUsername(newUsername);
+            }
+
+            em.getTransaction().commit();
+        } catch (Exception e) {
+            rollback();
+            e.printStackTrace();
         }
-
-        em.getTransaction().commit();
     }
 
-    public void updatePassword(user user, String newPassword) {
-        em.getTransaction().begin();
+    public void updatePassword(User user, String newPassword) {
+        try {
+            em.getTransaction().begin();
 
-        user managedUser = em.find(user.class, user.getUserId());
-        if (managedUser != null) {
-            String hashedPassword = hashPassword(newPassword);
-            managedUser.setPassword(hashedPassword);
-            user.setPassword(hashedPassword);
-        } else {
-            System.out.println("No user found");
+            User managedUser = em.find(User.class, user.getUserId());
+            if (managedUser != null) {
+                String hashedPassword = hashPassword(newPassword);
+                managedUser.setPassword(hashedPassword);
+                user.setPassword(hashedPassword);
+            } else {
+                System.out.println("No user found");
+            }
+
+            em.getTransaction().commit();
+        } catch (Exception e) {
+            rollback();
+            e.printStackTrace();
         }
-
-        em.getTransaction().commit();
     }
 
-    public void deleteUser(user user) {
-        em.getTransaction().begin();
+    public void deleteUser(User user) {
+        try {
+            em.getTransaction().begin();
 
-        user managedUser = em.find(user.class, user.getUserId());
-        if (managedUser != null) {
-            em.remove(managedUser);
+            User managedUser = em.find(User.class, user.getUserId());
+            if (managedUser != null) {
+                em.remove(managedUser);
+            }
+
+            em.getTransaction().commit();
+        } catch (Exception e) {
+            rollback();
+            e.printStackTrace();
         }
-
-        em.getTransaction().commit();
     }
 
     @SuppressWarnings("unchecked")
-    public List<user> getAllUsers() {
-        Query q = em.createNativeQuery("SELECT * FROM users", user.class);
-        return (List<user>) q.getResultList();
+    public List<User> getAllUsers() {
+        Query q = em.createNativeQuery("SELECT * FROM users", User.class);
+        return (List<User>) q.getResultList();
     }
 
     private String hashPassword(String password) {
@@ -182,5 +217,11 @@ public class JPAUser {
 
     private boolean checkPassword(String password, String hashedPassword) {
         return hashPassword(password).equals(hashedPassword);
+    }
+
+    private void rollback() {
+        if (em.getTransaction().isActive()) {
+            em.getTransaction().rollback();
+        }
     }
 }
