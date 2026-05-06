@@ -4,12 +4,14 @@ import java.time.LocalDate;
 import java.util.Objects;
 
 import Enums.Type_of_appointment;
+import Exceptions.InvalidIdentificator;
+import Exceptions.InvalidPrice;
 import Enums.Turn;
 import Enums.Payment_status;
 
 public class Appointment {
 
-    private int identificator;
+	private int identificator;
     private Type_of_appointment type;
     private LocalDate date;
     private Turn turn;
@@ -21,8 +23,24 @@ public class Appointment {
     // Constructor
     public Appointment(int identificator, Type_of_appointment type, LocalDate date,
                        Turn turn, float price, Patient patient, Doctor doctor,
-                       Payment_status payment_status) {
+                       Payment_status payment_status) throws InvalidIdentificator, InvalidPrice, NullPointerException
+    {
 
+    	if (identificator < 0) {
+    		String message = "The identification number cannot be negative";
+    		InvalidIdentificator invalidIdentificator = new InvalidIdentificator(message);
+    		throw invalidIdentificator;
+    	}
+    	if (price < 0) {
+    		String message = "The price cannot be negative";
+    		InvalidPrice invalidPrice = new InvalidPrice(message);
+    		throw invalidPrice;
+    	}
+    	if (type == null || date == null || turn == null || patient == null || doctor == null || payment_status == null) {
+    		String message = "The values cannot be null";
+    		NullPointerException nullPointerException = new NullPointerException(message);
+    		throw nullPointerException;
+    	}
         this.identificator = identificator;
         this.type = type;
         this.date = date;
@@ -111,4 +129,5 @@ public class Appointment {
     public int hashCode() {
         return Objects.hash(identificator, type, date, turn, price, patient, doctor, payment_status);
     }
+
 }

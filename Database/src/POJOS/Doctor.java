@@ -6,6 +6,10 @@ import java.util.Arrays;
 import java.util.Objects;
 
 import Enums.Sex;
+import Exceptions.InvalidAmountOfSurgeries;
+import Exceptions.InvalidIdentificator;
+import Exceptions.InvalidPhoneNumber;
+import Exceptions.InvalidPrice;
 
 public class Doctor {
 	
@@ -24,28 +28,60 @@ public class Doctor {
 	private List<Surgery> surgeries;
 	
 	
-    //constructor
     public Doctor(int medical_license_number, String name, String surname,
             Sex sex,LocalDate date_of_birth, int phone_number, String email,
-            String speciality, byte[] photo, double salary, int amount_of_surgeries) {
+            String speciality, byte[] photo, double salary, int amount_of_surgeries) throws InvalidAmountOfSurgeries, InvalidIdentificator, InvalidPhoneNumber, InvalidPrice{
+    	
+    	if (medical_license_number < 0) {
+    		String message = "The identification number cannot be negative";
+    		InvalidIdentificator invalidIdentificator = new InvalidIdentificator(message);
+    		throw invalidIdentificator;
+    	}
+    	if (salary < 0) {
+    		String message = "The salary cannot be negative";
+    		InvalidPrice invalidPrice = new InvalidPrice(message);
+    		throw invalidPrice;
+    	}
+    	if (phone_number < 0) {
+    		String message = "The phone number cannot be negative";
+    		InvalidPhoneNumber invalidPhoneNumber = new InvalidPhoneNumber(message);
+    		throw invalidPhoneNumber;
+    	}
+    	if (amount_of_surgeries < 0) {
+    		String message = "The amount of surgeries cannot be negative";
+    		InvalidPhoneNumber invalidPhoneNumber = new InvalidPhoneNumber(message);
+    		throw invalidPhoneNumber;
+    	}
+    	if (name == null || surname == null || sex == null || date_of_birth == null || email == null || speciality == null || photo == null) {
+    		String message = "The values cannot be null";
+    		NullPointerException nullPointerException = new NullPointerException(message);
+    		throw nullPointerException;
+    	}
 
-  this.medical_license_number = medical_license_number;
-  this.name = name;
-  this.surname = surname;
-  this.sex = sex;
-  this.date_of_birth = date_of_birth;
-  this.phone_number = phone_number;
-  this.email = email;
-  this.speciality = speciality;
-  this.photo = photo;
-  this.salary = salary;
-  this.amount_of_surgeries = amount_of_surgeries;
-  this.appointments = new ArrayList<>();
-  this.surgeries = new ArrayList<>();
+    this.medical_license_number = medical_license_number;
+    this.name = name;
+  	this.surname = surname;
+  	this.sex = sex;
+  	this.date_of_birth = date_of_birth;
+  	this.phone_number = phone_number;
+  	this.email = email;
+  	this.speciality = speciality;
+  	this.photo = photo;
+  	this.salary = salary;
+  	this.amount_of_surgeries = amount_of_surgeries;
+  	this.appointments = new ArrayList<>();
+  	this.surgeries = new ArrayList<>();
 
 }
 
- //getters y setters
+ public Doctor(int medical_license_number2, String name2, String surname2, Sex female, LocalDate date,
+			int phone_number2, String email2, String speciality2, String string, double salary2,
+			int amount_of_surgeries2) {
+		// TODO Auto-generated constructor stub --- > Esto hay que cambiarlo
+	
+	}
+
+	//getters y setters
     public int getMedical_license_number() {
         return medical_license_number;
     }

@@ -4,13 +4,12 @@
     <persistence-unit name="miUnidad">
         <provider>org.eclipse.persistence.jpa.PersistenceProvider</provider>
 
-        <class>POJOS.user</class>
+        <class>POJOS.User</class>
         <class>POJOS.Role</class>
 
         <properties>
             <property name="javax.persistence.jdbc.driver" value="org.sqlite.JDBC"/>
-            <property name="javax.persistence.jdbc.url" value="jdbc:sqlite:database.db"/>
-
+            <property name="javax.persistence.jdbc.url" value="jdbc:sqlite:db/database.db"/>
             <property name="eclipselink.ddl-generation" value="none"/>
             <property name="eclipselink.logging.level" value="FINE"/>
         </properties>

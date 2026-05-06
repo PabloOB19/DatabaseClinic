@@ -1,9 +1,14 @@
 package POJOS;
 import java.time.LocalDate;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Arrays;
 import java.util.Objects;
+//@rute element(Doctor doctor)
+//@elements
+//@atributes
+//@Type(orden en el que se ponen las cosas )//
 
 import Enums.Sex;
 

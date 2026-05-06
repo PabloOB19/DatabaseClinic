@@ -12,7 +12,7 @@ public class JDBCConnectionManager {
     public Connection manager() {
         try {
             Class.forName("org.sqlite.JDBC");
-            c = DriverManager.getConnection("jdbc:sqlite:database.db");
+            c = DriverManager.getConnection("jdbc:sqlite:db/database.db");
             createTables();
             return c;
         } catch (Exception e) {
