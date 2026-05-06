@@ -1,18 +1,28 @@
-<persistence xmlns="http://xmlns.jcp.org/xml/ns/persistence"
-             version="2.2">
+<?xml version="1.0" encoding="UTF-8" ?>
+<!--
+    Original schema validation from the teacher's template:
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://java.sun.com/xml/ns/persistence http://java.sun.com/xml/ns/persistence/persistence_2_0.xsd"
+-->
+<persistence version="2.0" xmlns="http://java.sun.com/xml/ns/persistence">
 
-    <persistence-unit name="miUnidad">
+    <persistence-unit name="miUnidad" transaction-type="RESOURCE_LOCAL">
         <provider>org.eclipse.persistence.jpa.PersistenceProvider</provider>
 
-        <class>POJOS.User</class>
+        <!-- Entity Classes -->
         <class>POJOS.Role</class>
+        <class>POJOS.User</class>
 
         <properties>
-            <property name="javax.persistence.jdbc.driver" value="org.sqlite.JDBC"/>
-            <property name="javax.persistence.jdbc.url" value="jdbc:sqlite:db/database.db"/>
-            <property name="eclipselink.ddl-generation" value="none"/>
-            <property name="eclipselink.logging.level" value="FINE"/>
+            <!-- Connection properties -->
+            <property name="javax.persistence.jdbc.driver" value="org.sqlite.JDBC" />
+            <property name="javax.persistence.jdbc.url" value="jdbc:sqlite:./db/database.db" />
+            <property name="javax.persistence.jdbc.user" value="" />
+            <property name="javax.persistence.jdbc.password" value="" />
+
+            <!-- Tables are created manually in JPAUser -->
+            <property name="eclipselink.ddl-generation" value="none" />
+            <property name="eclipselink.logging.level" value="FINE" />
         </properties>
     </persistence-unit>
-
 </persistence>
