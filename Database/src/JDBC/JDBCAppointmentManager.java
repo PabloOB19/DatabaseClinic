@@ -1,30 +1,28 @@
 package JDBC;
 
 import java.sql.*;
-import java.time.*;
 import java.util.*;
 
 
 import Enums.*;
 import POJOS.*;
-import JDBC.JDBCConnectionManager;
 
 public class JDBCAppointmentManager {
 
     private Connection c;
-    
+
     public JDBCAppointmentManager(Connection c) {
         this.c = c;
     }
-    
-	    public void insertAppointment(Appointment appointment) {
-	    	String sql = "INSERT INTO Appointment (type, date, price, turn, doctor_id, patient_id) VALUES (?, ?, ?, ?, ?, ?)";
 
-	        try (PreparedStatement p = c.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
-	            p.setString(1, appointment.getType().name());
-		        p.setDate(2, java.sql.Date.valueOf(appointment.getDate()));
-	            p.setDouble(3, appointment.getPrice());
-	            p.setString(4, appointment.getTurn().name());
+    public void insertAppointment(Appointment appointment) {
+        String sql = "INSERT INTO Appointment (type, date, price, turn, doctor_id, patient_id) VALUES (?, ?, ?, ?, ?, ?)";
+
+        try (PreparedStatement p = c.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
+            p.setString(1, appointment.getType().name());
+            p.setDate(2, java.sql.Date.valueOf(appointment.getDate()));
+            p.setDouble(3, appointment.getPrice());
+            p.setString(4, appointment.getTurn().name());
             p.setInt(5, appointment.getDoctor().getId());
             p.setInt(6, appointment.getPatient().getId());
 
@@ -47,66 +45,66 @@ public class JDBCAppointmentManager {
             e.printStackTrace();
         }
     }
-    
-	    private Doctor getDoctorById(int id) throws SQLException {
-	        Doctor doctor = null;
 
-	        String sql = "SELECT * FROM Doctor WHERE id = ?";
-	        try (PreparedStatement p = c.prepareStatement(sql)) {
-		        p.setInt(1, id);
+    private Doctor getDoctorById(int id) throws SQLException {
+        Doctor doctor = null;
 
-		        try (ResultSet rs = p.executeQuery()) {
-			        if (rs.next()) {
-			            doctor = new Doctor(
-			                    rs.getInt("id"),
-			                    rs.getString("name"),
-			                    rs.getString("surname"),
-			                    rs.getBytes("photo"),
-			                    Sex.valueOf(rs.getString("sex")),
-			                    rs.getString("email"),
-			                    rs.getString("speciality"),
-			                    rs.getDate("dob").toLocalDate(),
-			                    null,
-			                    null
-			            );
-			        }
-		        }
-	        }
+        String sql = "SELECT * FROM Doctor WHERE id = ?";
+        try (PreparedStatement p = c.prepareStatement(sql)) {
+            p.setInt(1, id);
 
-	        return doctor;
-	    }
+            try (ResultSet rs = p.executeQuery()) {
+                if (rs.next()) {
+                    doctor = new Doctor(
+                            rs.getInt("id"),
+                            rs.getString("name"),
+                            rs.getString("surname"),
+                            rs.getBytes("photo"),
+                            Sex.valueOf(rs.getString("sex")),
+                            rs.getString("email"),
+                            rs.getString("speciality"),
+                            rs.getDate("dob").toLocalDate(),
+                            null,
+                            null
+                    );
+                }
+            }
+        }
 
-	    private Patient getPatientById(int id) throws SQLException {
-	        Patient patient = null;
+        return doctor;
+    }
 
-	        String sql = "SELECT * FROM Patient WHERE id = ?";
-	        try (PreparedStatement p = c.prepareStatement(sql)) {
-		        p.setInt(1, id);
+    private Patient getPatientById(int id) throws SQLException {
+        Patient patient = null;
 
-		        try (ResultSet rs = p.executeQuery()) {
-			        if (rs.next()) {
-			            patient = new Patient(
-			                    rs.getInt("id"),
-			                    Sex.valueOf(rs.getString("sex")),
-			                    rs.getString("name"),
-			                    rs.getString("surname"),
-			                    rs.getDate("dob").toLocalDate(),
-			                    rs.getInt("height"),
-			                    rs.getFloat("weight"),
-			                    rs.getBytes("photo"),
-			                    rs.getString("info"),
-			                    rs.getString("email"),
-			                    null,
-			                    null
-			            );
-			        }
-		        }
-	        }
+        String sql = "SELECT * FROM Patient WHERE id = ?";
+        try (PreparedStatement p = c.prepareStatement(sql)) {
+            p.setInt(1, id);
 
-	        return patient;
-	    }
+            try (ResultSet rs = p.executeQuery()) {
+                if (rs.next()) {
+                    patient = new Patient(
+                            rs.getInt("id"),
+                            Sex.valueOf(rs.getString("sex")),
+                            rs.getString("name"),
+                            rs.getString("surname"),
+                            rs.getDate("dob").toLocalDate(),
+                            rs.getInt("height"),
+                            rs.getFloat("weight"),
+                            rs.getBytes("photo"),
+                            rs.getString("info"),
+                            rs.getString("email"),
+                            null,
+                            null
+                    );
+                }
+            }
+        }
 
-    
+        return patient;
+    }
+
+
     public Appointment getAppointmentById(int id) {
         Appointment result = null;
 
@@ -174,7 +172,7 @@ public class JDBCAppointmentManager {
         return list;
     }
 
-	    
+
     public void updateAppointment(Appointment appointment) {
         String sql = "UPDATE Appointment SET type = ?, date = ?, price = ?, turn = ?, doctor_id = ?, patient_id = ? WHERE id = ?";
 
@@ -196,90 +194,90 @@ public class JDBCAppointmentManager {
     }
 
 
-		    public void deleteAppointment(int id) {
-		    	String sql = "DELETE FROM Appointment WHERE id = ?";
+    public void deleteAppointment(int id) {
+        String sql = "DELETE FROM Appointment WHERE id = ?";
 
-		        try (PreparedStatement p = c.prepareStatement(sql)) {
-		            p.setInt(1, id);
-		            p.executeUpdate();
-		        } catch (SQLException e) {
-		            System.out.println("Database error during deleteAppointment.");
-		            e.printStackTrace();
-	        }
-	    }
-		    public List<Appointment> listAppointmentsByDoctor(int doctorId) {
-		        List<Appointment> list = new ArrayList<>();
+        try (PreparedStatement p = c.prepareStatement(sql)) {
+            p.setInt(1, id);
+            p.executeUpdate();
+        } catch (SQLException e) {
+            System.out.println("Database error during deleteAppointment.");
+            e.printStackTrace();
+        }
+    }
 
-		        String sql = "SELECT * FROM Appointment WHERE doctor_id = ?";
+    public List<Appointment> listAppointmentsByDoctor(int doctorId) {
+        List<Appointment> list = new ArrayList<>();
 
-		        try (PreparedStatement p = c.prepareStatement(sql)) {
-		            p.setInt(1, doctorId);
+        String sql = "SELECT * FROM Appointment WHERE doctor_id = ?";
 
-		            try (ResultSet rs = p.executeQuery()) {
-			            while (rs.next()) {
-			                Doctor doctor = getDoctorById(rs.getInt("doctor_id"));
-			                Patient patient = getPatientById(rs.getInt("patient_id"));
+        try (PreparedStatement p = c.prepareStatement(sql)) {
+            p.setInt(1, doctorId);
 
-			                Appointment appointment = new Appointment(
-			                        rs.getInt("id"),
-			                        Type_of_appointment.valueOf(rs.getString("type")),
-			                        rs.getDate("date").toLocalDate(),
-			                        Turn.valueOf(rs.getString("turn")),
-			                        rs.getDouble("price"),
-			                        doctor,
-			                        patient
-			                );
+            try (ResultSet rs = p.executeQuery()) {
+                while (rs.next()) {
+                    Doctor doctor = getDoctorById(rs.getInt("doctor_id"));
+                    Patient patient = getPatientById(rs.getInt("patient_id"));
 
-			                list.add(appointment);
-			            }
-		            }
+                    Appointment appointment = new Appointment(
+                            rs.getInt("id"),
+                            Type_of_appointment.valueOf(rs.getString("type")),
+                            rs.getDate("date").toLocalDate(),
+                            Turn.valueOf(rs.getString("turn")),
+                            rs.getDouble("price"),
+                            doctor,
+                            patient
+                    );
 
-		        } catch (SQLException e) {
-		            System.out.println("Database error during listAppointmentsByDoctor.");
-	            e.printStackTrace();
-	        }
+                    list.add(appointment);
+                }
+            }
 
-	        return list;
-	    }
+        } catch (SQLException e) {
+            System.out.println("Database error during listAppointmentsByDoctor.");
+            e.printStackTrace();
+        }
 
-	    
-		    public List<Appointment> listAppointmentsByPatient(int patientId) {
-		        List<Appointment> list = new ArrayList<>();
+        return list;
+    }
 
-		        String sql = "SELECT * FROM Appointment WHERE patient_id = ?";
 
-		        try (PreparedStatement p = c.prepareStatement(sql)) {
-		            p.setInt(1, patientId);
+    public List<Appointment> listAppointmentsByPatient(int patientId) {
+        List<Appointment> list = new ArrayList<>();
 
-		            try (ResultSet rs = p.executeQuery()) {
-			            while (rs.next()) {
-			                Doctor doctor = getDoctorById(rs.getInt("doctor_id"));
-			                Patient patient = getPatientById(rs.getInt("patient_id"));
+        String sql = "SELECT * FROM Appointment WHERE patient_id = ?";
 
-			                Appointment appointment = new Appointment(
-			                        rs.getInt("id"),
-			                        Type_of_appointment.valueOf(rs.getString("type")),
-			                        rs.getDate("date").toLocalDate(),
-			                        Turn.valueOf(rs.getString("turn")),
-			                        rs.getDouble("price"),
-			                        doctor,
-			                        patient
-			                );
+        try (PreparedStatement p = c.prepareStatement(sql)) {
+            p.setInt(1, patientId);
 
-			                list.add(appointment);
-			            }
-		            }
+            try (ResultSet rs = p.executeQuery()) {
+                while (rs.next()) {
+                    Doctor doctor = getDoctorById(rs.getInt("doctor_id"));
+                    Patient patient = getPatientById(rs.getInt("patient_id"));
 
-		        } catch (SQLException e) {
-		            System.out.println("Database error during listAppointmentsByPatient.");
-	            e.printStackTrace();
-	        }
+                    Appointment appointment = new Appointment(
+                            rs.getInt("id"),
+                            Type_of_appointment.valueOf(rs.getString("type")),
+                            rs.getDate("date").toLocalDate(),
+                            Turn.valueOf(rs.getString("turn")),
+                            rs.getDouble("price"),
+                            doctor,
+                            patient
+                    );
 
-	        return list;
-	    }
+                    list.add(appointment);
+                }
+            }
 
-	    
-	   
+        } catch (SQLException e) {
+            System.out.println("Database error during listAppointmentsByPatient.");
+            e.printStackTrace();
+        }
+
+        return list;
+    }
+
+
 }
 
     
