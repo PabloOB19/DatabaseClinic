@@ -9,316 +9,276 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
-import Enums.Origin;
+import Enums.Sex;
 import Enums.Turn;
-import Enums.Type_of_material;
+import Enums.Type_of_appointment;
+import Enums.Type_of_surgery;
+import POJOS.Appointment;
 import POJOS.Doctor;
-import POJOS.Stock;
+import POJOS.Patient;
+import POJOS.Surgery;
+import ifaces.SurgeryManager;
 
-public class JDBCSurgeryManager 
+public class JDBCSurgeryManager implements SurgeryManager
 {
-    private Connection c;
-    private int surgery_identificator;
+	private Connection c;
 
-    public JDBCSurgeryManager(Connection c, int surgery_identificator) 
-            throws NullPointerException, IllegalArgumentException 
-    {
-        if (c == null) {
-            NullPointerException nullPointerException =
-                    new NullPointerException("Connection cannot be null");
-            throw nullPointerException;
-        }
-
-        if (surgery_identificator < 0) {
-            IllegalArgumentException illegalArgumentException =
-                    new IllegalArgumentException("Surgery identificator cannot be negative");
-            throw illegalArgumentException;
-        }
-
+    public JDBCSurgeryManager(Connection c) {
         this.c = c;
-        this.surgery_identificator = surgery_identificator;
     }
+	
+    // Nos pasa lo mismo que en la clase Patient, al ser doctor y equipment dos listas, no hace falta guardarlas
+    // No hay que insertarlas dentro de mi tabla
+	@Override
+	public void insertSurgery(Surgery surgery) {
 
-    public void add_doctor(Doctor doctor)
-            throws NullPointerException, IllegalArgumentException
-    {
-        if (doctor == null) {
-            NullPointerException nullPointerException =
-                    new NullPointerException("Doctor cannot be null");
-            throw nullPointerException;
-        }
+	    String sql = "INSERT INTO Surgery "
+	            + "(id, type, date, price, turn, patient_id) "
+	            + "VALUES (?, ?, ?, ?, ?, ?)";
 
-        if (doctor.getMedical_license_number() < 0) {
-            IllegalArgumentException illegalArgumentException =
-                    new IllegalArgumentException("Doctor medical license number cannot be negative");
-            throw illegalArgumentException;
-        }
+	    try (PreparedStatement p = c.prepareStatement(sql)) {
 
-        String sql = "INSERT INTO DOCTOR_SURGERY "
-                + "(doctor_medical_license_number, surgery_identificator) "
-                + "VALUES (?, ?)";
+	        p.setInt(1, surgery.getId());
+	        p.setString(2, surgery.getType().name());
+	        p.setDate(3, java.sql.Date.valueOf(surgery.getDate()));
+	        p.setDouble(4, surgery.getPrice());
+	        p.setString(5, surgery.getTurn().name());
+	        p.setInt(6, surgery.getPatient().getId());
 
-        try (PreparedStatement ps = c.prepareStatement(sql)) {
-            ps.setInt(1, doctor.getMedical_license_number());
-            ps.setInt(2, surgery_identificator);
+	        int affectedRows = p.executeUpdate();
 
-            ps.executeUpdate();
+	        if (affectedRows == 0) {
+	            throw new SQLException("Creating surgery failed, no rows affected.");
+	        }
 
-        } catch (SQLException e) {
-            System.out.println("Error adding doctor to surgery");
-            e.printStackTrace();
-        }
-    }
+	    } catch (SQLException e) {
+	        System.out.println("Database error during insertSurgery.");
+	        e.printStackTrace();
+	    }
+	}
+	
+	private Patient getPatientById(int id) throws SQLException {
+        Patient patient = null;
 
-    public void remove_doctor(int doctor_medical_license)
-            throws IllegalArgumentException {
+        String sql = "SELECT * FROM Patient WHERE id = ?";
+        try (PreparedStatement p = c.prepareStatement(sql)) {
+            p.setInt(1, id);
 
-        if (doctor_medical_license < 0) {
-            IllegalArgumentException illegalArgumentException =
-                    new IllegalArgumentException("Doctor medical license cannot be negative");
-            throw illegalArgumentException;
-        }
-
-        String sql = "DELETE FROM DOCTOR_SURGERY "
-                + "WHERE doctor_medical_license_number = ? "
-                + "AND surgery_identificator = ?";
-
-        try (PreparedStatement ps = c.prepareStatement(sql)) {
-            ps.setInt(1, doctor_medical_license);
-            ps.setInt(2, surgery_identificator);
-
-            ps.executeUpdate();
-
-        } catch (SQLException e) {
-            System.out.println("Error removing doctor from surgery");
-            e.printStackTrace();
-        }
-    }
-
-    public void material_used(Stock stock, int amount)
-            throws NullPointerException, IllegalArgumentException {
-
-        if (stock == null) {
-            NullPointerException nullPointerException =
-                    new NullPointerException("Stock cannot be null");
-            throw nullPointerException;
-        }
-
-        if (stock.getReference_code() < 0) {
-            IllegalArgumentException illegalArgumentException =
-                    new IllegalArgumentException("Stock reference code cannot be negative");
-            throw illegalArgumentException;
-        }
-
-        if (amount < 0) {
-            IllegalArgumentException illegalArgumentException =
-                    new IllegalArgumentException("Material amount cannot be negative");
-            throw illegalArgumentException;
-        }
-
-        String sql = "INSERT INTO SURGERY_STOCK "
-                + "(surgery_identificator, stock_reference_code, amount) "
-                + "VALUES (?, ?, ?)";
-
-        try (PreparedStatement ps = c.prepareStatement(sql)) {
-            ps.setInt(1, surgery_identificator);
-            ps.setInt(2, stock.getReference_code());
-            ps.setInt(3, amount);
-
-            ps.executeUpdate();
-
-        } catch (SQLException e) {
-            System.out.println("Error adding material used in surgery");
-            e.printStackTrace();
-        }
-    }
-
-    public void change_surgery_date(LocalDate newDate, Turn turn)
-            throws NullPointerException {
-
-        if (newDate == null) {
-            NullPointerException nullPointerException =
-                    new NullPointerException("New surgery date cannot be null");
-            throw nullPointerException;
-        }
-
-        if (turn == null) {
-            NullPointerException nullPointerException =
-                    new NullPointerException("Turn cannot be null");
-            throw nullPointerException;
-        }
-
-        String sql = "UPDATE SURGERY "
-                + "SET date = ?, turn = ? "
-                + "WHERE identificator = ?";
-
-        try (PreparedStatement ps = c.prepareStatement(sql)) {
-            ps.setDate(1, Date.valueOf(newDate));
-            ps.setString(2, turn.name());
-            ps.setInt(3, surgery_identificator);
-
-            ps.executeUpdate();
-
-        } catch (SQLException e) {
-            System.out.println("Error changing surgery date");
-            e.printStackTrace();
-        }
-    }
-
-    public void cancel_surgery() {
-        String deleteDoctorsSql = "DELETE FROM DOCTOR_SURGERY WHERE surgery_identificator = ?";
-        String deleteMaterialsSql = "DELETE FROM SURGERY_STOCK WHERE surgery_identificator = ?";
-        String deleteSurgerySql = "DELETE FROM SURGERY WHERE identificator = ?";
-
-        try {
-            c.setAutoCommit(false);
-
-            try (PreparedStatement ps = c.prepareStatement(deleteDoctorsSql)) {
-                ps.setInt(1, surgery_identificator);
-                ps.executeUpdate();
-            }
-
-            try (PreparedStatement ps = c.prepareStatement(deleteMaterialsSql)) {
-                ps.setInt(1, surgery_identificator);
-                ps.executeUpdate();
-            }
-
-            try (PreparedStatement ps = c.prepareStatement(deleteSurgerySql)) {
-                ps.setInt(1, surgery_identificator);
-                ps.executeUpdate();
-            }
-
-            c.commit();
-
-        } catch (SQLException e) {
-            try {
-                c.rollback();
-            } catch (SQLException rollbackException) {
-                rollbackException.printStackTrace();
-            }
-
-            System.out.println("Error cancelling surgery");
-            e.printStackTrace();
-
-        } finally {
-            try {
-                c.setAutoCommit(true);
-            } catch (SQLException e) {
-                e.printStackTrace();
-            }
-        }
-    }
-
-    public float calculate_total_price()
-            throws IllegalArgumentException {
-
-        String sql = "SELECT amount_of_hours, tariff "
-                + "FROM SURGERY "
-                + "WHERE identificator = ?";
-
-        try (PreparedStatement ps = c.prepareStatement(sql)) {
-            ps.setInt(1, surgery_identificator);
-
-            try (ResultSet rs = ps.executeQuery()) {
+            try (ResultSet rs = p.executeQuery()) {
                 if (rs.next()) {
-                    float amountOfHours = rs.getFloat("amount_of_hours");
-                    float tariff = rs.getFloat("tariff");
-
-                    if (amountOfHours < 0) {
-                        IllegalArgumentException illegalArgumentException =
-                                new IllegalArgumentException("Surgery amount of hours cannot be negative");
-                        throw illegalArgumentException;
-                    }
-
-                    if (tariff < 0) {
-                        IllegalArgumentException illegalArgumentException =
-                                new IllegalArgumentException("Surgery tariff cannot be negative");
-                        throw illegalArgumentException;
-                    }
-
-                    return amountOfHours * tariff;
+                    patient = new Patient(
+                            rs.getInt("id"),
+                            Sex.valueOf(rs.getString("sex")),
+                            rs.getString("name"),
+                            rs.getString("surname"),
+                            rs.getDate("dob").toLocalDate(),
+                            rs.getInt("height"),
+                            rs.getFloat("weight"),
+                            rs.getBytes("photo"),
+                            rs.getString("info"),
+                            rs.getString("email"),
+                            null,
+                            null
+                    );
                 }
             }
+        }
+
+        return patient;
+    }
+	
+	@Override
+	public Surgery getSurgeryById(int id) throws SQLException {
+	    Surgery surgery = null;
+
+	    String sql = "SELECT * FROM Surgery WHERE id = ?";
+
+	    try (PreparedStatement p = c.prepareStatement(sql)) {
+	        p.setInt(1, id);
+
+	        try (ResultSet rs = p.executeQuery()) {
+	            if (rs.next()) {
+
+	                Patient patient = getPatientById(rs.getInt("patient_id"));
+
+	                surgery = new Surgery(
+	                        rs.getInt("id"),
+	                        rs.getDate("date").toLocalDate(),
+	                        Type_of_surgery.valueOf(rs.getString("type")),
+	                        rs.getDouble("price"),
+	                        Turn.valueOf(rs.getString("turn")),
+	                        patient,
+	                        new ArrayList<>(),
+	                        new ArrayList<>()
+	                );
+	            }
+	        }
+	    }
+
+	    return surgery;
+	}
+	
+	@Override
+    public List<Surgery> listAllSurgeries() {
+        List<Surgery> list = new ArrayList<>();
+
+        String sql = "SELECT * FROM Surgeries";
+
+        try (PreparedStatement p = c.prepareStatement(sql);
+             ResultSet rs = p.executeQuery()) {
+
+            while (rs.next()) {
+                Patient patient = getPatientById(rs.getInt("patient_id"));
+
+                Surgery surgery = new Surgery(
+                        rs.getInt("id"),
+                        rs.getDate("date").toLocalDate(),
+                        Type_of_surgery.valueOf(rs.getString("type")),
+                        rs.getDouble("price"),
+                        Turn.valueOf(rs.getString("turn")),
+                        patient,
+                        new ArrayList<>(),
+                        new ArrayList<>()
+                );
+
+                list.add(surgery);
+            }
 
         } catch (SQLException e) {
-            System.out.println("Error calculating total surgery price");
+            System.out.println("Database error during listAllSurgeries.");
             e.printStackTrace();
         }
 
-        return 0;
+        return list;
     }
+	
+	@Override
+	public void updateSurgery(Surgery surgery) {
 
-    public List<Stock> view_material_used()
-            throws NullPointerException, IllegalArgumentException {
+	    String sql = "UPDATE Surgery "
+	            + "SET type = ?, date = ?, price = ?, turn = ?, patient_id = ? "
+	            + "WHERE id = ?";
 
-        List<Stock> materials = new ArrayList<>();
+	    try (PreparedStatement p = c.prepareStatement(sql)) {
 
-        String sql = "SELECT s.reference_code, s.type, s.amount, s.price, s.origin, s.description "
-                + "FROM STOCK s "
-                + "JOIN SURGERY_STOCK ss "
-                + "ON s.reference_code = ss.stock_reference_code "
-                + "WHERE ss.surgery_identificator = ?";
+	        p.setString(1, surgery.getType().name());
+	        p.setDate(2, java.sql.Date.valueOf(surgery.getDate()));
+	        p.setDouble(3, surgery.getPrice());
+	        p.setString(4, surgery.getTurn().name());
+	        p.setInt(5, surgery.getPatient().getId());
+	        p.setInt(6, surgery.getId());
 
-        try (PreparedStatement ps = c.prepareStatement(sql)) {
-            ps.setInt(1, surgery_identificator);
+	        int affectedRows = p.executeUpdate();
 
-            try (ResultSet rs = ps.executeQuery()) {
+	        if (affectedRows == 0) {
+	            throw new SQLException("Updating surgery failed, no rows affected.");
+	        }
+
+	    } catch (SQLException e) {
+	        System.out.println("Database error during updateSurgery.");
+	        e.printStackTrace();
+	    }
+	}
+
+	@Override
+	public void deleteSurgery(int id) throws SQLException{
+
+	    String sql = "DELETE FROM Surgery WHERE id = ?";
+
+	    try (PreparedStatement p = c.prepareStatement(sql)) {
+
+	        p.setInt(1, id);
+
+	        int affectedRows = p.executeUpdate();
+
+	        if (affectedRows == 0) {
+	            throw new SQLException("Deleting surgery failed, no rows affected.");
+	        }
+
+	    } catch (SQLException e) {
+	        System.out.println("Database error during deleteSurgery.");
+	        e.printStackTrace();
+	    }
+	}
+	
+	@Override
+    public List<Surgery> listSurgeriesByDoctor(int doctor_Id) {
+        List<Surgery> list = new ArrayList<>();
+
+        String sql = "SELECT * FROM Surgery WHERE doctor_id = ?";
+
+        try (PreparedStatement p = c.prepareStatement(sql)) {
+            p.setInt(1, doctor_Id);
+
+            try (ResultSet rs = p.executeQuery()) {
                 while (rs.next()) {
+                    Patient patient = getPatientById(rs.getInt("patient_id"));
 
-                    if (rs.getInt("reference_code") < 0) {
-                        IllegalArgumentException illegalArgumentException =
-                                new IllegalArgumentException("Stock reference code cannot be negative");
-                        throw illegalArgumentException;
-                    }
-
-                    if (rs.getString("type") == null) {
-                        NullPointerException nullPointerException =
-                                new NullPointerException("Stock type cannot be null");
-                        throw nullPointerException;
-                    }
-
-                    if (rs.getInt("amount") < 0) {
-                        IllegalArgumentException illegalArgumentException =
-                                new IllegalArgumentException("Stock amount cannot be negative");
-                        throw illegalArgumentException;
-                    }
-
-                    if (rs.getFloat("price") < 0) {
-                        IllegalArgumentException illegalArgumentException =
-                                new IllegalArgumentException("Stock price cannot be negative");
-                        throw illegalArgumentException;
-                    }
-
-                    if (rs.getString("origin") == null) {
-                        NullPointerException nullPointerException =
-                                new NullPointerException("Stock origin cannot be null");
-                        throw nullPointerException;
-                    }
-
-                    if (rs.getString("description") == null) {
-                        NullPointerException nullPointerException =
-                                new NullPointerException("Stock description cannot be null");
-                        throw nullPointerException;
-                    }
-
-                    Stock stock = new Stock(
-                            rs.getInt("reference_code"),
-                            Type_of_material.valueOf(rs.getString("type")),
-                            rs.getInt("amount"),
-                            rs.getFloat("price"),
-                            Origin.valueOf(rs.getString("origin")),
-                            rs.getString("description")
+                    Surgery surgery = new Surgery(
+                            rs.getInt("id"),
+                            rs.getDate("date").toLocalDate(),
+                            Type_of_surgery.valueOf(rs.getString("type")),
+                            rs.getDouble("price"),
+                            Turn.valueOf(rs.getString("turn")),
+                            patient,
+                            new ArrayList<>(),
+                            new ArrayList<>()
                     );
 
-                    materials.add(stock);
+                    list.add(surgery);
                 }
             }
 
         } catch (SQLException e) {
-            System.out.println("Error viewing material used in surgery");
+            System.out.println("Database error during listAppointmentsByDoctor.");
             e.printStackTrace();
         }
 
-        return materials;
+        return list;
     }
+	
+	
+	@Override
+    public List<Surgery> listSurgeriesByPatient(int patientId) {
+        List<Surgery> list = new ArrayList<>();
+
+        String sql = "SELECT * FROM Surgery WHERE patient_id = ?";
+
+        try (PreparedStatement p = c.prepareStatement(sql)) {
+            p.setInt(1, patientId);
+
+            try (ResultSet rs = p.executeQuery()) {
+                while (rs.next()) {
+                    Patient patient = getPatientById(rs.getInt("patient_id"));
+
+                    Surgery surgery = new Surgery(
+                            rs.getInt("id"),
+                            rs.getDate("date").toLocalDate(),
+                            Type_of_surgery.valueOf(rs.getString("type")),
+                            rs.getDouble("price"),
+                            Turn.valueOf(rs.getString("turn")),
+                            patient,
+                            new ArrayList<>(),
+                            new ArrayList<>()
+                    );
+
+                    list.add(surgery);
+                }
+            }
+
+        } catch (SQLException e) {
+            System.out.println("Database error during listAppointmentsByPatient.");
+            e.printStackTrace();
+        }
+
+        return list;
+    }
+
+
+    /*
+     Faltan hacer los métodos : 
+     - addDoctorToSurgery(doctor_id, surgery_id)
+     - addEquipmentToSurgery(equipment_id, surgery_id)
+     */
+
 }
