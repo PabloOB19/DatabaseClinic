@@ -66,28 +66,36 @@ public class Surgery {
         this.price = price;
     }
 
-    public Turn getTurn() {
-        return turn;
-    }
+	    public Turn getTurn() {
+	        return turn;
+	    }
 
-    public void setTurn(Turn turn) {
-        this.turn = turn;
-    }
+	    public void setTurn(Turn turn) {
+	        this.turn = turn;
+	    }
 
-    public List<Equipment> getEquipment() {
-		return equipment;
-	}
+	    public Patient getPatient() {
+	        return patient;
+	    }
 
-	public void setEquipment(List<Equipment> equipment) {
-		this.equipment = equipment;
-	}
-	public List<Doctor> getDoctors() {
-		return doctors;
-	}
+	    public void setPatient(Patient patient) {
+	        this.patient = patient;
+	    }
 
-	public void setDoctors(List<Doctor> doctors) {
-		this.doctors = doctors;
-	}
+	    public List<Equipment> getEquipment() {
+			return equipment;
+		}
+
+		public void setEquipment(List<Equipment> equipment) {
+			this.equipment = equipment != null ? equipment : new ArrayList<>();
+		}
+		public List<Doctor> getDoctors() {
+			return doctors;
+		}
+
+		public void setDoctors(List<Doctor> doctors) {
+			this.doctors = doctors != null ? doctors : new ArrayList<>();
+		}
 
     @Override
     public String toString() {
