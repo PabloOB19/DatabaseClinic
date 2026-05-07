@@ -1,0 +1,89 @@
+package POJOS;
+
+import java.time.LocalDate;
+import java.util.Objects;
+
+import Enums.Type_of_appointment;
+
+import Enums.Turn;
+
+
+public class Appointment {
+	
+	private int id;
+    private Type_of_appointment type;
+    private LocalDate date;
+    private Turn turn;
+    private double price;
+    
+    public Appointment () {
+
+    }
+    
+    public Appointment(int id, Type_of_appointment type, LocalDate date,
+            Turn turn, double price) 
+{
+    	this.id = id;
+        this.type = type;
+        this.date = date;
+        this.turn = turn;
+        this.price = price;
+        
+        
+}
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public Type_of_appointment getType() {
+        return type;
+    }
+
+    public void setType(Type_of_appointment type) {
+        this.type = type;
+    }
+
+    public LocalDate getDate() {
+        return date;
+    }
+
+    public void setDate(LocalDate date) {
+        this.date = date;
+    }
+
+    public Turn getTurn() {
+        return turn;
+    }
+
+    public void setTurn(Turn turn) {
+        this.turn = turn;
+    }
+
+    public double getPrice() {
+        return price;
+    }
+
+    public void setPrice(double price) {
+        this.price = price;
+    }
+
+
+    @Override
+    public boolean equals(Object object) {
+        if (this == object) return true;
+        if (object == null || getClass() != object.getClass()) return false;
+        Appointment that = (Appointment) object;
+        return id == that.id && Double.compare(price, that.price) == 0 && type == that.type && Objects.equals(date, that.date) && turn == that.turn;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, type, date, turn, price);
+    }
+
+
+}
