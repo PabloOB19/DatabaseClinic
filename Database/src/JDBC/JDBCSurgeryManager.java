@@ -85,10 +85,10 @@ public class JDBCSurgeryManager implements SurgeryManager
         }
 
         return patient;
-    }
+	}
 	
 	@Override
-	public Surgery getSurgeryById(int id) throws SQLException {
+	public Surgery getSurgeryById(int id) {
 	    Surgery surgery = null;
 
 	    String sql = "SELECT * FROM Surgery WHERE id = ?";
@@ -113,6 +113,10 @@ public class JDBCSurgeryManager implements SurgeryManager
 	                );
 	            }
 	        }
+
+	    } catch (SQLException e) {
+	        System.out.println("Database error during getSurgeryById.");
+	        e.printStackTrace();
 	    }
 
 	    return surgery;
@@ -181,7 +185,7 @@ public class JDBCSurgeryManager implements SurgeryManager
 	}
 
 	@Override
-	public void deleteSurgery(int id) throws SQLException{
+	public void deleteSurgery(int id) {
 
 	    String sql = "DELETE FROM Surgery WHERE id = ?";
 

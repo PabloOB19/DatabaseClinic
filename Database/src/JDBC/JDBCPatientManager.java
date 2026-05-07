@@ -67,10 +67,11 @@ public class JDBCPatientManager implements PatientManager{
     }
     
     @Override
-    public Patient getPatientById(int id){
+    public Patient getPatientById(int id) {
         Patient patient = null;
 
         String sql = "SELECT * FROM Patient WHERE id = ?";
+
         try (PreparedStatement p = c.prepareStatement(sql)) {
             p.setInt(1, id);
 
@@ -92,12 +93,14 @@ public class JDBCPatientManager implements PatientManager{
                     );
                 }
             }
-   
+
+        } catch (SQLException e) {
+            System.out.println("Database error during getPatientById.");
+            e.printStackTrace();
+        }
 
         return patient;
     }
-}
-
 
     @Override
     public List<Patient> listAllPatients() {
