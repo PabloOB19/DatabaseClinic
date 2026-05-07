@@ -138,18 +138,52 @@ public class JDBCDoctorManager implements DoctorManager {
         }
     }
 
+   
     @Override
     public void deleteDoctor(int id) {
-        String sql = "DELETE FROM Doctor WHERE id = ?";
+        String deleteDoctorSurgeriesSql = "DELETE FROM DOCTOR_SURGERY WHERE doctor_id = ?";
+        String deleteAppointmentsSql = "DELETE FROM Appointment WHERE doctor_id = ?";
+        String deleteDoctorSql = "DELETE FROM Doctor WHERE id = ?";
 
-        try (PreparedStatement p = c.prepareStatement(sql)) {
-            p.setInt(1, id);
-            p.executeUpdate();
+        try {
+            c.setAutoCommit(false);
+
+            try (PreparedStatement p = c.prepareStatement(deleteDoctorSurgeriesSql)) {
+                p.setInt(1, id);
+                p.executeUpdate();
+            }
+
+            try (PreparedStatement p = c.prepareStatement(deleteAppointmentsSql)) {
+                p.setInt(1, id);
+                p.executeUpdate();
+            }
+
+            try (PreparedStatement p = c.prepareStatement(deleteDoctorSql)) {
+                p.setInt(1, id);
+                p.executeUpdate();
+            }
+
+            c.commit();
+
         } catch (SQLException e) {
+            try {
+                c.rollback();
+            } catch (SQLException rollbackException) {
+                rollbackException.printStackTrace();
+            }
+
             System.out.println("Database error during deleteDoctor.");
             e.printStackTrace();
+
+        } finally {
+            try {
+                c.setAutoCommit(true);
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
         }
     }
+
 
     @Override
     public void addDoctorToAppointment(int doctor_id, int appointment_id) {

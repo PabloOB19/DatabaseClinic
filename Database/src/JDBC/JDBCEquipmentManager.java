@@ -48,8 +48,7 @@ public class JDBCEquipmentManager implements EquipmentManager {
         }
     }
 
-    
-    
+
    
     @Override
     public Equipment getEquipmentById(int id) {
@@ -134,19 +133,46 @@ public class JDBCEquipmentManager implements EquipmentManager {
         }
     }
 
+   
     @Override
     public void deleteEquipment(int id) {
-        String sql = "DELETE FROM Equipment WHERE id = ?";
+        String deleteRelationsSql = "DELETE FROM SURGERY_EQUIPMENT WHERE equipment_id = ?";
+        String deleteEquipmentSql = "DELETE FROM Equipment WHERE id = ?";
 
-        try (PreparedStatement p = c.prepareStatement(sql)) {
-            p.setInt(1, id);
-            p.executeUpdate();
+        try {
+            c.setAutoCommit(false);
+
+            try (PreparedStatement p = c.prepareStatement(deleteRelationsSql)) {
+                p.setInt(1, id);
+                p.executeUpdate();
+            }
+
+            try (PreparedStatement p = c.prepareStatement(deleteEquipmentSql)) {
+                p.setInt(1, id);
+                p.executeUpdate();
+            }
+
+            c.commit();
+
         } catch (SQLException e) {
+            try {
+                c.rollback();
+            } catch (SQLException rollbackException) {
+                rollbackException.printStackTrace();
+            }
+
             System.out.println("Database error during deleteEquipment.");
             e.printStackTrace();
+
+        } finally {
+            try {
+                c.setAutoCommit(true);
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
         }
     }
-    
+
     @Override
     public List<Equipment> listEquipmentBySurgery(int surgery_Id) {
         List<Equipment> list = new ArrayList<>();

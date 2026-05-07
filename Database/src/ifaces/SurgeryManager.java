@@ -13,5 +13,7 @@ public interface SurgeryManager
 	void deleteSurgery(int id);
 	List<Surgery> listSurgeriesByDoctor(int doctorId);
 	List<Surgery> listSurgeriesByPatient(int patientId);
+	void addDoctorToSurgery(int doctorId, int surgeryId);
+	void addEquipmentToSurgery(int equipmentId, int surgeryId);
 
 }

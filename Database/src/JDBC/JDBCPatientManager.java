@@ -1,27 +1,13 @@
 package JDBC;
 
-import java.sql.Connection;
-import java.sql.Date;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
-import java.time.LocalDate;
+import java.sql.*;
+
 import java.util.ArrayList;
 import java.util.List;
 
-import Enums.Sex;
-import Enums.Turn;
-import Enums.Type_of_appointment;
-import Enums.Type_of_surgery;
-import Exceptions.InvalidAmountOfSurgeries;
-import Exceptions.InvalidIdentificator;
-import Exceptions.InvalidPhoneNumber;
-import Exceptions.InvalidPrice;
-import POJOS.Appointment;
-import POJOS.Doctor;
-import POJOS.Patient;
-import POJOS.Surgery;
+import Enums.*;
+
+import POJOS.*;
 import ifaces.PatientManager;
 
 public class JDBCPatientManager implements PatientManager{
@@ -182,17 +168,70 @@ public class JDBCPatientManager implements PatientManager{
         }
     }
 
+    
     @Override
     public void deletePatient(int id) {
-        String sql = "DELETE FROM Patient WHERE id = ?";
+        String deleteAppointmentsSql = "DELETE FROM Appointment WHERE patient_id = ?";
 
-        try (PreparedStatement p = c.prepareStatement(sql)) {
-            p.setInt(1, id);
-            p.executeUpdate();
+        String deleteDoctorSurgerySql =
+                "DELETE FROM DOCTOR_SURGERY " +
+                "WHERE surgery_id IN (SELECT id FROM Surgery WHERE patient_id = ?)";
+
+        String deleteSurgeryEquipmentSql =
+                "DELETE FROM SURGERY_EQUIPMENT " +
+                "WHERE surgery_id IN (SELECT id FROM Surgery WHERE patient_id = ?)";
+
+        String deleteSurgeriesSql = "DELETE FROM Surgery WHERE patient_id = ?";
+        String deletePatientSql = "DELETE FROM Patient WHERE id = ?";
+
+        try {
+            c.setAutoCommit(false);
+
+            try (PreparedStatement p = c.prepareStatement(deleteAppointmentsSql)) {
+                p.setInt(1, id);
+                p.executeUpdate();
+            }
+
+            try (PreparedStatement p = c.prepareStatement(deleteDoctorSurgerySql)) {
+                p.setInt(1, id);
+                p.executeUpdate();
+            }
+
+            try (PreparedStatement p = c.prepareStatement(deleteSurgeryEquipmentSql)) {
+                p.setInt(1, id);
+                p.executeUpdate();
+            }
+
+            try (PreparedStatement p = c.prepareStatement(deleteSurgeriesSql)) {
+                p.setInt(1, id);
+                p.executeUpdate();
+            }
+
+            try (PreparedStatement p = c.prepareStatement(deletePatientSql)) {
+                p.setInt(1, id);
+                p.executeUpdate();
+            }
+
+            c.commit();
+
         } catch (SQLException e) {
+            try {
+                c.rollback();
+            } catch (SQLException rollbackException) {
+                rollbackException.printStackTrace();
+            }
+
             System.out.println("Database error during deletePatient.");
             e.printStackTrace();
+
+        } finally {
+            try {
+                c.setAutoCommit(true);
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
         }
     }
+
     
 }

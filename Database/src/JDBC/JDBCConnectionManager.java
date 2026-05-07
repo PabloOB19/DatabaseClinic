@@ -13,6 +13,9 @@ public class JDBCConnectionManager {
         try {
             Class.forName("org.sqlite.JDBC");
             c = DriverManager.getConnection("jdbc:sqlite:db/database.db");
+            Statement statement = c.createStatement();
+            statement.execute("PRAGMA foreign_keys = ON");
+            statement.close();
             createTables();
             return c;
         } catch (Exception e) {
@@ -20,7 +23,9 @@ public class JDBCConnectionManager {
             e.printStackTrace();
             return null;
         }
+        
     }
+    
 
     private void createTables() {
         try {

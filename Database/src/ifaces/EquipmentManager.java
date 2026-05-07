@@ -13,7 +13,6 @@ public interface EquipmentManager {
 	void deleteEquipment(int id);
 	List<Equipment> listEquipmentBySurgery(int surgery_Id);
 	List<Equipment> listEquipmentByCategory (Category category); 
-	
 
 
 }

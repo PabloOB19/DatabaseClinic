@@ -11,6 +11,6 @@ public interface AppointmentManager {
     void updateAppointment(Appointment appointment)  ;
     void deleteAppointment(int id) ;
     List<Appointment> listAppointmentsByDoctor(int doctor_Id);
-    List<Appointment> listAppointmentsByPatient(int patientId);
+    List<Appointment> listAppointmentsByPatient(int patient_Id);
     
 }

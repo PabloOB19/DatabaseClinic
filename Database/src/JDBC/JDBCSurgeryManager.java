@@ -1,22 +1,11 @@
 package JDBC;
 
-import java.sql.Connection;
-import java.sql.Date;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.time.LocalDate;
+import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
-import Enums.Sex;
-import Enums.Turn;
-import Enums.Type_of_appointment;
-import Enums.Type_of_surgery;
-import POJOS.Appointment;
-import POJOS.Doctor;
-import POJOS.Patient;
-import POJOS.Surgery;
+import Enums.*;
+import POJOS.*;
 import ifaces.SurgeryManager;
 
 public class JDBCSurgeryManager implements SurgeryManager
@@ -133,7 +122,7 @@ public class JDBCSurgeryManager implements SurgeryManager
     public List<Surgery> listAllSurgeries() {
         List<Surgery> list = new ArrayList<>();
 
-        String sql = "SELECT * FROM Surgeries";
+        String sql = "SELECT * FROM Surgery";
 
         try (PreparedStatement p = c.prepareStatement(sql);
              ResultSet rs = p.executeQuery()) {
@@ -318,11 +307,36 @@ public class JDBCSurgeryManager implements SurgeryManager
         return list;
     }
 
+	@Override
+	public void addDoctorToSurgery(int doctorId, int surgeryId) {
+	    String sql = "INSERT INTO DOCTOR_SURGERY (doctor_id, surgery_id) VALUES (?, ?)";
 
-    /*
-     Faltan hacer los métodos : 
-     - addDoctorToSurgery(doctor_id, surgery_id)
-     - addEquipmentToSurgery(equipment_id, surgery_id)
-     */
+	    try (PreparedStatement p = c.prepareStatement(sql)) {
+	        p.setInt(1, doctorId);
+	        p.setInt(2, surgeryId);
 
+	        p.executeUpdate();
+
+	    } catch (SQLException e) {
+	        System.out.println("Database error during addDoctorToSurgery.");
+	        e.printStackTrace();
+	    }
+	}
+	@Override
+	public void addEquipmentToSurgery(int equipmentId, int surgeryId) {
+	    String sql = "INSERT INTO SURGERY_EQUIPMENT (surgery_id, equipment_id) VALUES (?, ?)";
+
+	    try (PreparedStatement p = c.prepareStatement(sql)) {
+	        p.setInt(1, surgeryId);
+	        p.setInt(2, equipmentId);
+
+	        p.executeUpdate();
+
+	    } catch (SQLException e) {
+	        System.out.println("Database error during addEquipmentToSurgery.");
+	        e.printStackTrace();
+	    }
+	}
+
+	
 }
