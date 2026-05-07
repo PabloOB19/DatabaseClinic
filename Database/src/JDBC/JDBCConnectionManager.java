@@ -27,7 +27,7 @@ public class JDBCConnectionManager {
             Statement s = c.createStatement();
 
             String patientTable = "CREATE TABLE IF NOT EXISTS Patient (" +
-                    "id TEXT PRIMARY KEY, " +
+                    "id INTEGER PRIMARY KEY, " +
                     "name TEXT, " +
                     "surname TEXT, " +
                     "email TEXT, " +
@@ -55,7 +55,7 @@ public class JDBCConnectionManager {
                     "price DOUBLE, " +
                     "turn TEXT, " +
                     "doctor_id INTEGER, " +
-                    "patient_id TEXT, " +
+                    "patient_id INTEGER, " +
                     "FOREIGN KEY (doctor_id) REFERENCES Doctor(id), " +
                     "FOREIGN KEY (patient_id) REFERENCES Patient(id))";
 
@@ -65,7 +65,7 @@ public class JDBCConnectionManager {
                     "date DATE, " +
                     "price DOUBLE, " +
                     "turn TEXT, " +
-                    "patient_id TEXT, " +
+                    "patient_id INTEGER, " +
                     "FOREIGN KEY (patient_id) REFERENCES Patient(id))";
 
 
