@@ -4,7 +4,7 @@ import java.time.LocalDate;
 import java.util.*;
 
 
-import Enums.Sex;
+import Enums.*;
 
 public class Doctor 
 {
@@ -16,21 +16,28 @@ public class Doctor
     private String email;
     private String speciality;
     private LocalDate dob;
+    private List<Appointment> appointments;
+    private List<Surgery> surgeries;
 
-    public Doctor() 
-    {
+    public Doctor() {
+        this.appointments = new ArrayList<>();
+        this.surgeries = new ArrayList<>();
     }
-    public Doctor(int id, String name, String surname, byte[] photo, Sex sex, String email, String speciality, LocalDate dob)
-    {
-        this.id = id;
-        this.name = name;
-        this.surname = surname;
-        this.photo = photo;
-        this.sex = sex;
-        this.email = email;
-        this.speciality = speciality;
-        this.dob = dob;
-    }
+
+    public Doctor(int id, String name, String surname, byte[] photo, Sex sex,
+            String email, String speciality, LocalDate dob,
+            List<Appointment> appointments, List<Surgery> surgeries) {
+		  this.id = id;
+		  this.name = name;
+		  this.surname = surname;
+		  this.photo = photo;
+		  this.sex = sex;
+		  this.email = email;
+		  this.speciality = speciality;
+		  this.dob = dob;
+		  this.appointments = appointments != null ? appointments : new ArrayList<>();
+		  this.surgeries = surgeries != null ? surgeries : new ArrayList<>();
+		}
 
     public int getId() {
         return id;
@@ -94,6 +101,22 @@ public class Doctor
 
     public void setDob(LocalDate dob) {
         this.dob = dob;
+    }
+    
+    public List<Appointment> getAppointments() {
+        return appointments;
+    }
+
+    public void setAppointments(List<Appointment> appointments) {
+        this.appointments = appointments != null ? appointments : new ArrayList<>();
+    }
+
+    public List<Surgery> getSurgeries() {
+        return surgeries;
+    }
+
+    public void setSurgeries(List<Surgery> surgeries) {
+        this.surgeries = surgeries != null ? surgeries : new ArrayList<>();
     }
 
     @Override

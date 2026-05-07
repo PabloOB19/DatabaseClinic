@@ -1,11 +1,10 @@
 package POJOS;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 
-import Enums.Sex;
+
+import Enums.*;
 
 public class Patient {
 

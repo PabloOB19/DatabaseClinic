@@ -3,7 +3,7 @@ package POJOS;
 import java.time.LocalDate;
 import java.util.*;
 
-import Enums.Category;
+import Enums.*;
 
 public class Equipment {
 
@@ -87,15 +87,7 @@ public class Equipment {
         this.surgeries = surgeries != null ? surgeries : new ArrayList<>();
     }
 
-    public void addSurgery(Surgery surgery) {
-        if (surgery != null && !surgeries.contains(surgery)) {
-            surgeries.add(surgery);
-        }
-    }
-
-    public void removeSurgery(Surgery surgery) {
-        surgeries.remove(surgery);
-    }
+   
 
     @Override
     public boolean equals(Object object) {
