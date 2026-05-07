@@ -211,13 +211,13 @@ public class JDBCAppointmentManager implements AppointmentManager {
     }
     
     @Override
-    public List<Appointment> listAppointmentsByDoctor(int doctorId) {
+    public List<Appointment> listAppointmentsByDoctor(int doctor_Id) {
         List<Appointment> list = new ArrayList<>();
 
         String sql = "SELECT * FROM Appointment WHERE doctor_id = ?";
 
         try (PreparedStatement p = c.prepareStatement(sql)) {
-            p.setInt(1, doctorId);
+            p.setInt(1, doctor_Id);
 
             try (ResultSet rs = p.executeQuery()) {
                 while (rs.next()) {

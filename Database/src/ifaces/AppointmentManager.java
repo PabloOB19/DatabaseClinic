@@ -10,7 +10,7 @@ public interface AppointmentManager {
 	List<Appointment> listAllAppointments();
     void updateAppointment(Appointment appointment)  ;
     void deleteAppointment(int id) ;
-    List<Appointment> listAppointmentsByDoctor(int doctorId);
+    List<Appointment> listAppointmentsByDoctor(int doctor_Id);
     List<Appointment> listAppointmentsByPatient(int patientId);
 	
 

@@ -19,13 +19,13 @@ public class Equipment {
         this.surgeries = new ArrayList<>();
     }
 
-    public Equipment(int id, String name, int quantity, double price, Category category,
+    public Equipment(int id, String name,Category category, int quantity, double price, 
                      LocalDate expiration_date, List<Surgery> surgeries) {
         this.id = id;
         this.name = name;
+        this.category = category;
         this.quantity = quantity;
         this.price = price;
-        this.category = category;
         this.expiration_date = expiration_date;
         this.surgeries = surgeries != null ? surgeries : new ArrayList<>();
     }
