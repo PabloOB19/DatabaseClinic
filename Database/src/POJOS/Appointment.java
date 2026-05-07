@@ -3,8 +3,8 @@ package POJOS;
 import java.time.LocalDate;
 import java.util.Objects;
 
-import Enums.Type_of_appointment;
-import Enums.Turn;
+import Enums.*;
+
 
 public class Appointment {
 

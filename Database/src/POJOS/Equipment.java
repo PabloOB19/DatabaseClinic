@@ -12,7 +12,7 @@ public class Equipment {
     private int quantity;
     private double price;
     private Category category;
-    private LocalDate expirationDate;
+    private LocalDate expiration_date;
     private List<Surgery> surgeries;
 
     public Equipment() {
@@ -20,13 +20,13 @@ public class Equipment {
     }
 
     public Equipment(int id, String name, int quantity, double price, Category category,
-                     LocalDate expirationDate, List<Surgery> surgeries) {
+                     LocalDate expiration_date, List<Surgery> surgeries) {
         this.id = id;
         this.name = name;
         this.quantity = quantity;
         this.price = price;
         this.category = category;
-        this.expirationDate = expirationDate;
+        this.expiration_date = expiration_date;
         this.surgeries = surgeries != null ? surgeries : new ArrayList<>();
     }
 
@@ -71,12 +71,12 @@ public class Equipment {
         this.category = category;
     }   
 
-    public LocalDate getExpirationDate() {
-        return expirationDate;
+    public LocalDate getExpiration_date() {
+        return expiration_date;
     }
 
-    public void setExpirationDate(LocalDate expirationDate) {
-        this.expirationDate = expirationDate;
+    public void setExpiration_date(LocalDate expiration_date) {
+        this.expiration_date = expiration_date;
     }   
 
     public List<Surgery> getSurgeries() {
@@ -118,7 +118,7 @@ public class Equipment {
                 ", quantity=" + quantity +
                 ", price=" + price +
                 ", category=" + category +
-                ", expirationDate=" + expirationDate +
+                ", expirationDate=" + expiration_date +
                 '}';
     }
 }
