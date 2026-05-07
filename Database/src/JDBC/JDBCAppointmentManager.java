@@ -6,8 +6,9 @@ import java.util.*;
 
 import Enums.*;
 import POJOS.*;
+import ifaces.AppointmentManager;
 
-public class JDBCAppointmentManager {
+public class JDBCAppointmentManager implements AppointmentManager {
 
     private Connection c;
 
@@ -15,6 +16,7 @@ public class JDBCAppointmentManager {
         this.c = c;
     }
 
+    @Override
     public void insertAppointment(Appointment appointment) {
         String sql = "INSERT INTO Appointment (type, date, price, turn, doctor_id, patient_id) VALUES (?, ?, ?, ?, ?, ?)";
 
@@ -46,6 +48,7 @@ public class JDBCAppointmentManager {
         }
     }
 
+    
     private Doctor getDoctorById(int id) throws SQLException {
         Doctor doctor = null;
 
@@ -74,6 +77,7 @@ public class JDBCAppointmentManager {
         return doctor;
     }
 
+    
     private Patient getPatientById(int id) throws SQLException {
         Patient patient = null;
 
@@ -104,7 +108,7 @@ public class JDBCAppointmentManager {
         return patient;
     }
 
-
+    @Override
     public Appointment getAppointmentById(int id) {
         Appointment result = null;
 
@@ -138,7 +142,7 @@ public class JDBCAppointmentManager {
         return result;
     }
 
-
+    @Override
     public List<Appointment> listAllAppointments() {
         List<Appointment> list = new ArrayList<>();
 
@@ -172,7 +176,7 @@ public class JDBCAppointmentManager {
         return list;
     }
 
-
+    @Override
     public void updateAppointment(Appointment appointment) {
         String sql = "UPDATE Appointment SET type = ?, date = ?, price = ?, turn = ?, doctor_id = ?, patient_id = ? WHERE id = ?";
 
@@ -193,7 +197,7 @@ public class JDBCAppointmentManager {
         }
     }
 
-
+    @Override
     public void deleteAppointment(int id) {
         String sql = "DELETE FROM Appointment WHERE id = ?";
 
@@ -205,7 +209,8 @@ public class JDBCAppointmentManager {
             e.printStackTrace();
         }
     }
-
+    
+    @Override
     public List<Appointment> listAppointmentsByDoctor(int doctorId) {
         List<Appointment> list = new ArrayList<>();
 
@@ -241,7 +246,7 @@ public class JDBCAppointmentManager {
         return list;
     }
 
-
+    @Override
     public List<Appointment> listAppointmentsByPatient(int patientId) {
         List<Appointment> list = new ArrayList<>();
 

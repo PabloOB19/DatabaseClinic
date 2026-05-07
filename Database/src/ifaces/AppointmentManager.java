@@ -3,7 +3,15 @@ package ifaces;
 import java.util.List;
 import POJOS.*;
 
-public class AppointmentManager {
+public interface AppointmentManager {
+	
+	void insertAppointment(Appointment appointment);
+	Appointment getAppointmentById(int id);
+	List<Appointment> listAllAppointments();
+    void updateAppointment(Appointment appointment)  ;
+    void deleteAppointment(int id) ;
+    List<Appointment> listAppointmentsByDoctor(int doctorId);
+    List<Appointment> listAppointmentsByPatient(int patientId);
 	
 
 }
