@@ -27,97 +27,79 @@ public class JDBCConnectionManager {
             Statement s = c.createStatement();
 
             String patientTable = "CREATE TABLE IF NOT EXISTS Patient (" +
-                    "dni TEXT PRIMARY KEY, " +
+                    "id TEXT PRIMARY KEY, " +
                     "name TEXT, " +
                     "surname TEXT, " +
-                    "date_of_birth DATE, " +
+                    "dob DATE, " +
                     "sex TEXT, " +
                     "height INTEGER, " +
-                    "weight INTEGER, " +
+                    "weight FLOAT, " +
                     "photo BLOB, " +
-                    "phone_number INTEGER, " +
                     "email TEXT, " +
-                    "address TEXT, " +
-                    "payment_method TEXT, " +
-                    "clinical_history TEXT, " +
-                    "personal_information TEXT)";
+                    "info TEXT)";
 
             String doctorTable = "CREATE TABLE IF NOT EXISTS Doctor (" +
-                    "medical_license_number INTEGER PRIMARY KEY, " +
+                    "id INTEGER PRIMARY KEY, " +
                     "name TEXT, " +
                     "surname TEXT, " +
                     "photo BLOB, " +
                     "sex TEXT, " +
-                    "date_of_birth DATE, " +
-                    "phone_number INTEGER, " +
+                    "dob DATE, " +
                     "email TEXT, " +
-                    "speciality TEXT, " +
-                    "salary DOUBLE, " +
-                    "amount_of_surgeries INT)";
+                    "speciality TEXT)";
             
             String appointmentTable = "CREATE TABLE IF NOT EXISTS Appointment (" +
-                    "identificator INTEGER PRIMARY KEY, " +
+                    "id INTEGER PRIMARY KEY, " +
                     "type TEXT, " +
                     "date DATE, " +
                     "turn TEXT, " +
-                    "price FLOAT, " +
-                    "payment_status TEXT, " +
-                    "patient_dni TEXT, " +
-                    "doctor_license INTEGER, " +
-                    "FOREIGN KEY (patient_dni) REFERENCES Patient(dni), " +
-                    "FOREIGN KEY (doctor_license) REFERENCES Doctor(medical_license_number))";
+                    "price DOUBLE, " +
+                    "patient_id TEXT, " +
+                    "doctor_id INTEGER, " +
+                    "FOREIGN KEY (patient_id) REFERENCES Patient(id), " +
+                    "FOREIGN KEY (doctor_id) REFERENCES Doctor(id))";
 
             String surgeryTable = "CREATE TABLE IF NOT EXISTS Surgery (" +
-                    "identificator INTEGER PRIMARY KEY, " +
+                    "id INTEGER PRIMARY KEY, " +
                     "type TEXT, " +
                     "date DATE, " +
                     "turn TEXT, " +
-                    "price FLOAT, " +
-                    "amount_of_hours INTEGER, " +
-                    "tariff INTEGER, " +
-                    "payment_status TEXT, " +
-                    "patient_dni TEXT, " +
-                    "FOREIGN KEY (patient_dni) REFERENCES Patient(dni))";
+                    "price DOUBLE, " +
+                    "patient_id TEXT, " +
+                    "FOREIGN KEY (patient_id) REFERENCES Patient(id))";
 
 
-            String stockTable = "CREATE TABLE IF NOT EXISTS Stock (" +
-                    "reference_code INTEGER PRIMARY KEY, " +
-                    "type TEXT, " +
-                    "amount INTEGER, " +
-                    "price FLOAT, " +
-                    "origin TEXT, " +
-                    "description TEXT)";
+            String equipmentTable = "CREATE TABLE IF NOT EXISTS Equipment (" +
+                    "id INTEGER PRIMARY KEY, " +
+                    "name TEXT, " +
+                    "quantity INTEGER, " +
+                    "price DOUBLE, " +
+                    "category TEXT, " +
+                    "expiration_date DATE)";
 
             String doctorSurgeryTable = "CREATE TABLE IF NOT EXISTS DOCTOR_SURGERY (" +
-                    "doctor_medical_license_number INTEGER NOT NULL, " +
-                    "surgery_identificator INTEGER NOT NULL, " +
-                    "PRIMARY KEY (doctor_medical_license_number, surgery_identificator), " +
-                    "FOREIGN KEY (doctor_medical_license_number) REFERENCES Doctor(medical_license_number), " +
-                    "FOREIGN KEY (surgery_identificator) REFERENCES Surgery(identificator))";
+                    "doctor_id INTEGER NOT NULL, " +
+                    "surgery_id INTEGER NOT NULL, " +
+                    "PRIMARY KEY (doctor_id, surgery_id), " +
+                    "FOREIGN KEY (doctor_id) REFERENCES Doctor(id), " +
+                    "FOREIGN KEY (surgery_id) REFERENCES Surgery(id))";
 
-            String doctorStockTable = "CREATE TABLE IF NOT EXISTS DOCTOR_STOCK (" +
-                    "doctor_medical_license_number INTEGER NOT NULL, " +
-                    "stock_reference_code INTEGER NOT NULL, " +
-                    "PRIMARY KEY (doctor_medical_license_number, stock_reference_code), " +
-                    "FOREIGN KEY (doctor_medical_license_number) REFERENCES Doctor(medical_license_number), " +
-                    "FOREIGN KEY (stock_reference_code) REFERENCES Stock(reference_code))";
 
-            String surgeryStockTable = "CREATE TABLE IF NOT EXISTS SURGERY_STOCK (" +
-                    "surgery_identificator INTEGER NOT NULL, " +
-                    "stock_reference_code INTEGER NOT NULL, " +
+            String surgeryEquipmentTable = "CREATE TABLE IF NOT EXISTS SURGERY_EQUIPMENT (" +
+                    "surgery_id INTEGER NOT NULL, " +
+                    "equipment_id INTEGER NOT NULL, " +
                     "amount INTEGER NOT NULL, " +
-                    "PRIMARY KEY (surgery_identificator, stock_reference_code), " +
-                    "FOREIGN KEY (stock_reference_code) REFERENCES Stock(reference_code), " +
-                    "FOREIGN KEY (surgery_identificator) REFERENCES Surgery(identificator))";
+                    "PRIMARY KEY (surgery_id, equipment_id), " +
+                    "FOREIGN KEY (equipment_id) REFERENCES Equipment(id), " +
+                    "FOREIGN KEY (surgery_id) REFERENCES Surgery(id))";
             
             s.executeUpdate(patientTable);
             s.executeUpdate(doctorTable);
             s.executeUpdate(appointmentTable);
             s.executeUpdate(surgeryTable);
-            s.executeUpdate(stockTable);
+            s.executeUpdate(equipmentTable);
             s.executeUpdate(doctorSurgeryTable);
-            s.executeUpdate(doctorStockTable);
-            s.executeUpdate(surgeryStockTable);
+            s.executeUpdate(surgeryEquipmentTable);
 
             s.close();
 
