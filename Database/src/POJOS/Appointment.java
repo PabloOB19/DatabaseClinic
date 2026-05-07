@@ -3,9 +3,8 @@ package POJOS;
 import java.time.LocalDate;
 import java.util.Objects;
 
-import Enums.Type_of_appointment;
 
-import Enums.Turn;
+import Enums.*;
 
 
 public class Appointment {
@@ -80,6 +79,12 @@ public class Appointment {
         return id == that.id && Double.compare(price, that.price) == 0 && type == that.type && Objects.equals(date, that.date) && turn == that.turn;
     }
 
+    
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, type, date, turn, price);
+    }
+    
     @Override
     public String toString() {
         return "Appointment{" +
@@ -89,11 +94,6 @@ public class Appointment {
                 ", turn=" + turn +
                 ", price=" + price +
                 '}';
-    }
-    
-    @Override
-    public int hashCode() {
-        return Objects.hash(id, type, date, turn, price);
     }
 
 
