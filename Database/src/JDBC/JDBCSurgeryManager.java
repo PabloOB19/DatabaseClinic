@@ -263,7 +263,7 @@ public class JDBCSurgeryManager implements SurgeryManager
             }
 
         } catch (SQLException e) {
-            System.out.println("Database error during listAppointmentsByDoctor.");
+            System.out.println("Database error during listSurgeriesByDoctor.");
             e.printStackTrace();
         }
 
@@ -300,7 +300,7 @@ public class JDBCSurgeryManager implements SurgeryManager
             }
 
         } catch (SQLException e) {
-            System.out.println("Database error during listAppointmentsByPatient.");
+            System.out.println("Database error during listSurgeriesByPatient.");
             e.printStackTrace();
         }
 
