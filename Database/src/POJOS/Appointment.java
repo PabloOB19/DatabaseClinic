@@ -15,13 +15,14 @@ public class Appointment {
     private Turn turn;
     private double price;
     private Doctor doctor;
+    private Patient patient;
     
     public Appointment () {
 
     }
     
     public Appointment(int id, Type_of_appointment type, LocalDate date,
-            Turn turn, double price, Doctor doctor) 
+            Turn turn, double price, Doctor doctor, Patient patient) 
 {
     	this.id = id;
         this.type = type;
@@ -29,6 +30,7 @@ public class Appointment {
         this.turn = turn;
         this.price = price;
         this.doctor=doctor;
+        this.patient= patient;
         
         
 }
@@ -79,6 +81,14 @@ public class Appointment {
     public void setDoctor(Doctor doctor) {
         this.doctor = doctor;
     }
+    
+    public Patient getPatient() {
+        return patient;
+    }
+
+    public void setPatient(Patient patient) {
+        this.patient = patient;
+    }
 
 
     @Override
@@ -86,15 +96,13 @@ public class Appointment {
         if (this == object) return true;
         if (object == null || getClass() != object.getClass()) return false;
         Appointment that = (Appointment) object;
-        return id == that.id && Double.compare(price, that.price) == 0 && type == that.type 
-        	&& Objects.equals(date, that.date) && turn == that.turn 
-        	&& Objects.equals(doctor, that.doctor) ;
+        return id == that.id;
     }
 
     
     @Override
     public int hashCode() {
-        return Objects.hash(id, type, date, turn, price, doctor);
+        return Objects.hash(id);
     }
     
     @Override
@@ -105,7 +113,8 @@ public class Appointment {
                 ", date=" + date +
                 ", turn=" + turn +
                 ", price=" + price +
-                 ", doctor=" + doctor +
+                ", doctorId=" + (doctor != null ? doctor.getId() : null) +
+                ", patientId=" + (patient != null ? patient.getId() : null) +
                 '}';
     }
 
