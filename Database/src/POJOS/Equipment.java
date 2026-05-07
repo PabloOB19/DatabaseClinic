@@ -1,9 +1,7 @@
 package POJOS;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 
 import Enums.Category;
 
@@ -21,18 +19,18 @@ public class Equipment {
         this.surgeries = new ArrayList<>();
     }
 
-    
     public Equipment(int id, String name, int quantity, double price, Category category,
-                     LocalDate expirationDate) {
+                     LocalDate expirationDate, List<Surgery> surgeries) {
         this.id = id;
         this.name = name;
         this.quantity = quantity;
         this.price = price;
         this.category = category;
         this.expirationDate = expirationDate;
-        this.surgeries = new ArrayList<>();
+        this.surgeries = surgeries != null ? surgeries : new ArrayList<>();
     }
 
+ 
     public int getId() {
         return id;
     }
@@ -89,6 +87,15 @@ public class Equipment {
         this.surgeries = surgeries != null ? surgeries : new ArrayList<>();
     }
 
+    public void addSurgery(Surgery surgery) {
+        if (surgery != null && !surgeries.contains(surgery)) {
+            surgeries.add(surgery);
+        }
+    }
+
+    public void removeSurgery(Surgery surgery) {
+        surgeries.remove(surgery);
+    }
 
     @Override
     public boolean equals(Object object) {

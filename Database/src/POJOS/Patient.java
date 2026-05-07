@@ -1,41 +1,47 @@
 package POJOS;
 
 import java.time.LocalDate;
-import java.util.Arrays;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 
 import Enums.Sex;
 
 public class Patient {
-	
-	private int id;
+
+    private int id;
     private Sex sex;
     private String name;
     private String surname;
-    private LocalDate date_of_birth;
+    private LocalDate dob;
     private int height;
     private float weight;
     private byte[] photo;
     private String info;
     private String email;
+    private List<Appointment> appointments;
+    private List<Surgery> surgeries;
 
-    // Constructor_vacío_por_defecto
-    public Patient() 
-    {
+    public Patient() {
+        this.appointments = new ArrayList<>();
+        this.surgeries = new ArrayList<>();
     }
 
-    public Patient(int id, Sex sex, String name, String surname, LocalDate date_of_birth, int height, float weight, byte[] photo, String info, String email) 
-    {
+    public Patient(int id, Sex sex, String name, String surname, LocalDate dob,
+                   int height, float weight, byte[] photo, String info, String email,
+                   List<Appointment> appointments, List<Surgery> surgeries) {
         this.id = id;
         this.sex = sex;
         this.name = name;
         this.surname = surname;
-        this.date_of_birth = date_of_birth;
+        this.dob = dob;
         this.height = height;
         this.weight = weight;
         this.photo = photo;
         this.info = info;
         this.email = email;
+        this.appointments = appointments != null ? appointments : new ArrayList<>();
+        this.surgeries = surgeries != null ? surgeries : new ArrayList<>();
     }
 
     public int getId() {
@@ -44,7 +50,7 @@ public class Patient {
 
     public void setId(int id) {
         this.id = id;
-    }
+    }   
 
     public Sex getSex() {
         return sex;
@@ -52,7 +58,7 @@ public class Patient {
 
     public void setSex(Sex sex) {
         this.sex = sex;
-    }
+    }   
 
     public String getName() {
         return name;
@@ -60,7 +66,7 @@ public class Patient {
 
     public void setName(String name) {
         this.name = name;
-    }
+    }   
 
     public String getSurname() {
         return surname;
@@ -68,15 +74,15 @@ public class Patient {
 
     public void setSurname(String surname) {
         this.surname = surname;
+    }   
+
+    public LocalDate getDob() {
+        return dob;
     }
 
-    public LocalDate getDate_of_birth() {
-        return date_of_birth;
-    }
-
-    public void setDate_of_birth(LocalDate date_of_birth) {
-        this.date_of_birth = date_of_birth;
-    }
+    public void setDob(LocalDate dob) {
+        this.dob = dob;
+    }   
 
     public int getHeight() {
         return height;
@@ -84,7 +90,7 @@ public class Patient {
 
     public void setHeight(int height) {
         this.height = height;
-    }
+    }   
 
     public float getWeight() {
         return weight;
@@ -92,7 +98,7 @@ public class Patient {
 
     public void setWeight(float weight) {
         this.weight = weight;
-    }
+    }   
 
     public byte[] getPhoto() {
         return photo;
@@ -100,7 +106,7 @@ public class Patient {
 
     public void setPhoto(byte[] photo) {
         this.photo = photo;
-    }
+    }   
 
     public String getInfo() {
         return info;
@@ -108,7 +114,7 @@ public class Patient {
 
     public void setInfo(String info) {
         this.info = info;
-    }
+    }   
 
     public String getEmail() {
         return email;
@@ -116,6 +122,35 @@ public class Patient {
 
     public void setEmail(String email) {
         this.email = email;
+    }   
+
+    public List<Appointment> getAppointments() {
+        return appointments;
+    }
+
+    public void setAppointments(List<Appointment> appointments) {
+        this.appointments = appointments != null ? appointments : new ArrayList<>();
+    }
+
+    public List<Surgery> getSurgeries() {
+        return surgeries;
+    }
+
+    public void setSurgeries(List<Surgery> surgeries) {
+        this.surgeries = surgeries != null ? surgeries : new ArrayList<>();
+    }
+
+    @Override
+    public boolean equals(Object object) {
+        if (this == object) return true;
+        if (object == null || getClass() != object.getClass()) return false;
+        Patient patient = (Patient) object;
+        return id == patient.id;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id);
     }
 
     @Override
@@ -125,29 +160,11 @@ public class Patient {
                 ", sex=" + sex +
                 ", name='" + name + '\'' +
                 ", surname='" + surname + '\'' +
-                ", date_of_birth=" + date_of_birth +
+                ", dob=" + dob +
                 ", height=" + height +
                 ", weight=" + weight +
-                ", photo=" + Arrays.toString(photo) +
                 ", info='" + info + '\'' +
                 ", email='" + email + '\'' +
                 '}';
     }
-
-    @Override
-    public boolean equals(Object object) {
-        if (this == object) return true;
-        if (object == null || getClass() != object.getClass()) return false;
-        Patient patient = (Patient) object;
-        return id == patient.id && height == patient.height && Float.compare(weight, patient.weight) == 0 && sex == patient.sex && Objects.equals(name, patient.name) && Objects.equals(surname, patient.surname) && Objects.equals(date_of_birth, patient.date_of_birth) && Arrays.equals(photo, patient.photo) && Objects.equals(info, patient.info) && Objects.equals(email, patient.email);
-    }
-
-    @Override
-    public int hashCode() {
-        int result = Objects.hash(id, sex, name, surname, date_of_birth, height, weight, info, email);
-        result = 31 * result + Arrays.hashCode(photo);
-        return result;
-    }
-	
-
 }

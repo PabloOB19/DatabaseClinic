@@ -3,44 +3,40 @@ package POJOS;
 import java.time.LocalDate;
 import java.util.Objects;
 
-
-import Enums.*;
-
+import Enums.Type_of_appointment;
+import Enums.Turn;
 
 public class Appointment {
-	
-	private int id;
+
+    private int id;
     private Type_of_appointment type;
     private LocalDate date;
     private Turn turn;
     private double price;
     private Doctor doctor;
     private Patient patient;
-    
-    public Appointment () {
 
+    public Appointment() {
     }
-    
-    public Appointment(int id, Type_of_appointment type, LocalDate date,
-            Turn turn, double price, Doctor doctor, Patient patient) 
-{
-    	this.id = id;
+
+    public Appointment(int id, Type_of_appointment type, LocalDate date, Turn turn,
+                       double price, Doctor doctor, Patient patient) {
+        this.id = id;
         this.type = type;
         this.date = date;
         this.turn = turn;
         this.price = price;
-        this.doctor=doctor;
-        this.patient= patient;
-        
-        
-}
+        this.doctor = doctor;
+        this.patient = patient;
+    }
+
     public int getId() {
         return id;
     }
 
     public void setId(int id) {
         this.id = id;
-    }
+    } 
 
     public Type_of_appointment getType() {
         return type;
@@ -72,8 +68,8 @@ public class Appointment {
 
     public void setPrice(double price) {
         this.price = price;
-    }
-    
+    } 
+
     public Doctor getDoctor() {
         return doctor;
     }
@@ -81,7 +77,7 @@ public class Appointment {
     public void setDoctor(Doctor doctor) {
         this.doctor = doctor;
     }
-    
+
     public Patient getPatient() {
         return patient;
     }
@@ -89,7 +85,6 @@ public class Appointment {
     public void setPatient(Patient patient) {
         this.patient = patient;
     }
-
 
     @Override
     public boolean equals(Object object) {
@@ -99,12 +94,11 @@ public class Appointment {
         return id == that.id;
     }
 
-    
     @Override
     public int hashCode() {
         return Objects.hash(id);
     }
-    
+
     @Override
     public String toString() {
         return "Appointment{" +
@@ -117,6 +111,4 @@ public class Appointment {
                 ", patientId=" + (patient != null ? patient.getId() : null) +
                 '}';
     }
-
-
 }

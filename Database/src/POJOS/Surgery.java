@@ -1,30 +1,38 @@
 package POJOS;
 
 import java.time.LocalDate;
-import java.util.Objects;
+import java.util.*;
 
-import Enums.Turn;
-import Enums.Type_of_surgery;
+import Enums.*;
 
 public class Surgery {
 	
 	private int id;
     private LocalDate date;
     private Type_of_surgery type;
-    private float price;
+    private double price;
     private Turn turn;
+    private Patient patient;
+    private List<Doctor> doctors;
+    private List<Equipment> equipment;
 
-    public Surgery ()
-    {
+    public Surgery() {
+        this.setDoctors(new ArrayList<>());
+        this.setEquipment(new ArrayList<>());
     }
-    
-    public Surgery(int id, LocalDate date, Type_of_surgery type, float price, Turn turn) {
-        this.id = id;
-        this.date = date;
-        this.type = type;
-        this.price = price;
-        this.turn = turn;
+
+    public Surgery(int id, LocalDate date, Type_of_surgery type, double price, Turn turn, Patient patient, 
+    		List<Doctor> doctors, List<Equipment> equipment) {
+	 this.id = id;
+	 this.date = date;
+	 this.type = type;
+	 this.price = price;
+	 this.turn = turn;
+	 this.patient = patient;
+	 this.doctors = doctors != null ? doctors : new ArrayList<>();
+	 this.equipment = equipment != null ? equipment : new ArrayList<>();
     }
+
 
     public int getId() {
         return id;
@@ -50,11 +58,11 @@ public class Surgery {
         this.type = type;
     }
 
-    public float getPrice() {
+    public double getPrice() {
         return price;
     }
 
-    public void setPrice(float price) {
+    public void setPrice(double price) {
         this.price = price;
     }
 
@@ -66,6 +74,21 @@ public class Surgery {
         this.turn = turn;
     }
 
+    public List<Equipment> getEquipment() {
+		return equipment;
+	}
+
+	public void setEquipment(List<Equipment> equipment) {
+		this.equipment = equipment;
+	}
+	public List<Doctor> getDoctors() {
+		return doctors;
+	}
+
+	public void setDoctors(List<Doctor> doctors) {
+		this.doctors = doctors;
+	}
+
     @Override
     public String toString() {
         return "Surgery{" +
@@ -74,6 +97,7 @@ public class Surgery {
                 ", type=" + type +
                 ", price=" + price +
                 ", turn=" + turn +
+                ", patientId=" + (patient != null ? patient.getId() : null) +
                 '}';
     }
 
@@ -82,12 +106,14 @@ public class Surgery {
         if (this == object) return true;
         if (object == null || getClass() != object.getClass()) return false;
         Surgery surgery = (Surgery) object;
-        return id == surgery.id && Float.compare(price, surgery.price) == 0 && Objects.equals(date, surgery.date) && Objects.equals(type, surgery.type) && turn == surgery.turn;
+        return id == surgery.id;
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, date, type, price, turn);
+        return Objects.hash(id);
     }
 
+	
+	
 }

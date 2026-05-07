@@ -1,8 +1,8 @@
 package POJOS;
 
 import java.time.LocalDate;
-import java.util.Arrays;
-import java.util.Objects;
+import java.util.*;
+
 
 import Enums.Sex;
 
@@ -15,12 +15,12 @@ public class Doctor
     private Sex sex;
     private String email;
     private String speciality;
-    private LocalDate date_of_birth;
+    private LocalDate dob;
 
     public Doctor() 
     {
     }
-    public Doctor(int id, String name, String surname, byte[] photo, Sex sex, String email, String speciality, LocalDate date_of_birth)
+    public Doctor(int id, String name, String surname, byte[] photo, Sex sex, String email, String speciality, LocalDate dob)
     {
         this.id = id;
         this.name = name;
@@ -29,7 +29,7 @@ public class Doctor
         this.sex = sex;
         this.email = email;
         this.speciality = speciality;
-        this.date_of_birth = date_of_birth;
+        this.dob = dob;
     }
 
     public int getId() {
@@ -88,12 +88,12 @@ public class Doctor
         this.speciality = speciality;
     }
 
-    public LocalDate getDate_of_birth() {
-        return date_of_birth;
+    public LocalDate getDob() {
+        return dob;
     }
 
-    public void setDate_of_birth(LocalDate date_of_birth) {
-        this.date_of_birth = date_of_birth;
+    public void setDob(LocalDate dob) {
+        this.dob = dob;
     }
 
     @Override
@@ -102,11 +102,10 @@ public class Doctor
                 "id=" + id +
                 ", name='" + name + '\'' +
                 ", surname='" + surname + '\'' +
-                ", photo=" + Arrays.toString(photo) +
                 ", sex=" + sex +
                 ", email='" + email + '\'' +
                 ", speciality='" + speciality + '\'' +
-                ", date_of_birth=" + date_of_birth +
+                ", dateOfBirth=" + dob +
                 '}';
     }
 
@@ -115,14 +114,12 @@ public class Doctor
         if (this == object) return true;
         if (object == null || getClass() != object.getClass()) return false;
         Doctor doctor = (Doctor) object;
-        return id == doctor.id && Objects.equals(name, doctor.name) && Objects.equals(surname, doctor.surname) && Arrays.equals(photo, doctor.photo) && sex == doctor.sex && Objects.equals(email, doctor.email) && Objects.equals(speciality, doctor.speciality) && Objects.equals(date_of_birth, doctor.date_of_birth);
+        return id == doctor.id;
     }
 
     @Override
     public int hashCode() {
-        int result = Objects.hash(id, name, surname, sex, email, speciality, date_of_birth);
-        result = 31 * result + Arrays.hashCode(photo);
-        return result;
+        return Objects.hash(id);
     }
 
 }
