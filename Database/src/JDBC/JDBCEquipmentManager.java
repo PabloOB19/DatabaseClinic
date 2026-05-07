@@ -221,10 +221,3 @@ public class JDBCEquipmentManager implements EquipmentManager {
 
 }
 
-    
-	
-	
-	
-	
-
-

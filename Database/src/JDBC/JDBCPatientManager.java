@@ -66,8 +66,8 @@ public class JDBCPatientManager implements PatientManager{
         }
     }
     
-    
-    private Patient getPatientById(int id) throws SQLException {
+    @Override
+    public Patient getPatientById(int id){
         Patient patient = null;
 
         String sql = "SELECT * FROM Patient WHERE id = ?";
@@ -92,10 +92,11 @@ public class JDBCPatientManager implements PatientManager{
                     );
                 }
             }
-        }
+   
 
         return patient;
     }
+}
 
 
     @Override
