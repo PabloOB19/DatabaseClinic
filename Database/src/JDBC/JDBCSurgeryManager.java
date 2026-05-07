@@ -33,22 +33,29 @@ public class JDBCSurgeryManager implements SurgeryManager
 	public void insertSurgery(Surgery surgery) {
 
 	    String sql = "INSERT INTO Surgery "
-	            + "(id, type, date, price, turn, patient_id) "
-	            + "VALUES (?, ?, ?, ?, ?, ?)";
+	            + "(type, date, price, turn, patient_id) "
+	            + "VALUES (?, ?, ?, ?, ?)";
 
-	    try (PreparedStatement p = c.prepareStatement(sql)) {
+	    try (PreparedStatement p = c.prepareStatement(sql, java.sql.Statement.RETURN_GENERATED_KEYS)) {
 
-	        p.setInt(1, surgery.getId());
-	        p.setString(2, surgery.getType().name());
-	        p.setDate(3, java.sql.Date.valueOf(surgery.getDate()));
-	        p.setDouble(4, surgery.getPrice());
-	        p.setString(5, surgery.getTurn().name());
-	        p.setInt(6, surgery.getPatient().getId());
+	        p.setString(1, surgery.getType().name());
+	        p.setDate(2, java.sql.Date.valueOf(surgery.getDate()));
+	        p.setDouble(3, surgery.getPrice());
+	        p.setString(4, surgery.getTurn().name());
+	        p.setInt(5, surgery.getPatient().getId());
 
 	        int affectedRows = p.executeUpdate();
 
 	        if (affectedRows == 0) {
 	            throw new SQLException("Creating surgery failed, no rows affected.");
+	        }
+
+	        try (ResultSet generatedKeys = p.getGeneratedKeys()) {
+	            if (generatedKeys.next()) {
+	                surgery.setId(generatedKeys.getInt(1));
+	            } else {
+	                throw new SQLException("Creating surgery failed, no ID obtained.");
+	            }
 	        }
 
 	    } catch (SQLException e) {
@@ -187,21 +194,51 @@ public class JDBCSurgeryManager implements SurgeryManager
 	@Override
 	public void deleteSurgery(int id) {
 
-	    String sql = "DELETE FROM Surgery WHERE id = ?";
+	    String deleteDoctorsSql = "DELETE FROM DOCTOR_SURGERY WHERE surgery_id = ?";
+	    String deleteEquipmentSql = "DELETE FROM SURGERY_EQUIPMENT WHERE surgery_id = ?";
+	    String deleteSurgerySql = "DELETE FROM Surgery WHERE id = ?";
 
-	    try (PreparedStatement p = c.prepareStatement(sql)) {
+	    try {
+	        c.setAutoCommit(false);
 
-	        p.setInt(1, id);
-
-	        int affectedRows = p.executeUpdate();
-
-	        if (affectedRows == 0) {
-	            throw new SQLException("Deleting surgery failed, no rows affected.");
+	        try (PreparedStatement p = c.prepareStatement(deleteDoctorsSql)) {
+	            p.setInt(1, id);
+	            p.executeUpdate();
 	        }
 
+	        try (PreparedStatement p = c.prepareStatement(deleteEquipmentSql)) {
+	            p.setInt(1, id);
+	            p.executeUpdate();
+	        }
+
+	        try (PreparedStatement p = c.prepareStatement(deleteSurgerySql)) {
+	            p.setInt(1, id);
+
+	            int affectedRows = p.executeUpdate();
+
+	            if (affectedRows == 0) {
+	                throw new SQLException("Deleting surgery failed, no rows affected.");
+	            }
+	        }
+
+	        c.commit();
+
 	    } catch (SQLException e) {
+	        try {
+	            c.rollback();
+	        } catch (SQLException rollbackException) {
+	            rollbackException.printStackTrace();
+	        }
+
 	        System.out.println("Database error during deleteSurgery.");
 	        e.printStackTrace();
+
+	    } finally {
+	        try {
+	            c.setAutoCommit(true);
+	        } catch (SQLException e) {
+	            e.printStackTrace();
+	        }
 	    }
 	}
 	
@@ -209,7 +246,10 @@ public class JDBCSurgeryManager implements SurgeryManager
     public List<Surgery> listSurgeriesByDoctor(int doctor_Id) {
         List<Surgery> list = new ArrayList<>();
 
-        String sql = "SELECT * FROM Surgery WHERE doctor_id = ?";
+        String sql = "SELECT s.* " +
+                     "FROM Surgery s " +
+                     "JOIN DOCTOR_SURGERY ds ON s.id = ds.surgery_id " +
+                     "WHERE ds.doctor_id = ?";
 
         try (PreparedStatement p = c.prepareStatement(sql)) {
             p.setInt(1, doctor_Id);

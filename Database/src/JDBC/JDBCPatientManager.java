@@ -38,26 +38,33 @@ public class JDBCPatientManager implements PatientManager{
     public void insertPatient(Patient patient) {
 
         String sql = "INSERT INTO Patient "
-                + "(id, name, surname, email, sex, dob, height, weight, photo, info) "
-                + "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+                + "(name, surname, email, sex, dob, height, weight, photo, info) "
+                + "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
-        try (PreparedStatement p = c.prepareStatement(sql)) {
+        try (PreparedStatement p = c.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
 
-            p.setInt(1, patient.getId());
-            p.setString(2, patient.getName());
-            p.setString(3, patient.getSurname());
-            p.setString(4, patient.getEmail());
-            p.setString(5, patient.getSex().name());
-            p.setDate(6, java.sql.Date.valueOf(patient.getDob()));
-            p.setInt(7, patient.getHeight());
-            p.setFloat(8, patient.getWeight());
-            p.setBytes(9, patient.getPhoto());
-            p.setString(10, patient.getInfo());
+            p.setString(1, patient.getName());
+            p.setString(2, patient.getSurname());
+            p.setString(3, patient.getEmail());
+            p.setString(4, patient.getSex().name());
+            p.setDate(5, java.sql.Date.valueOf(patient.getDob()));
+            p.setInt(6, patient.getHeight());
+            p.setFloat(7, patient.getWeight());
+            p.setBytes(8, patient.getPhoto());
+            p.setString(9, patient.getInfo());
 
             int affectedRows = p.executeUpdate();
 
             if (affectedRows == 0) {
                 throw new SQLException("Creating patient failed, no rows affected.");
+            }
+
+            try (ResultSet generatedKeys = p.getGeneratedKeys()) {
+                if (generatedKeys.next()) {
+                    patient.setId(generatedKeys.getInt(1));
+                } else {
+                    throw new SQLException("Creating patient failed, no ID obtained.");
+                }
             }
 
         } catch (SQLException e) {
@@ -142,6 +149,7 @@ public class JDBCPatientManager implements PatientManager{
     
     // No dejo hacer un update del id, ya que, es lo que se utiliza para localizar al paciente que queremos modificar
     // No tiene sentido que el paciente vaya cambiando de id, como hacemos nosotros con el DNI , que tienes uno para siempre
+    @Override
     public void updatePatient(Patient patient) {
 
         String sql = "UPDATE Patient "
