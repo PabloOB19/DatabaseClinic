@@ -30,41 +30,41 @@ public class JDBCConnectionManager {
                     "id TEXT PRIMARY KEY, " +
                     "name TEXT, " +
                     "surname TEXT, " +
-                    "dob DATE, " +
+                    "email TEXT, " +
                     "sex TEXT, " +
+                    "dob DATE, " +
                     "height INTEGER, " +
                     "weight FLOAT, " +
                     "photo BLOB, " +
-                    "email TEXT, " +
                     "info TEXT)";
 
             String doctorTable = "CREATE TABLE IF NOT EXISTS Doctor (" +
                     "id INTEGER PRIMARY KEY, " +
                     "name TEXT, " +
                     "surname TEXT, " +
-                    "photo BLOB, " +
+                    "email TEXT, " +
                     "sex TEXT, " +
                     "dob DATE, " +
-                    "email TEXT, " +
+                    "photo BLOB, " +
                     "speciality TEXT)";
             
             String appointmentTable = "CREATE TABLE IF NOT EXISTS Appointment (" +
                     "id INTEGER PRIMARY KEY, " +
                     "type TEXT, " +
                     "date DATE, " +
-                    "turn TEXT, " +
                     "price DOUBLE, " +
-                    "patient_id TEXT, " +
+                    "turn TEXT, " +
                     "doctor_id INTEGER, " +
-                    "FOREIGN KEY (patient_id) REFERENCES Patient(id), " +
-                    "FOREIGN KEY (doctor_id) REFERENCES Doctor(id))";
+                    "patient_id TEXT, " +
+                    "FOREIGN KEY (doctor_id) REFERENCES Doctor(id), " +
+                    "FOREIGN KEY (patient_id) REFERENCES Patient(id))";
 
             String surgeryTable = "CREATE TABLE IF NOT EXISTS Surgery (" +
                     "id INTEGER PRIMARY KEY, " +
                     "type TEXT, " +
                     "date DATE, " +
-                    "turn TEXT, " +
                     "price DOUBLE, " +
+                    "turn TEXT, " +
                     "patient_id TEXT, " +
                     "FOREIGN KEY (patient_id) REFERENCES Patient(id))";
 
@@ -72,9 +72,9 @@ public class JDBCConnectionManager {
             String equipmentTable = "CREATE TABLE IF NOT EXISTS Equipment (" +
                     "id INTEGER PRIMARY KEY, " +
                     "name TEXT, " +
+                    "category TEXT, " +
                     "quantity INTEGER, " +
                     "price DOUBLE, " +
-                    "category TEXT, " +
                     "expiration_date DATE)";
 
             String doctorSurgeryTable = "CREATE TABLE IF NOT EXISTS DOCTOR_SURGERY (" +
@@ -88,7 +88,6 @@ public class JDBCConnectionManager {
             String surgeryEquipmentTable = "CREATE TABLE IF NOT EXISTS SURGERY_EQUIPMENT (" +
                     "surgery_id INTEGER NOT NULL, " +
                     "equipment_id INTEGER NOT NULL, " +
-                    "amount INTEGER NOT NULL, " +
                     "PRIMARY KEY (surgery_id, equipment_id), " +
                     "FOREIGN KEY (equipment_id) REFERENCES Equipment(id), " +
                     "FOREIGN KEY (surgery_id) REFERENCES Surgery(id))";
