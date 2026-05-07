@@ -15,7 +15,9 @@ import Enums.Sex;
 import Enums.Turn;
 import Enums.Type_of_appointment;
 import Enums.Type_of_material;
+import Exceptions.InvalidAmountOfSurgeries;
 import Exceptions.InvalidIdentificator;
+import Exceptions.InvalidPhoneNumber;
 import Exceptions.InvalidPrice;
 import POJOS.Appointment;
 import POJOS.Doctor;
@@ -619,18 +621,22 @@ public class JDBCDoctorManager {
                         throw illegalArgumentException;
                     }
 
-                    return new Doctor(
-                            rs.getInt("medical_license_number"),
-                            rs.getString("name"),
-                            rs.getString("surname"),
-                            Sex.valueOf(rs.getString("sex")),
-                            rs.getDate("date_of_birth").toLocalDate(),
-                            rs.getInt("phone_number"),
-                            rs.getString("email"),
-                            rs.getString("speciality"),
-                            rs.getBytes("photo"),
-                            rs.getDouble("salary"),
-                            rs.getInt("amount_of_surgeries"));
+                    try {
+                        return new Doctor(
+                                rs.getInt("medical_license_number"),
+                                rs.getString("name"),
+                                rs.getString("surname"),
+                                Sex.valueOf(rs.getString("sex")),
+                                rs.getDate("date_of_birth").toLocalDate(),
+                                rs.getInt("phone_number"),
+                                rs.getString("email"),
+                                rs.getString("speciality"),
+                                rs.getBytes("photo"),
+                                rs.getDouble("salary"),
+                                rs.getInt("amount_of_surgeries"));
+                    } catch (InvalidAmountOfSurgeries | InvalidIdentificator | InvalidPhoneNumber | InvalidPrice e) {
+                        throw new IllegalArgumentException(e.getMessage(), e);
+                    }
                 }
             }
         }
