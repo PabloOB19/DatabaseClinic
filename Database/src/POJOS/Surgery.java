@@ -8,8 +8,8 @@ import Enums.*;
 public class Surgery {
 	
 	private int id;
-    private LocalDate date;
     private Type_of_surgery type;
+    private LocalDate date;
     private double price;
     private Turn turn;
     private Patient patient;
@@ -101,8 +101,8 @@ public class Surgery {
     public String toString() {
         return "Surgery{" +
                 "id=" + id +
-                ", date=" + date +
                 ", type=" + type +
+                ", date=" + date +
                 ", price=" + price +
                 ", turn=" + turn +
                 ", patientId=" + (patient != null ? patient.getId() : null) +

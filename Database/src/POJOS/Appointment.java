@@ -11,8 +11,8 @@ public class Appointment {
     private int id;
     private Type_of_appointment type;
     private LocalDate date;
-    private Turn turn;
     private double price;
+    private Turn turn;
     private Doctor doctor;
     private Patient patient;
 
@@ -105,8 +105,8 @@ public class Appointment {
                 "id=" + id +
                 ", type=" + type +
                 ", date=" + date +
-                ", turn=" + turn +
                 ", price=" + price +
+                ", turn=" + turn +
                 ", doctorId=" + (doctor != null ? doctor.getId() : null) +
                 ", patientId=" + (patient != null ? patient.getId() : null) +
                 '}';

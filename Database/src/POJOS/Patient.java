@@ -9,15 +9,15 @@ import Enums.*;
 public class Patient {
 
     private int id;
-    private Sex sex;
     private String name;
     private String surname;
+    private String email;
+    private Sex sex;
     private LocalDate dob;
     private int height;
     private float weight;
     private byte[] photo;
     private String info;
-    private String email;
     private List<Appointment> appointments;
     private List<Surgery> surgeries;
 
@@ -156,14 +156,15 @@ public class Patient {
     public String toString() {
         return "Patient{" +
                 "id=" + id +
-                ", sex=" + sex +
                 ", name='" + name + '\'' +
                 ", surname='" + surname + '\'' +
+                ", email='" + email +
+                ", sex=" + sex +
                 ", dob=" + dob +
                 ", height=" + height +
                 ", weight=" + weight +
-                ", info='" + info + '\'' +
-                ", email='" + email + '\'' +
+                ", info='" + info +
+                 '\'' +
                 '}';
     }
 }

@@ -11,11 +11,11 @@ public class Doctor
 	private int id;
     private String name;
     private String surname;
-    private byte[] photo;
-    private Sex sex;
     private String email;
-    private String speciality;
+    private Sex sex;
     private LocalDate dob;
+    private byte[] photo;
+    private String specialty;
     private List<Appointment> appointments;
     private List<Surgery> surgeries;
 
@@ -33,7 +33,7 @@ public class Doctor
 		  this.photo = photo;
 		  this.sex = sex;
 		  this.email = email;
-		  this.speciality = speciality;
+		  this.specialty = speciality;
 		  this.dob = dob;
 		  this.appointments = appointments != null ? appointments : new ArrayList<>();
 		  this.surgeries = surgeries != null ? surgeries : new ArrayList<>();
@@ -87,12 +87,12 @@ public class Doctor
         this.email = email;
     }
 
-    public String getSpeciality() {
-        return speciality;
+    public String getSpecialty() {
+        return specialty;
     }
 
-    public void setSpeciality(String speciality) {
-        this.speciality = speciality;
+    public void setSpecialty(String specialty) {
+        this.specialty = specialty;
     }
 
     public LocalDate getDob() {
@@ -127,8 +127,8 @@ public class Doctor
                 ", surname='" + surname + '\'' +
                 ", sex=" + sex +
                 ", email='" + email + '\'' +
-                ", speciality='" + speciality + '\'' +
-                ", dateOfBirth=" + dob +
+                ", specialty='" + specialty + '\'' +
+                ", date of birth=" + dob +
                 '}';
     }
 

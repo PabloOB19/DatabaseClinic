@@ -9,9 +9,9 @@ public class Equipment {
 
     private int id;
     private String name;
+    private Category category;
     private int quantity;
     private double price;
-    private Category category;
     private LocalDate expiration_date;
     private List<Surgery> surgeries;
 
@@ -107,9 +107,9 @@ public class Equipment {
         return "Equipment{" +
                 "id=" + id +
                 ", name='" + name + '\'' +
+                ", category=" + category +
                 ", quantity=" + quantity +
                 ", price=" + price +
-                ", category=" + category +
                 ", expirationDate=" + expiration_date +
                 '}';
     }
