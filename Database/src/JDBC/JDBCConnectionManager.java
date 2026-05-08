@@ -26,6 +26,15 @@ public class JDBCConnectionManager {
         
     }
     
+    public void closeConnection() {
+        try {
+            c.close();
+        } catch (Exception e) {
+            System.out.println("Database error.");
+            e.printStackTrace();
+        }
+    }
+
 
     private void createTables() {
         try {
