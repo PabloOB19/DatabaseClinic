@@ -7,11 +7,11 @@ import java.util.List;
 
 import javax.persistence.*;
 
-
 import POJOS.Role;
 import POJOS.User;
+import ifaces.UserManager;
 
-public class JPAUser {
+public class JPAUser implements UserManager {
 
     private EntityManager em;
 
@@ -30,6 +30,7 @@ public class JPAUser {
         }
     }
 
+    @Override
     public void close() {
         em.close();
     }
@@ -51,10 +52,12 @@ public class JPAUser {
         em.createNativeQuery(userTable).executeUpdate();
     }
 
+    @Override
     public void register(User user) {
         try {
             em.getTransaction().begin();
-            user.setPassword(hashPassword(user.getPassword()));
+            String hashedPassword = hashPassword(user.getPassword());
+            user.setPassword(hashedPassword);
             em.persist(user);
             em.getTransaction().commit();
         } catch (Exception e) {
@@ -63,6 +66,7 @@ public class JPAUser {
         }
     }
 
+    @Override
     public void createRole(Role role) {
         try {
             em.getTransaction().begin();
@@ -74,6 +78,7 @@ public class JPAUser {
         }
     }
 
+    @Override
     public void assignRole(User user, Role role) {
         try {
             em.getTransaction().begin();
@@ -82,6 +87,7 @@ public class JPAUser {
             Role managedRole = em.find(Role.class, role.getRoleId());
 
             if (managedUser != null && managedRole != null) {
+                managedUser.setRole(managedRole);
                 managedRole.addUser(managedUser);
             }
 
@@ -92,12 +98,14 @@ public class JPAUser {
         }
     }
 
-    @SuppressWarnings("unchecked") // --> Revisar que es
+    @Override
+    @SuppressWarnings("unchecked")
     public List<Role> getRoles() {
         Query q = em.createNativeQuery("SELECT * FROM roles", Role.class);
         return (List<Role>) q.getResultList();
     }
 
+    @Override
     public Role getRole(String name) {
         try {
             Query q = em.createNativeQuery("SELECT * FROM roles WHERE name = ?", Role.class);
@@ -108,6 +116,7 @@ public class JPAUser {
         }
     }
 
+    @Override
     public User login(String username, String password) {
         try {
             Query q = em.createNativeQuery("SELECT * FROM users WHERE username = ?", User.class);
@@ -124,6 +133,7 @@ public class JPAUser {
         }
     }
 
+    @Override
     public User getUser(String username, String email) {
         try {
             Query q = em.createNativeQuery("SELECT * FROM users WHERE username = ? AND email = ?", User.class);
@@ -135,6 +145,7 @@ public class JPAUser {
         }
     }
 
+    @Override
     public void updateUser(User user, String newUsername) {
         try {
             em.getTransaction().begin();
@@ -151,6 +162,7 @@ public class JPAUser {
         }
     }
 
+    @Override
     public void updatePassword(User user, String newPassword) {
         try {
             em.getTransaction().begin();
@@ -171,6 +183,7 @@ public class JPAUser {
         }
     }
 
+    @Override
     public void deleteUser(User user) {
         try {
             em.getTransaction().begin();
@@ -187,6 +200,7 @@ public class JPAUser {
         }
     }
 
+    @Override
     @SuppressWarnings("unchecked")
     public List<User> getAllUsers() {
         Query q = em.createNativeQuery("SELECT * FROM users", User.class);
@@ -217,8 +231,7 @@ public class JPAUser {
         return hashPassword(password).equals(hashedPassword);
     }
 
-    private void rollback() //--> Revisar
-    {
+    private void rollback() {
         if (em.getTransaction().isActive()) {
             em.getTransaction().rollback();
         }

@@ -1,9 +1,8 @@
 package POJOS;
 
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
+
 
 import javax.persistence.*;
 
@@ -42,7 +41,7 @@ public class Role implements Serializable {
     public Role(Integer roleId, String name, List<User> users) {
         this.roleId = roleId;
         this.name = name;
-        this.users = users;
+        this.users = users != null ? users : new ArrayList<>();
     }
 
     public Integer getRoleId() {
@@ -66,7 +65,7 @@ public class Role implements Serializable {
     }
 
     public void setUsers(List<User> users) {
-        this.users = users;
+        this.users = users != null ? users : new ArrayList<>();
     }
 
     public void addUser(User user) {
