@@ -17,6 +17,7 @@ public class InputOutput {
         } else {
             System.out.println("Could not connect to database.");
         }
+
     }
     
     //prueba

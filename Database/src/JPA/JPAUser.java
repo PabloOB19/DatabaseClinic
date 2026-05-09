@@ -36,6 +36,10 @@ public class JPAUser implements UserManager {
     }
 
     private void createTables() {
+        String sequenceTable = "CREATE TABLE IF NOT EXISTS SEQUENCE (" +
+                "SEQ_NAME TEXT PRIMARY KEY, " +
+                "SEQ_COUNT INTEGER)";
+
         String roleTable = "CREATE TABLE IF NOT EXISTS roles (" +
                 "role_id INTEGER PRIMARY KEY AUTOINCREMENT, " +
                 "name TEXT NOT NULL UNIQUE)";
@@ -48,8 +52,18 @@ public class JPAUser implements UserManager {
                 "role_id INTEGER, " +
                 "FOREIGN KEY (role_id) REFERENCES roles(role_id))";
 
+        em.createNativeQuery(sequenceTable).executeUpdate();
         em.createNativeQuery(roleTable).executeUpdate();
         em.createNativeQuery(userTable).executeUpdate();
+        em.createNativeQuery("INSERT OR IGNORE INTO SEQUENCE (SEQ_NAME, SEQ_COUNT) VALUES ('SEQ_GEN_IDENTITY', 0)").executeUpdate();
+        em.createNativeQuery("UPDATE SEQUENCE SET SEQ_COUNT = (SELECT MAX(id) FROM (" +
+                "SELECT COALESCE(MAX(role_id), 0) AS id FROM roles " +
+                "UNION ALL " +
+                "SELECT COALESCE(MAX(user_id), 0) AS id FROM users)) " +
+                "WHERE SEQ_NAME = 'SEQ_GEN_IDENTITY' AND SEQ_COUNT < (SELECT MAX(id) FROM (" +
+                "SELECT COALESCE(MAX(role_id), 0) AS id FROM roles " +
+                "UNION ALL " +
+                "SELECT COALESCE(MAX(user_id), 0) AS id FROM users))").executeUpdate();
     }
 
     @Override
