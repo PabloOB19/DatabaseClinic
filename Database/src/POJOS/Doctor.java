@@ -1,5 +1,6 @@
 package POJOS;
 
+import java.io.Serializable;
 import java.time.LocalDate;
 import Enums.*;
 import javax.xml.bind.annotation.XmlRootElement;
@@ -9,7 +10,10 @@ import javax.xml.bind.annotation.XmlType;
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlElementWrapper;
+
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 import javax.xml.bind.annotation.*;
 
@@ -68,7 +72,7 @@ public class Doctor implements Serializable{
     private List<Surgery> surgeries;
 
    
-   
+    
     public Doctor() {
         this.appointments = new ArrayList<>();
         this.surgeries = new ArrayList<>();
