@@ -8,38 +8,38 @@ import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlElement;
-import javax.xml.bind.annotation.XmlElementWrapper;
 import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.XmlTransient;
 import javax.xml.bind.annotation.XmlType;
+import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 
 import Enums.*;
+import xml.SQLDateAdapter;
 
 @XmlRootElement(name = "surgery")
 
 @XmlAccessorType(XmlAccessType.FIELD)
 
-@XmlType(
-    propOrder = {
-        "id",
-        "type",
-        "date",
-        "price",
-        "turn",
-        "patient",
-        "doctors",
-        "equipment",
-    }
-)
+	@XmlType(
+	    propOrder = {
+	        "type",
+	        "date",
+	        "price",
+	        "turn"
+	    }
+	)
 
 public class Surgery implements Serializable{
 	
+	private static final long serialVersionUID = 1L;
 	@XmlAttribute
 	private int id;
 	
 	@XmlElement
     private Type_of_surgery type;
     
-	@XmlElement
+	 @XmlElement
+	@XmlJavaTypeAdapter(SQLDateAdapter.class)
     private LocalDate date;
     
 	@XmlElement
@@ -48,16 +48,14 @@ public class Surgery implements Serializable{
 	@XmlElement
     private Turn turn;
     
-	@XmlElement
-    private Patient patient;
-    
-	@XmlElementWrapper(name = "doctors")
-    @XmlElement(name = "doctor")
-    private List<Doctor> doctors;
-    
-	@XmlElementWrapper(name = "equipments")
-    @XmlElement(name = "equipment")
-    private List<Equipment> equipment;
+		@XmlTransient
+	    private Patient patient;
+	    
+		@XmlTransient
+	    private List<Doctor> doctors;
+	    
+		@XmlTransient
+	    private List<Equipment> equipment;
 
     
     

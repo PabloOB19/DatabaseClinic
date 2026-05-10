@@ -60,7 +60,7 @@ public class JDBCConnectionManager {
                     "sex TEXT, " +
                     "dob DATE, " +
                     "photo BLOB, " +
-                    "speciality TEXT)";
+                    "specialty TEXT)";
             
             String appointmentTable = "CREATE TABLE IF NOT EXISTS Appointment (" +
                     "id INTEGER PRIMARY KEY, " +

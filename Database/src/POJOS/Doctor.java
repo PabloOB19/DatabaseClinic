@@ -3,19 +3,21 @@ package POJOS;
 import java.io.Serializable;
 import java.time.LocalDate;
 import Enums.*;
+import xml.SQLDateAdapter;
+
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlType;
+import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlElement;
-import javax.xml.bind.annotation.XmlElementWrapper;
+import javax.xml.bind.annotation.XmlTransient;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
-import javax.xml.bind.annotation.*;
 
 @XmlRootElement(name = "doctor")
 
@@ -29,19 +31,19 @@ import javax.xml.bind.annotation.*;
         "sex",
         "dob",
         "photo",
-        "specialty",
-        "appointments",
-        "surgeries"
+        "specialty"
     }
 )
 
 public class Doctor implements Serializable{
+	
+	private static final long serialVersionUID = 1L;
 
-    // ATTRIBUTE
+ 
     @XmlAttribute
     private int id;
 
-    // ELEMENTS
+
     @XmlElement
     private String name;
 
@@ -55,6 +57,7 @@ public class Doctor implements Serializable{
     private Sex sex;
 
     @XmlElement
+	@XmlJavaTypeAdapter(SQLDateAdapter.class)
     private LocalDate dob;
 
     @XmlElement
@@ -63,12 +66,10 @@ public class Doctor implements Serializable{
     @XmlElement
     private String specialty;
 
-    @XmlElementWrapper(name = "appointments")
-    @XmlElement(name = "appointment")
+    @XmlTransient
     private List<Appointment> appointments;
 
-    @XmlElementWrapper(name = "surgeries")
-    @XmlElement(name = "surgery")
+    @XmlTransient
     private List<Surgery> surgeries;
 
    

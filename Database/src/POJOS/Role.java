@@ -5,7 +5,19 @@ import java.util.*;
 
 
 import javax.persistence.*;
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.XmlAttribute;
+import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.XmlTransient;
+import javax.xml.bind.annotation.XmlType;
 
+@XmlRootElement(name = "role")
+@XmlAccessorType(XmlAccessType.FIELD)
+@XmlType(propOrder = {
+        "name"
+})
 @Entity
 @Table(name = "roles")
 public class Role implements Serializable {
@@ -15,12 +27,15 @@ public class Role implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "role_id")
+    @XmlAttribute
     private Integer roleId;
 
     @Column(name = "name", nullable = false, unique = true)
+    @XmlElement
     private String name;
 
     @OneToMany(mappedBy = "role", fetch = FetchType.LAZY)
+    @XmlTransient
     private List<User> users;
 
     public Role() {

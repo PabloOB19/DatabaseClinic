@@ -1,0 +1,42 @@
+<!ELEMENT DataBase (patient*, doctor*, appointment*, surgery*, equipment*, role*, user*)>
+
+<!ELEMENT patient ANY>
+<!ATTLIST patient id CDATA #IMPLIED>
+
+<!ELEMENT doctor ANY>
+<!ATTLIST doctor id CDATA #IMPLIED>
+
+<!ELEMENT appointment ANY>
+<!ATTLIST appointment id CDATA #IMPLIED>
+
+<!ELEMENT surgery ANY>
+<!ATTLIST surgery id CDATA #IMPLIED>
+
+<!ELEMENT equipment ANY>
+<!ATTLIST equipment id CDATA #IMPLIED>
+
+<!ELEMENT role ANY>
+<!ATTLIST role roleId CDATA #IMPLIED>
+
+<!ELEMENT user ANY>
+<!ATTLIST user userId CDATA #IMPLIED>
+
+<!ELEMENT name (#PCDATA)>
+<!ELEMENT surname (#PCDATA)>
+<!ELEMENT email (#PCDATA)>
+<!ELEMENT sex (#PCDATA)>
+<!ELEMENT dob (#PCDATA)>
+<!ELEMENT height (#PCDATA)>
+<!ELEMENT weight (#PCDATA)>
+<!ELEMENT photo (#PCDATA)>
+<!ELEMENT info (#PCDATA)>
+<!ELEMENT type (#PCDATA)>
+<!ELEMENT date (#PCDATA)>
+<!ELEMENT price (#PCDATA)>
+<!ELEMENT turn (#PCDATA)>
+<!ELEMENT specialty (#PCDATA)>
+<!ELEMENT category (#PCDATA)>
+<!ELEMENT quantity (#PCDATA)>
+<!ELEMENT expiration_date (#PCDATA)>
+<!ELEMENT username (#PCDATA)>
+<!ELEMENT password (#PCDATA)>

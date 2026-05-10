@@ -4,18 +4,52 @@ import java.io.Serializable;
 import java.time.LocalDate;
 import java.util.*;
 
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.XmlAttribute;
+import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.XmlTransient;
+import javax.xml.bind.annotation.XmlType;
+import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
+
 import Enums.*;
+import xml.SQLDateAdapter;
 
 
+@XmlRootElement(name = "appointment")
+@XmlAccessorType(XmlAccessType.FIELD)
+@XmlType(propOrder = {
+        "type",
+        "date",
+        "price",
+        "turn"
+})
 public class Appointment implements Serializable{
+	
+	private static final long serialVersionUID = 1L;
 
+	@XmlAttribute
     private int id;
+	
+	@XmlElement 
     private Type_of_appointment type;
+	
+	 @XmlElement
+	@XmlJavaTypeAdapter(SQLDateAdapter.class)
     private LocalDate date;
+	
+	@XmlElement
     private double price;
-    private Turn turn;
-    private Doctor doctor;
-    private Patient patient;
+	
+	@XmlElement
+	private Turn turn;
+	
+		@XmlTransient
+		private Doctor doctor;
+		
+		@XmlTransient
+	    private Patient patient;
 
     public Appointment() 
     {

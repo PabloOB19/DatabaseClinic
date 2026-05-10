@@ -66,7 +66,7 @@ public class JDBCDoctorManager implements DoctorManager {
                             rs.getBytes("photo"),
                             Enums.Sex.valueOf(rs.getString("sex")),
                             rs.getString("email"),
-                            rs.getString("speciality"),
+                            rs.getString("specialty"),
                             rs.getDate("dob").toLocalDate(),
                             null,
                             null
@@ -99,7 +99,7 @@ public class JDBCDoctorManager implements DoctorManager {
                         rs.getBytes("photo"),
                         Enums.Sex.valueOf(rs.getString("sex")),
                         rs.getString("email"),
-                        rs.getString("speciality"),
+                        rs.getString("specialty"),
                         rs.getDate("dob").toLocalDate(),
                         null,
                         null
@@ -118,7 +118,7 @@ public class JDBCDoctorManager implements DoctorManager {
 
     @Override
     public void updateDoctor(Doctor doctor) {
-        String sql = "UPDATE Doctor SET name = ?, surname = ?, email = ?, sex = ?, dob = ?, photo = ?, speciality = ? WHERE id = ?";
+        String sql = "UPDATE Doctor SET name = ?, surname = ?, email = ?, sex = ?, dob = ?, photo = ?, specialty = ? WHERE id = ?";
 
         try (PreparedStatement p = c.prepareStatement(sql)) {
             p.setString(1, doctor.getName());
@@ -205,7 +205,7 @@ public class JDBCDoctorManager implements DoctorManager {
     public List<Doctor> listDoctorsBySpecialty(String specialty) {
         List<Doctor> list = new ArrayList<>();
 
-        String sql = "SELECT * FROM Doctor WHERE speciality = ?";
+        String sql = "SELECT * FROM Doctor WHERE specialty = ?";
 
         try (PreparedStatement p = c.prepareStatement(sql)) {
             p.setString(1, specialty);
@@ -219,7 +219,7 @@ public class JDBCDoctorManager implements DoctorManager {
                             rs.getBytes("photo"),
                             Enums.Sex.valueOf(rs.getString("sex")),
                             rs.getString("email"),
-                            rs.getString("speciality"),
+                            rs.getString("specialty"),
                             rs.getDate("dob").toLocalDate(),
                             null,
                             null
@@ -258,7 +258,7 @@ public class JDBCDoctorManager implements DoctorManager {
                             rs.getBytes("photo"),
                             Enums.Sex.valueOf(rs.getString("sex")),
                             rs.getString("email"),
-                            rs.getString("speciality"),
+                            rs.getString("specialty"),
                             rs.getDate("dob").toLocalDate(),
                             null,
                             null

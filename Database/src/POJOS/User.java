@@ -4,7 +4,21 @@ import java.io.Serializable;
 import java.util.Objects;
 
 import javax.persistence.*;
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.XmlAttribute;
+import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.XmlTransient;
+import javax.xml.bind.annotation.XmlType;
 
+@XmlRootElement(name = "user")
+@XmlAccessorType(XmlAccessType.FIELD)
+@XmlType(propOrder = {
+        "username",
+        "email",
+        "password"
+})
 
 @Entity
 @Table(name = "users")
@@ -15,19 +29,24 @@ public class User implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "user_id")
+    @XmlAttribute
     private Integer userId;
 
     @Column(name = "username", nullable = false, unique = true)
+    @XmlElement
     private String username;
 
     @Column(name = "email", nullable = false, unique = true)
+    @XmlElement
     private String email;
 
     @Column(name = "password", nullable = false)
+    @XmlElement
     private String password;
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "role_id")
+    @XmlTransient
     private Role role;
 
     public User() {

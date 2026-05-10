@@ -1,4 +1,4 @@
-package JPA;
+//package JPA;
 //Siempre poner get transaction.commit() al final cuando cambiamos cosas, como con preparestatement en jdbc
 //sin quiero leer uso query como statement 
 //fichero persistance, cmabio ruta base de datos, nombre, ruta de db 
@@ -10,7 +10,7 @@ package JPA;
 //crear manager de XML 
 //XML
 //crear carpeta para ficheros xml //rute element(el hospital) , elements, atributes, Type(orden en el que se ponen las cosas ) poner estos
- cosos con @xml 
+ //cosos con @xml 
 // no hay métodos en xml, solo atributos
 // elementos: cosas dentro de otras (hospital : dentro maquinas) y hay muchos  , hospital id : atributo
 //@xmlElementWraper : "envoltorio de elementos"
@@ -56,10 +56,5 @@ public User login(name.password) {
 	
 
 }
-
-<<<<<<< HEAD
-
-=======
->>>>>>> branch 'main' of https://github.com/PabloOB19/DatabaseClinic.git
 
 */

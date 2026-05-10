@@ -1,16 +1,14 @@
 package POJOS;
 
 import java.io.Serializable;
+
 import java.time.LocalDate;
 import java.util.*;
 
-import javax.xml.bind.annotation.XmlAccessType;
-import javax.xml.bind.annotation.XmlAccessorType;
-import javax.xml.bind.annotation.XmlAttribute;
-import javax.xml.bind.annotation.XmlElement;
-import javax.xml.bind.annotation.XmlElementWrapper;
-import javax.xml.bind.annotation.XmlRootElement;
-import javax.xml.bind.annotation.XmlType;
+import javax.xml.bind.annotation.*;
+import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
+import xml.SQLDateAdapter;
+
 
 import Enums.*;
 
@@ -19,7 +17,6 @@ import Enums.*;
 @XmlAccessorType(XmlAccessType.FIELD)
 
 @XmlType(propOrder = {
-		"id",
 		"name",
 		"surname",
 		"email",
@@ -28,14 +25,13 @@ import Enums.*;
 		"height",
 		"weight",
 		"photo",
-		"info",
-		"appointments",
-		"surgeries"
+		"info"
 })
 
 
 public class Patient implements Serializable{
-
+	
+	private static final long serialVersionUID = 1L;
 	@XmlAttribute
     private int id;
 	
@@ -52,7 +48,8 @@ public class Patient implements Serializable{
     private Sex sex;
     
 	@XmlElement
-    private LocalDate dob;
+	@XmlJavaTypeAdapter(SQLDateAdapter.class)
+	private LocalDate dob;
     
 	@XmlElement
     private int height;
@@ -66,12 +63,10 @@ public class Patient implements Serializable{
 	@XmlElement
     private String info;
     
-	@XmlElementWrapper(name = "appointments")
-    @XmlElement(name = "appointment")
+	@XmlTransient
     private List<Appointment> appointments;
     
-	@XmlElementWrapper(name = "surgeries")
-    @XmlElement(name = "surgery")
+	@XmlTransient
     private List<Surgery> surgeries;
     
     

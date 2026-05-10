@@ -8,28 +8,31 @@ import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlElement;
-import javax.xml.bind.annotation.XmlElementWrapper;
 import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.XmlTransient;
 import javax.xml.bind.annotation.XmlType;
+import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
+
 
 import Enums.*;
+import xml.SQLDateAdapter;
 
 @XmlRootElement(name = "equipment")
 
 @XmlAccessorType(XmlAccessType.FIELD)
 
-@XmlType(propOrder = {
-		"id",
-		"name",
-		"category",
-		"quantity",
-		"price",
-		"expiration_date",
-		"surgeries"
-})
+	@XmlType(propOrder = {
+			"name",
+			"category",
+			"quantity",
+			"price",
+			"expiration_date"
+	})
 
 
 public class Equipment implements Serializable{
+
+	private static final long serialVersionUID = 1L;
 
 	@XmlAttribute
     private int id;
@@ -47,11 +50,11 @@ public class Equipment implements Serializable{
     private double price;
 	
 	@XmlElement
+	@XmlJavaTypeAdapter(SQLDateAdapter.class)
     private LocalDate expiration_date;
     
-    @XmlElementWrapper(name = "surgeries")
-    @XmlElement(name = "surgery")
-    private List<Surgery> surgeries;
+	    @XmlTransient
+	    private List<Surgery> surgeries;
 
     
     public Equipment() 
