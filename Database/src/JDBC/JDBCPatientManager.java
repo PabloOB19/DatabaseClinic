@@ -18,8 +18,7 @@ public class JDBCPatientManager implements PatientManager{
         this.c = c;
     }
 
-    // No inserto la lista de appointments y surgeries porque al final puede tener muchas, es una relación many to many
-    // No tiene sentido, ya que, no es una cosa caracter´sitica, guardar estos datos ya lo hacen el resto de clases
+    
     @Override
     public void insertPatient(Patient patient) {
 
