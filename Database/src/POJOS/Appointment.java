@@ -1,12 +1,13 @@
 package POJOS;
 
+import java.io.Serializable;
 import java.time.LocalDate;
 import java.util.*;
 
 import Enums.*;
 
 
-public class Appointment {
+public class Appointment implements Serializable{
 
     private int id;
     private Type_of_appointment type;
@@ -16,7 +17,8 @@ public class Appointment {
     private Doctor doctor;
     private Patient patient;
 
-    public Appointment() {
+    public Appointment() 
+    {
     }
 
     public Appointment(int id, Type_of_appointment type, LocalDate date, Turn turn,

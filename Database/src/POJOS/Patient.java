@@ -1,25 +1,80 @@
 package POJOS;
 
+import java.io.Serializable;
 import java.time.LocalDate;
 import java.util.*;
 
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.XmlAttribute;
+import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlElementWrapper;
+import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.XmlType;
 
 import Enums.*;
 
-public class Patient {
+@XmlRootElement(name = "patient")
 
+@XmlAccessorType(XmlAccessType.FIELD)
+
+@XmlType(propOrder = {
+		"id",
+		"name",
+		"surname",
+		"email",
+		"sex",
+		"dob",
+		"height",
+		"weight",
+		"photo",
+		"info",
+		"appointments",
+		"surgeries"
+})
+
+
+public class Patient implements Serializable{
+
+	@XmlAttribute
     private int id;
+	
+	@XmlElement
     private String name;
+    
+	@XmlElement
     private String surname;
+    
+	@XmlElement
     private String email;
+    
+	@XmlElement
     private Sex sex;
+    
+	@XmlElement
     private LocalDate dob;
+    
+	@XmlElement
     private int height;
+    
+	@XmlElement
     private float weight;
+    
+	@XmlElement
     private byte[] photo;
+    
+	@XmlElement
     private String info;
+    
+	@XmlElementWrapper(name = "appointments")
+    @XmlElement(name = "appointment")
     private List<Appointment> appointments;
+    
+	@XmlElementWrapper(name = "surgeries")
+    @XmlElement(name = "surgery")
     private List<Surgery> surgeries;
+    
+    
 
     public Patient() {
         this.appointments = new ArrayList<>();

@@ -1,21 +1,61 @@
 package POJOS;
 
+import java.io.Serializable;
 import java.time.LocalDate;
 import java.util.*;
 
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.XmlAttribute;
+import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlElementWrapper;
+import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.XmlType;
+
 import Enums.*;
 
-public class Equipment {
+@XmlRootElement(name = "equipment")
 
+@XmlAccessorType(XmlAccessType.FIELD)
+
+@XmlType(propOrder = {
+		"id",
+		"name",
+		"category",
+		"quantity",
+		"price",
+		"expiration_date",
+		"surgeries"
+})
+
+
+public class Equipment implements Serializable{
+
+	@XmlAttribute
     private int id;
+	
+	@XmlElement
     private String name;
+	
+	@XmlElement
     private Category category;
+	
+	@XmlElement
     private int quantity;
+	
+	@XmlElement
     private double price;
+	
+	@XmlElement
     private LocalDate expiration_date;
+    
+    @XmlElementWrapper(name = "surgeries")
+    @XmlElement(name = "surgery")
     private List<Surgery> surgeries;
 
-    public Equipment() {
+    
+    public Equipment() 
+    {
         this.surgeries = new ArrayList<>();
     }
 
