@@ -1,9 +1,12 @@
-package xml;
+
+
+	package xml;
 
 	import jakarta.xml.bind.*;
 	import java.io.File;
 
-	public class xmlManager {
+
+	public class XmlManager {
 
 	    private JAXBContext context;
 
@@ -43,3 +46,5 @@ package xml;
 	        return null;
 	    }
 	}
+
+}

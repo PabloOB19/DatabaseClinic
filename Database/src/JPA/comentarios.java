@@ -9,8 +9,8 @@ package JPA;
 //anotaciones de xml en los pollos para pasarlos a xml 
 //crear manager de XML 
 //XML
-//crear carpeta para ficheros xml 
-//rute element(el hospital) , elements, atributes, Type(orden en el que se ponen las cosas ) poner estos cosos con @xml 
+//crear carpeta para ficheros xml //rute element(el hospital) , elements, atributes, Type(orden en el que se ponen las cosas ) poner estos
+ cosos con @xml 
 // no hay métodos en xml, solo atributos
 // elementos: cosas dentro de otras (hospital : dentro maquinas) y hay muchos  , hospital id : atributo
 //@xmlElementWraper : "envoltorio de elementos"

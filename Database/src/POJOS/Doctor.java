@@ -1,24 +1,74 @@
 package POJOS;
 
 import java.time.LocalDate;
-import java.util.*;
-
-
 import Enums.*;
+import jakarta.xml.bind.annotation.XmlRootElement;
+import jakarta.xml.bind.annotation.XmlAccessorType;
+import jakarta.xml.bind.annotation.XmlAccessType;
+import jakarta.xml.bind.annotation.XmlType;
+import jakarta.xml.bind.annotation.XmlAttribute;
+import jakarta.xml.bind.annotation.XmlElement;
+import jakarta.xml.bind.annotation.XmlElementWrapper;
+import java.util.List;
 
-public class Doctor 
-{
-	private int id;
+import jakarta.xml.bind.annotation.*;
+
+@XmlRootElement(name = "doctor")
+
+@XmlAccessorType(XmlAccessType.FIELD)
+
+@XmlType(
+    propOrder = {
+        "name",
+        "surname",
+        "email",
+        "sex",
+        "dob",
+        "photo",
+        "specialty",
+        "appointments",
+        "surgeries"
+    }
+)
+
+public class Doctor {
+
+    // ATTRIBUTE
+    @XmlAttribute
+    private int id;
+
+    // ELEMENTS
+    @XmlElement
     private String name;
+
+    @XmlElement
     private String surname;
+
+    @XmlElement
     private String email;
+
+    @XmlElement
     private Sex sex;
+
+    @XmlElement
     private LocalDate dob;
+
+    @XmlElement
     private byte[] photo;
+
+    @XmlElement
     private String specialty;
+
+    @XmlElementWrapper(name = "appointments")
+    @XmlElement(name = "appointment")
     private List<Appointment> appointments;
+
+    @XmlElementWrapper(name = "surgeries")
+    @XmlElement(name = "surgery")
     private List<Surgery> surgeries;
 
+   
+   
     public Doctor() {
         this.appointments = new ArrayList<>();
         this.surgeries = new ArrayList<>();
