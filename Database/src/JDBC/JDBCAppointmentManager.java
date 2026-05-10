@@ -65,7 +65,7 @@ public class JDBCAppointmentManager implements AppointmentManager {
                             rs.getBytes("photo"),
                             Sex.valueOf(rs.getString("sex")),
                             rs.getString("email"),
-                            rs.getString("speciality"),
+                            rs.getString("specialty"),
                             rs.getDate("dob").toLocalDate(),
                             null,
                             null

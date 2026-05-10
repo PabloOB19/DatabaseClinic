@@ -17,7 +17,7 @@ public class JDBCDoctorManager implements DoctorManager {
     
     @Override
     public void insertDoctor(Doctor doctor) {
-        String sql = "INSERT INTO Doctor (name, surname, email, sex, dob, photo, speciality) VALUES (?, ?, ?, ?, ?, ?, ?)";
+        String sql = "INSERT INTO Doctor (name, surname, email, sex, dob, photo, specialty) VALUES (?, ?, ?, ?, ?, ?, ?)";
 
         try (PreparedStatement p = c.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
             p.setString(1, doctor.getName());
