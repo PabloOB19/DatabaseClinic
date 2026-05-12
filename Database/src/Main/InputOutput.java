@@ -34,7 +34,7 @@ public class InputOutput {
         List<Surgery> surgeries = new ArrayList<>();
 
         try {
-            byte[] foto = loadImage("imagenes/doctor.jpg");
+            byte[] foto = loadImage("doctor.jpg");
 
             Doctor doctor = new Doctor(
                 1,
