@@ -11,13 +11,11 @@ import JDBC.JDBCDoctorManager;
 import POJOS.Appointment;
 import POJOS.Doctor;
 import POJOS.Surgery;
+import Utils.Utils;
 
 public class InputOutput {
 	 
-    public static byte[] loadImage(String path) throws Exception {
-        return Files.readAllBytes(Paths.get(path));
-    }
-
+   
     public static void main(String[] args) {
 
         JDBCConnectionManager connectionManager = new JDBCConnectionManager();
@@ -34,7 +32,7 @@ public class InputOutput {
         List<Surgery> surgeries = new ArrayList<>();
 
         try {
-            byte[] foto = loadImage("doctor.jpg");
+            byte[] foto = Utils.loadImage("doctor.jpg");
 
             Doctor doctor = new Doctor(
                 1,
