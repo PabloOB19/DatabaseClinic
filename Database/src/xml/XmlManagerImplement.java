@@ -75,11 +75,12 @@ public class XmlManagerImplement implements XmlManager {
 		JAXBContext context = JAXBContext.newInstance(DatabaseWrapper.class);
 		Unmarshaller unmarshaller = context.createUnmarshaller();
 
-		try {
+		try (FileInputStream dtdInput = new FileInputStream(getFile(DTD_FILE));
+			 FileInputStream xmlInput = new FileInputStream(xmlFile)) {
 			SAXParserFactory factory = SAXParserFactory.newInstance();
 			XMLReader reader = factory.newSAXParser().getXMLReader();
-			reader.setEntityResolver((publicId, systemId) -> new InputSource(new FileInputStream(getFile(DTD_FILE))));
-			SAXSource source = new SAXSource(reader, new InputSource(new FileInputStream(xmlFile)));
+			reader.setEntityResolver((publicId, systemId) -> new InputSource(dtdInput));
+			SAXSource source = new SAXSource(reader, new InputSource(xmlInput));
 			return (DatabaseWrapper) unmarshaller.unmarshal(source);
 		} catch (JAXBException ex) {
 			throw new JAXBException("Error", ex);
@@ -117,11 +118,12 @@ public class XmlManagerImplement implements XmlManager {
 	}
 
 	private void validateXML(File xmlFile) {
-		try {
+		try (FileInputStream dtdInput = new FileInputStream(getFile(DTD_FILE));
+			 FileInputStream xmlInput = new FileInputStream(xmlFile)) {
 			SAXParserFactory factory = SAXParserFactory.newInstance();
 			factory.setValidating(true);
 			XMLReader reader = factory.newSAXParser().getXMLReader();
-			reader.setEntityResolver((publicId, systemId) -> new InputSource(new FileInputStream(getFile(DTD_FILE))));
+			reader.setEntityResolver((publicId, systemId) -> new InputSource(dtdInput));
 			reader.setErrorHandler(new ErrorHandler() {
 				@Override
 				public void warning(SAXParseException exception) throws SAXException {
@@ -138,7 +140,7 @@ public class XmlManagerImplement implements XmlManager {
 					throw exception;
 				}
 			});
-			reader.parse(new InputSource(new FileInputStream(xmlFile)));
+			reader.parse(new InputSource(xmlInput));
 		} catch (Exception ex) {
 			throw new IllegalStateException("XML validation failed", ex);
 		}
