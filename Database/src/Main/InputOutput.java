@@ -1,8 +1,6 @@
 package Main;
 
 import java.sql.Connection;
-import java.nio.file.Files;
-import java.nio.file.Paths;
 import Enums.Sex;
 import java.util.List;
 import java.util.ArrayList;
