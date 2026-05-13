@@ -1,6 +1,7 @@
 package JDBC;
 
 import java.sql.*;
+import java.time.LocalDate;
 import java.util.*;
 
 
@@ -26,7 +27,7 @@ public class JDBCEquipmentManager implements EquipmentManager {
             p.setString(2, equipment.getCategory().name());
             p.setInt(3, equipment.getQuantity());
             p.setDouble(4, equipment.getPrice());
-            p.setDate(5, java.sql.Date.valueOf(equipment.getExpiration_date()));
+            p.setString(5, equipment.getExpiration_date().toString());
             
             int affectedRows = p.executeUpdate();
 
@@ -67,7 +68,7 @@ public class JDBCEquipmentManager implements EquipmentManager {
                             Category.valueOf(rs.getString("category")),
                             rs.getInt("quantity"),
                             rs.getDouble("price"),
-                            rs.getDate("expiration_date").toLocalDate(),
+                            LocalDate.parse(rs.getString("expiration_date")),
                             null
                     );
                 }
@@ -98,7 +99,7 @@ public class JDBCEquipmentManager implements EquipmentManager {
                         Category.valueOf(rs.getString("category")),
                         rs.getInt("quantity"),
                         rs.getDouble("price"),
-                        rs.getDate("expiration_date").toLocalDate(),
+                        LocalDate.parse(rs.getString("expiration_date")),
                         null
                 );
 
@@ -122,7 +123,7 @@ public class JDBCEquipmentManager implements EquipmentManager {
             p.setString(2, equipment.getCategory().name());
             p.setInt(3, equipment.getQuantity());
             p.setDouble(4, equipment.getPrice());
-            p.setDate(5, java.sql.Date.valueOf(equipment.getExpiration_date()));
+            p.setString(5, equipment.getExpiration_date().toString());
             p.setInt(6, equipment.getId());
 
             p.executeUpdate();
@@ -193,7 +194,7 @@ public class JDBCEquipmentManager implements EquipmentManager {
                             Category.valueOf(rs.getString("category")),
                             rs.getInt("quantity"),
                             rs.getDouble("price"),
-                            rs.getDate("expiration_date").toLocalDate(),
+                            LocalDate.parse(rs.getString("expiration_date")),
                             null
                     );
 
@@ -227,7 +228,7 @@ public class JDBCEquipmentManager implements EquipmentManager {
                             Category.valueOf(rs.getString("category")),
                             rs.getInt("quantity"),
                             rs.getDouble("price"),
-                            rs.getDate("expiration_date").toLocalDate(),
+                            LocalDate.parse(rs.getString("expiration_date")),
                             null
                     );
 

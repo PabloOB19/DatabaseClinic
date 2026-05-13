@@ -1,6 +1,7 @@
 package JDBC;
 
 import java.sql.*;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -24,7 +25,7 @@ public class JDBCDoctorManager implements DoctorManager {
             p.setString(2, doctor.getSurname());
             p.setString(3, doctor.getEmail());
             p.setString(4, doctor.getSex().name());
-            p.setDate(5, java.sql.Date.valueOf(doctor.getDob()));
+            p.setString(5, doctor.getDob().toString());
             p.setBytes(6, doctor.getPhoto());
             p.setString(7, doctor.getSpecialty());
 
@@ -67,7 +68,7 @@ public class JDBCDoctorManager implements DoctorManager {
                             Enums.Sex.valueOf(rs.getString("sex")),
                             rs.getString("email"),
                             rs.getString("specialty"),
-                            rs.getDate("dob").toLocalDate(),
+                            LocalDate.parse(rs.getString("dob")),
                             null,
                             null
                     );
@@ -100,7 +101,7 @@ public class JDBCDoctorManager implements DoctorManager {
                         Enums.Sex.valueOf(rs.getString("sex")),
                         rs.getString("email"),
                         rs.getString("specialty"),
-                        rs.getDate("dob").toLocalDate(),
+                        LocalDate.parse(rs.getString("dob")),
                         null,
                         null
                 );
@@ -125,7 +126,7 @@ public class JDBCDoctorManager implements DoctorManager {
             p.setString(2, doctor.getSurname());
             p.setString(3, doctor.getEmail());
             p.setString(4, doctor.getSex().name());
-            p.setDate(5, java.sql.Date.valueOf(doctor.getDob()));
+            p.setString(5, doctor.getDob().toString());
             p.setBytes(6, doctor.getPhoto());
             p.setString(7, doctor.getSpecialty());
             p.setInt(8, doctor.getId());
@@ -220,7 +221,7 @@ public class JDBCDoctorManager implements DoctorManager {
                             Enums.Sex.valueOf(rs.getString("sex")),
                             rs.getString("email"),
                             rs.getString("specialty"),
-                            rs.getDate("dob").toLocalDate(),
+                            LocalDate.parse(rs.getString("dob")),
                             null,
                             null
                     );
@@ -259,7 +260,7 @@ public class JDBCDoctorManager implements DoctorManager {
                             Enums.Sex.valueOf(rs.getString("sex")),
                             rs.getString("email"),
                             rs.getString("specialty"),
-                            rs.getDate("dob").toLocalDate(),
+                            LocalDate.parse(rs.getString("dob")),
                             null,
                             null
                     );

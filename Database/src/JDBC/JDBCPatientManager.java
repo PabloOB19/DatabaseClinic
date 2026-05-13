@@ -1,7 +1,7 @@
 package JDBC;
 
 import java.sql.*;
-
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -32,7 +32,7 @@ public class JDBCPatientManager implements PatientManager{
             p.setString(2, patient.getSurname());
             p.setString(3, patient.getEmail());
             p.setString(4, patient.getSex().name());
-            p.setDate(5, java.sql.Date.valueOf(patient.getDob()));
+            p.setString(5, patient.getDob().toString());
             p.setInt(6, patient.getHeight());
             p.setFloat(7, patient.getWeight());
             p.setBytes(8, patient.getPhoto());
@@ -74,7 +74,7 @@ public class JDBCPatientManager implements PatientManager{
                             Sex.valueOf(rs.getString("sex")),
                             rs.getString("name"),
                             rs.getString("surname"),
-                            rs.getDate("dob").toLocalDate(),
+                            LocalDate.parse(rs.getString("dob")),
                             rs.getInt("height"),
                             rs.getFloat("weight"),
                             rs.getBytes("photo"),
@@ -110,7 +110,7 @@ public class JDBCPatientManager implements PatientManager{
                         Sex.valueOf(rs.getString("sex")),
                         rs.getString("name"),
                         rs.getString("surname"),
-                        rs.getDate("dob").toLocalDate(),
+                        LocalDate.parse(rs.getString("dob")),
                         rs.getInt("height"),
                         rs.getFloat("weight"),
                         rs.getBytes("photo"),
@@ -132,8 +132,7 @@ public class JDBCPatientManager implements PatientManager{
     }
     
     
-    // No dejo hacer un update del id, ya que, es lo que se utiliza para localizar al paciente que queremos modificar
-    // No tiene sentido que el paciente vaya cambiando de id, como hacemos nosotros con el DNI , que tienes uno para siempre
+    
     @Override
     public void updatePatient(Patient patient) {
 
@@ -148,7 +147,7 @@ public class JDBCPatientManager implements PatientManager{
             p.setString(2, patient.getSurname());
             p.setString(3, patient.getEmail());
             p.setString(4, patient.getSex().name());
-            p.setDate(5, java.sql.Date.valueOf(patient.getDob()));
+            p.setString(5, patient.getDob().toString());
             p.setInt(6, patient.getHeight());
             p.setFloat(7, patient.getWeight());
             p.setBytes(8, patient.getPhoto());

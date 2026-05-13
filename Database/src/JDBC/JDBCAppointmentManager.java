@@ -1,6 +1,7 @@
 package JDBC;
 
 import java.sql.*;
+import java.time.LocalDate;
 import java.util.*;
 
 
@@ -22,7 +23,7 @@ public class JDBCAppointmentManager implements AppointmentManager {
 
         try (PreparedStatement p = c.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
             p.setString(1, appointment.getType().name());
-            p.setDate(2, java.sql.Date.valueOf(appointment.getDate()));
+            p.setString(2, appointment.getDate().toString());
             p.setDouble(3, appointment.getPrice());
             p.setString(4, appointment.getTurn().name());
             p.setInt(5, appointment.getDoctor().getId());
@@ -66,7 +67,7 @@ public class JDBCAppointmentManager implements AppointmentManager {
                             Sex.valueOf(rs.getString("sex")),
                             rs.getString("email"),
                             rs.getString("specialty"),
-                            rs.getDate("dob").toLocalDate(),
+                            LocalDate.parse(rs.getString("date")),
                             null,
                             null
                     );
@@ -92,7 +93,7 @@ public class JDBCAppointmentManager implements AppointmentManager {
                             Sex.valueOf(rs.getString("sex")),
                             rs.getString("name"),
                             rs.getString("surname"),
-                            rs.getDate("dob").toLocalDate(),
+                            LocalDate.parse(rs.getString("date")),
                             rs.getInt("height"),
                             rs.getFloat("weight"),
                             rs.getBytes("photo"),
@@ -125,7 +126,7 @@ public class JDBCAppointmentManager implements AppointmentManager {
                     result = new Appointment(
                             rs.getInt("id"),
                             Type_of_appointment.valueOf(rs.getString("type")),
-                            rs.getDate("date").toLocalDate(),
+                            LocalDate.parse(rs.getString("date")),
                             Turn.valueOf(rs.getString("turn")),
                             rs.getDouble("price"),
                             doctor,
@@ -158,7 +159,7 @@ public class JDBCAppointmentManager implements AppointmentManager {
                 Appointment appointment = new Appointment(
                         rs.getInt("id"),
                         Type_of_appointment.valueOf(rs.getString("type")),
-                        rs.getDate("date").toLocalDate(),
+                        LocalDate.parse(rs.getString("date")),
                         Turn.valueOf(rs.getString("turn")),
                         rs.getDouble("price"),
                         doctor,
@@ -182,7 +183,7 @@ public class JDBCAppointmentManager implements AppointmentManager {
 
         try (PreparedStatement p = c.prepareStatement(sql)) {
             p.setString(1, appointment.getType().name());
-            p.setDate(2, java.sql.Date.valueOf(appointment.getDate()));
+            p.setString(2, appointment.getDate().toString());
             p.setDouble(3, appointment.getPrice());
             p.setString(4, appointment.getTurn().name());
             p.setInt(5, appointment.getDoctor().getId());
@@ -227,7 +228,7 @@ public class JDBCAppointmentManager implements AppointmentManager {
                     Appointment appointment = new Appointment(
                             rs.getInt("id"),
                             Type_of_appointment.valueOf(rs.getString("type")),
-                            rs.getDate("date").toLocalDate(),
+                            LocalDate.parse(rs.getString("date")),
                             Turn.valueOf(rs.getString("turn")),
                             rs.getDouble("price"),
                             doctor,
@@ -263,7 +264,7 @@ public class JDBCAppointmentManager implements AppointmentManager {
                     Appointment appointment = new Appointment(
                             rs.getInt("id"),
                             Type_of_appointment.valueOf(rs.getString("type")),
-                            rs.getDate("date").toLocalDate(),
+                            LocalDate.parse(rs.getString("date")),
                             Turn.valueOf(rs.getString("turn")),
                             rs.getDouble("price"),
                             doctor,

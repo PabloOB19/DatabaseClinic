@@ -1,6 +1,7 @@
 package JDBC;
 
 import java.sql.*;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -28,7 +29,7 @@ public class JDBCSurgeryManager implements SurgeryManager
 	    try (PreparedStatement p = c.prepareStatement(sql, java.sql.Statement.RETURN_GENERATED_KEYS)) {
 
 	        p.setString(1, surgery.getType().name());
-	        p.setDate(2, java.sql.Date.valueOf(surgery.getDate()));
+	        p.setString(2, surgery.getDate().toString());
 	        p.setDouble(3, surgery.getPrice());
 	        p.setString(4, surgery.getTurn().name());
 	        p.setInt(5, surgery.getPatient().getId());
@@ -67,7 +68,7 @@ public class JDBCSurgeryManager implements SurgeryManager
                             Sex.valueOf(rs.getString("sex")),
                             rs.getString("name"),
                             rs.getString("surname"),
-                            rs.getDate("dob").toLocalDate(),
+                            LocalDate.parse(rs.getString("date")),
                             rs.getInt("height"),
                             rs.getFloat("weight"),
                             rs.getBytes("photo"),
@@ -99,7 +100,7 @@ public class JDBCSurgeryManager implements SurgeryManager
 
 	                surgery = new Surgery(
 	                        rs.getInt("id"),
-	                        rs.getDate("date").toLocalDate(),
+	                        LocalDate.parse(rs.getString("date")),
 	                        Type_of_surgery.valueOf(rs.getString("type")),
 	                        rs.getDouble("price"),
 	                        Turn.valueOf(rs.getString("turn")),
@@ -132,7 +133,7 @@ public class JDBCSurgeryManager implements SurgeryManager
 
                 Surgery surgery = new Surgery(
                         rs.getInt("id"),
-                        rs.getDate("date").toLocalDate(),
+                        LocalDate.parse(rs.getString("date")),
                         Type_of_surgery.valueOf(rs.getString("type")),
                         rs.getDouble("price"),
                         Turn.valueOf(rs.getString("turn")),
@@ -162,7 +163,7 @@ public class JDBCSurgeryManager implements SurgeryManager
 	    try (PreparedStatement p = c.prepareStatement(sql)) {
 
 	        p.setString(1, surgery.getType().name());
-	        p.setDate(2, java.sql.Date.valueOf(surgery.getDate()));
+	        p.setString(2, surgery.getDate().toString());
 	        p.setDouble(3, surgery.getPrice());
 	        p.setString(4, surgery.getTurn().name());
 	        p.setInt(5, surgery.getPatient().getId());
@@ -249,7 +250,7 @@ public class JDBCSurgeryManager implements SurgeryManager
 
                     Surgery surgery = new Surgery(
                             rs.getInt("id"),
-                            rs.getDate("date").toLocalDate(),
+                            LocalDate.parse(rs.getString("date")),
                             Type_of_surgery.valueOf(rs.getString("type")),
                             rs.getDouble("price"),
                             Turn.valueOf(rs.getString("turn")),
@@ -286,7 +287,7 @@ public class JDBCSurgeryManager implements SurgeryManager
 
                     Surgery surgery = new Surgery(
                             rs.getInt("id"),
-                            rs.getDate("date").toLocalDate(),
+                            LocalDate.parse(rs.getString("date")),
                             Type_of_surgery.valueOf(rs.getString("type")),
                             rs.getDouble("price"),
                             Turn.valueOf(rs.getString("turn")),
