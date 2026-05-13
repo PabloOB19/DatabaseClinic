@@ -17,8 +17,7 @@ public class JDBCSurgeryManager implements SurgeryManager
         this.c = c;
     }
 	
-    // Nos pasa lo mismo que en la clase Patient, al ser doctor y equipment dos listas, no hace falta guardarlas
-    // No hay que insertarlas dentro de mi tabla
+  
 	@Override
 	public void insertSurgery(Surgery surgery) {
 
@@ -68,7 +67,7 @@ public class JDBCSurgeryManager implements SurgeryManager
                             Sex.valueOf(rs.getString("sex")),
                             rs.getString("name"),
                             rs.getString("surname"),
-                            LocalDate.parse(rs.getString("date")),
+                            LocalDate.parse(rs.getString("dob")),
                             rs.getInt("height"),
                             rs.getFloat("weight"),
                             rs.getBytes("photo"),

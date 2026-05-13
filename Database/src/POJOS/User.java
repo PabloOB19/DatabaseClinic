@@ -16,8 +16,7 @@ import javax.xml.bind.annotation.XmlType;
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(propOrder = {
         "username",
-        "email",
-        "password"
+        "email"
 })
 
 @Entity

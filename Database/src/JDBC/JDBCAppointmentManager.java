@@ -67,7 +67,7 @@ public class JDBCAppointmentManager implements AppointmentManager {
                             Sex.valueOf(rs.getString("sex")),
                             rs.getString("email"),
                             rs.getString("specialty"),
-                            LocalDate.parse(rs.getString("date")),
+                            LocalDate.parse(rs.getString("dob")),
                             null,
                             null
                     );
@@ -93,7 +93,7 @@ public class JDBCAppointmentManager implements AppointmentManager {
                             Sex.valueOf(rs.getString("sex")),
                             rs.getString("name"),
                             rs.getString("surname"),
-                            LocalDate.parse(rs.getString("date")),
+                            LocalDate.parse(rs.getString("dob")),
                             rs.getInt("height"),
                             rs.getFloat("weight"),
                             rs.getBytes("photo"),
