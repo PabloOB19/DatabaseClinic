@@ -131,7 +131,11 @@ public class JDBCDoctorManager implements DoctorManager {
             p.setString(7, doctor.getSpecialty());
             p.setInt(8, doctor.getId());
 
-            p.executeUpdate();
+            int affectedRows = p.executeUpdate();
+
+            if (affectedRows == 0) {
+                throw new SQLException("Updating doctor failed, no rows affected.");
+            }
 
         } catch (SQLException e) {
             System.out.println("Database error during updateDoctor.");

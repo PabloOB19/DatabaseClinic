@@ -126,7 +126,11 @@ public class JDBCEquipmentManager implements EquipmentManager {
             p.setString(5, equipment.getExpiration_date().toString());
             p.setInt(6, equipment.getId());
 
-            p.executeUpdate();
+            int affectedRows = p.executeUpdate();
+
+            if (affectedRows == 0) {
+                throw new SQLException("Updating equipment failed, no rows affected.");
+            }
 
         } catch (SQLException e) {
             System.out.println("Database error during updateEquipment.");
@@ -247,4 +251,3 @@ public class JDBCEquipmentManager implements EquipmentManager {
 
 
 }
-

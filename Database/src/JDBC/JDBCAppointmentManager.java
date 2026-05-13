@@ -190,7 +190,11 @@ public class JDBCAppointmentManager implements AppointmentManager {
             p.setInt(6, appointment.getPatient().getId());
             p.setInt(7, appointment.getId());
 
-            p.executeUpdate();
+            int affectedRows = p.executeUpdate();
+
+            if (affectedRows == 0) {
+                throw new SQLException("Updating appointment failed, no rows affected.");
+            }
 
         } catch (SQLException e) {
             System.out.println("Database error during updateAppointment.");
