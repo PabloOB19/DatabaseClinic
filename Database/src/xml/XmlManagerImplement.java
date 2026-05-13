@@ -3,6 +3,8 @@ package xml;
 import javax.xml.bind.*;
 
 import java.io.*;
+import java.nio.file.Files;
+import java.nio.file.StandardCopyOption;
 
 import javax.xml.parsers.SAXParserFactory;
 import javax.xml.transform.*;
@@ -41,12 +43,25 @@ public class XmlManagerImplement implements XmlManager {
 
 		JAXBContext context = JAXBContext.newInstance(DatabaseWrapper.class);
 		Marshaller marshaller = context.createMarshaller();
-		marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE);
+		marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.FALSE);
 		marshaller.setProperty("com.sun.xml.bind.xmlHeaders",
 				"<!DOCTYPE DataBase SYSTEM \"" + DTD_FILE + "\">");
 
-		marshaller.marshal(dbWrapper, xmlFile);
-		validateXML(xmlFile);
+		File tempFile = null;
+		try {
+			tempFile = File.createTempFile("DataXML", ".tmp", directory);
+			marshaller.marshal(dbWrapper, tempFile);
+			validateXML(tempFile);
+			Files.move(tempFile.toPath(), xmlFile.toPath(), StandardCopyOption.REPLACE_EXISTING);
+		} catch (JAXBException ex) {
+			throw ex;
+		} catch (Exception ex) {
+			throw new JAXBException("Error exporting XML", ex);
+		} finally {
+			if (tempFile != null && tempFile.exists()) {
+				tempFile.delete();
+			}
+		}
 	}
 
 	@Override
