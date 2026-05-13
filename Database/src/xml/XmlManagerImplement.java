@@ -83,9 +83,9 @@ public class XmlManagerImplement implements XmlManager {
 			SAXSource source = new SAXSource(reader, new InputSource(xmlInput));
 			return (DatabaseWrapper) unmarshaller.unmarshal(source);
 		} catch (JAXBException ex) {
-			throw new JAXBException("Error", ex);
+			throw new JAXBException("Error importing XML", ex);
 		} catch (Exception ex) {
-			throw new JAXBException("Error", ex);
+			throw new JAXBException("Error importing XML", ex);
 		}
 	}
 

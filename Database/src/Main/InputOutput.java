@@ -13,7 +13,7 @@ import POJOS.Doctor;
 import POJOS.Surgery;
 
 public class InputOutput {
-	  // 👇 MÉTODO loadImage
+	 
     public static byte[] loadImage(String path) throws Exception {
         return Files.readAllBytes(Paths.get(path));
     }
@@ -49,7 +49,7 @@ public class InputOutput {
                 surgeries
             );
 
-            // ✔ AQUÍ ESTÁ EL CAMBIO IMPORTANTE
+           
             JDBCDoctorManager doc = new JDBCDoctorManager(c);
             doc.insertDoctor(doctor);
 
