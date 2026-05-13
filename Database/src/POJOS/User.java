@@ -41,7 +41,7 @@ public class User implements Serializable {
     private String email;
 
     @Column(name = "password", nullable = false)
-    @XmlElement
+    @XmlTransient
     private String password;
 
     @ManyToOne(fetch = FetchType.EAGER)
