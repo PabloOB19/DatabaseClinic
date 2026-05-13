@@ -27,12 +27,12 @@ public class XmlManagerImplement implements XmlManager {
 
 	@Override
 	public void export_to_XML(DatabaseWrapper dbWrapper) throws JAXBException {
-		File fileDTD = getXmlFile(DTD_FILE);
+		File fileDTD = getFile(DTD_FILE);
 		if (!fileDTD.exists()) {
 			throw new IllegalArgumentException("File not found");
 		}
 
-		File xmlFile = getXmlFile(XML_FILE);
+		File xmlFile = getFile(XML_FILE);
 		File directory = xmlFile.getParentFile();
 		if (directory != null && !directory.exists()) {
 			directory.mkdirs();
@@ -50,7 +50,7 @@ public class XmlManagerImplement implements XmlManager {
 
 	@Override
 	public DatabaseWrapper import_to_Java() throws JAXBException {
-		File xmlFile = getXmlFile(XML_FILE);
+		File xmlFile = getFile(XML_FILE);
 		if (!xmlFile.exists()) {
 			throw new IllegalArgumentException("File not found");
 		}
@@ -69,9 +69,9 @@ public class XmlManagerImplement implements XmlManager {
 	@Override
 	public void convert_to_HTML() {
 		try {
-			File xml = getXmlFile(XML_FILE);
-			File xsl = getXmlFile(XSL_FILE);
-			File html = getXmlFile(HTML_FILE);
+			File xml = getFile(XML_FILE);
+			File xsl = getFile(XSL_FILE);
+			File html = getFile(HTML_FILE);
 			validateXML(xml);
 
 			Source xmlSource = new StreamSource(xml);
@@ -86,7 +86,7 @@ public class XmlManagerImplement implements XmlManager {
 		}
 	}
 
-	private File getXmlFile(String fileName) {
+	private File getFile(String fileName) {
 		File databaseExecutionPath = new File("XmlFiles", fileName);
 		if (databaseExecutionPath.exists() || databaseExecutionPath.getParentFile().exists()) {
 			return databaseExecutionPath;
@@ -99,7 +99,7 @@ public class XmlManagerImplement implements XmlManager {
 			SAXParserFactory factory = SAXParserFactory.newInstance();
 			factory.setValidating(true);
 			XMLReader reader = factory.newSAXParser().getXMLReader();
-			reader.setEntityResolver((publicId, systemId) -> new InputSource(new FileInputStream(getXmlFile(DTD_FILE))));
+			reader.setEntityResolver((publicId, systemId) -> new InputSource(new FileInputStream(getFile(DTD_FILE))));
 			reader.setErrorHandler(new ErrorHandler() {
 				@Override
 				public void warning(SAXParseException exception) throws SAXException {
