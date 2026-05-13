@@ -6,6 +6,7 @@ import java.io.*;
 
 import javax.xml.parsers.SAXParserFactory;
 import javax.xml.transform.*;
+import javax.xml.transform.sax.SAXSource;
 import javax.xml.transform.stream.StreamResult;
 import javax.xml.transform.stream.StreamSource;
 
@@ -60,8 +61,14 @@ public class XmlManagerImplement implements XmlManager {
 		Unmarshaller unmarshaller = context.createUnmarshaller();
 
 		try {
-			return (DatabaseWrapper) unmarshaller.unmarshal(xmlFile);
+			SAXParserFactory factory = SAXParserFactory.newInstance();
+			XMLReader reader = factory.newSAXParser().getXMLReader();
+			reader.setEntityResolver((publicId, systemId) -> new InputSource(new FileInputStream(getFile(DTD_FILE))));
+			SAXSource source = new SAXSource(reader, new InputSource(new FileInputStream(xmlFile)));
+			return (DatabaseWrapper) unmarshaller.unmarshal(source);
 		} catch (JAXBException ex) {
+			throw new JAXBException("Error", ex);
+		} catch (Exception ex) {
 			throw new JAXBException("Error", ex);
 		}
 	}
