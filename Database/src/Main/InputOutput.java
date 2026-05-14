@@ -69,6 +69,29 @@ public class InputOutput {
 			}
 		}
 	}
+	
+	public static String pedirPassword(String mensaje) {
+		try (Scanner sc = new Scanner(System.in)) {
+			while (true) {
+			    System.out.println(mensaje);
+			    String input = sc.nextLine().trim();
+
+			    if (input.isEmpty()) {
+			        System.out.println("Password cannot be empty.");
+			    } else {
+			        return input;
+			    }
+			}
+		}
+	}
+
+	
+	public static void Impresion() {
+		System.out.println("1-Administrator");
+		System.out.println("2-Doctor");
+		System.out.println("3-Patient");
+		
+	}
 
 
 }
