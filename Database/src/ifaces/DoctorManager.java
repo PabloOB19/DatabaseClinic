@@ -13,4 +13,5 @@ public interface DoctorManager {
     void addDoctorToAppointment(int doctor_id, int appointment_id);
     List<Doctor> listDoctorsBySpecialty(String specialty);
     List<Doctor> listDoctorsBySurgery(int surgery_id);
+    List<Doctor> listDoctorsByAppointment(int appointmentId);
 }

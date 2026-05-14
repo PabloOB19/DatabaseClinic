@@ -67,7 +67,7 @@ public class JDBCSurgeryManager implements SurgeryManager
                             Sex.valueOf(rs.getString("sex")),
                             rs.getString("name"),
                             rs.getString("surname"),
-                            LocalDate.parse(rs.getString("dob")),
+                            JDBCDateUtils.parseLocalDate(rs.getString("dob")),
                             rs.getInt("height"),
                             rs.getFloat("weight"),
                             rs.getBytes("photo"),
@@ -99,7 +99,7 @@ public class JDBCSurgeryManager implements SurgeryManager
 
 	                surgery = new Surgery(
 	                        rs.getInt("id"),
-	                        LocalDate.parse(rs.getString("date")),
+	                        JDBCDateUtils.parseLocalDate(rs.getString("date")),
 	                        Type_of_surgery.valueOf(rs.getString("type")),
 	                        rs.getDouble("price"),
 	                        Turn.valueOf(rs.getString("turn")),
@@ -132,7 +132,7 @@ public class JDBCSurgeryManager implements SurgeryManager
 
                 Surgery surgery = new Surgery(
                         rs.getInt("id"),
-                        LocalDate.parse(rs.getString("date")),
+                        JDBCDateUtils.parseLocalDate(rs.getString("date")),
                         Type_of_surgery.valueOf(rs.getString("type")),
                         rs.getDouble("price"),
                         Turn.valueOf(rs.getString("turn")),
@@ -249,7 +249,7 @@ public class JDBCSurgeryManager implements SurgeryManager
 
                     Surgery surgery = new Surgery(
                             rs.getInt("id"),
-                            LocalDate.parse(rs.getString("date")),
+                            JDBCDateUtils.parseLocalDate(rs.getString("date")),
                             Type_of_surgery.valueOf(rs.getString("type")),
                             rs.getDouble("price"),
                             Turn.valueOf(rs.getString("turn")),
@@ -286,7 +286,7 @@ public class JDBCSurgeryManager implements SurgeryManager
 
                     Surgery surgery = new Surgery(
                             rs.getInt("id"),
-                            LocalDate.parse(rs.getString("date")),
+                            JDBCDateUtils.parseLocalDate(rs.getString("date")),
                             Type_of_surgery.valueOf(rs.getString("type")),
                             rs.getDouble("price"),
                             Turn.valueOf(rs.getString("turn")),

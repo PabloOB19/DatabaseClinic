@@ -67,7 +67,7 @@ public class JDBCAppointmentManager implements AppointmentManager {
                             Sex.valueOf(rs.getString("sex")),
                             rs.getString("email"),
                             rs.getString("specialty"),
-                            LocalDate.parse(rs.getString("dob")),
+                            JDBCDateUtils.parseLocalDate(rs.getString("dob")),
                             null,
                             null
                     );
@@ -93,7 +93,7 @@ public class JDBCAppointmentManager implements AppointmentManager {
                             Sex.valueOf(rs.getString("sex")),
                             rs.getString("name"),
                             rs.getString("surname"),
-                            LocalDate.parse(rs.getString("dob")),
+                            JDBCDateUtils.parseLocalDate(rs.getString("dob")),
                             rs.getInt("height"),
                             rs.getFloat("weight"),
                             rs.getBytes("photo"),
@@ -126,7 +126,7 @@ public class JDBCAppointmentManager implements AppointmentManager {
                     result = new Appointment(
                             rs.getInt("id"),
                             Type_of_appointment.valueOf(rs.getString("type")),
-                            LocalDate.parse(rs.getString("date")),
+                            JDBCDateUtils.parseLocalDate(rs.getString("date")),
                             Turn.valueOf(rs.getString("turn")),
                             rs.getDouble("price"),
                             doctor,
@@ -159,7 +159,7 @@ public class JDBCAppointmentManager implements AppointmentManager {
                 Appointment appointment = new Appointment(
                         rs.getInt("id"),
                         Type_of_appointment.valueOf(rs.getString("type")),
-                        LocalDate.parse(rs.getString("date")),
+                        JDBCDateUtils.parseLocalDate(rs.getString("date")),
                         Turn.valueOf(rs.getString("turn")),
                         rs.getDouble("price"),
                         doctor,
@@ -232,7 +232,7 @@ public class JDBCAppointmentManager implements AppointmentManager {
                     Appointment appointment = new Appointment(
                             rs.getInt("id"),
                             Type_of_appointment.valueOf(rs.getString("type")),
-                            LocalDate.parse(rs.getString("date")),
+                            JDBCDateUtils.parseLocalDate(rs.getString("date")),
                             Turn.valueOf(rs.getString("turn")),
                             rs.getDouble("price"),
                             doctor,
@@ -268,7 +268,7 @@ public class JDBCAppointmentManager implements AppointmentManager {
                     Appointment appointment = new Appointment(
                             rs.getInt("id"),
                             Type_of_appointment.valueOf(rs.getString("type")),
-                            LocalDate.parse(rs.getString("date")),
+                            JDBCDateUtils.parseLocalDate(rs.getString("date")),
                             Turn.valueOf(rs.getString("turn")),
                             rs.getDouble("price"),
                             doctor,

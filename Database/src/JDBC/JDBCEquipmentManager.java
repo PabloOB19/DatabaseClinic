@@ -68,7 +68,7 @@ public class JDBCEquipmentManager implements EquipmentManager {
                             Category.valueOf(rs.getString("category")),
                             rs.getInt("quantity"),
                             rs.getDouble("price"),
-                            LocalDate.parse(rs.getString("expiration_date")),
+                            JDBCDateUtils.parseLocalDate(rs.getString("expiration_date")),
                             null
                     );
                 }
@@ -99,7 +99,7 @@ public class JDBCEquipmentManager implements EquipmentManager {
                         Category.valueOf(rs.getString("category")),
                         rs.getInt("quantity"),
                         rs.getDouble("price"),
-                        LocalDate.parse(rs.getString("expiration_date")),
+                        JDBCDateUtils.parseLocalDate(rs.getString("expiration_date")),
                         null
                 );
 
@@ -198,7 +198,7 @@ public class JDBCEquipmentManager implements EquipmentManager {
                             Category.valueOf(rs.getString("category")),
                             rs.getInt("quantity"),
                             rs.getDouble("price"),
-                            LocalDate.parse(rs.getString("expiration_date")),
+                            JDBCDateUtils.parseLocalDate(rs.getString("expiration_date")),
                             null
                     );
 
@@ -232,7 +232,7 @@ public class JDBCEquipmentManager implements EquipmentManager {
                             Category.valueOf(rs.getString("category")),
                             rs.getInt("quantity"),
                             rs.getDouble("price"),
-                            LocalDate.parse(rs.getString("expiration_date")),
+                            JDBCDateUtils.parseLocalDate(rs.getString("expiration_date")),
                             null
                     );
 

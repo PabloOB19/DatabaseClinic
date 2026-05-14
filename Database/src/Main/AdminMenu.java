@@ -134,7 +134,7 @@ public class AdminMenu {
     }
 
     private void listMenu() {
-        Utils.ImpresionEntity();
+        printListMenu();
         int op = InputOutput.askInt("\n Choose an option: ");
 
         switch (op) {
@@ -153,10 +153,38 @@ public class AdminMenu {
             case 5:
                 listAllEquipment();
                 break;
+            case 6:
+                listDoctorsBySpecialty();
+                break;
+            case 7:
+                listDoctorsBySurgery();
+                break;
+            case 8:
+                listDoctorsByAppointment();
+                break;
+            case 9:
+                listEquipmentBySurgery();
+                break;
+            case 10:
+                listEquipmentByCategory();
+                break;
             default:
-                System.out.println("Invalid entity option.");
+                System.out.println("Invalid list option.");
                 break;
         }
+    }
+
+    private void printListMenu() {
+        System.out.println("1- List all patients");
+        System.out.println("2- List all doctors");
+        System.out.println("3- List all appointments");
+        System.out.println("4- List all surgeries");
+        System.out.println("5- List all equipment");
+        System.out.println("6- List doctors by specialty");
+        System.out.println("7- List doctors by surgery");
+        System.out.println("8- List doctors by appointment");
+        System.out.println("9- List equipment by surgery");
+        System.out.println("10- List equipment by category");
     }
 
     private void addDoctorByScreen() {
@@ -532,6 +560,34 @@ public class AdminMenu {
 
     private void listAllEquipment() {
         printList(equipmentManager.listAllEquipments(), "There is no equipment.");
+    }
+
+    private void listDoctorsBySpecialty() {
+        String specialty = InputOutput.askString("Introduce doctor's specialty:");
+        printList(doctorManager.listDoctorsBySpecialty(specialty), "There are no doctors with that specialty.");
+    }
+
+    private void listDoctorsBySurgery() {
+        int surgeryId = InputOutput.askInt("Introduce surgery ID:");
+        printList(doctorManager.listDoctorsBySurgery(surgeryId), "There are no doctors for that surgery.");
+    }
+
+    private void listDoctorsByAppointment() {
+        int appointmentId = InputOutput.askInt("Introduce appointment ID:");
+        printList(doctorManager.listDoctorsByAppointment(appointmentId), "There are no doctors for that appointment.");
+    }
+
+    private void listEquipmentBySurgery() {
+        int surgeryId = InputOutput.askInt("Introduce surgery ID:");
+        printList(equipmentManager.listEquipmentBySurgery(surgeryId), "There is no equipment for that surgery.");
+    }
+
+    private void listEquipmentByCategory() {
+        Category category = InputOutput.askCategory();
+        if (category == null) {
+            return;
+        }
+        printList(equipmentManager.listEquipmentByCategory(category), "There is no equipment in that category.");
     }
 
     private void printList(List<?> list, String emptyMessage) {
