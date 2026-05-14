@@ -29,7 +29,7 @@ public class InputOutput {
 		}
 	}
 
-	public static String askUsername(String mensaje) {
+	public static String askText(String mensaje) {
 		while (true) {
 			System.out.println(mensaje);
 			String input = sc.nextLine().trim();
@@ -383,7 +383,7 @@ public class InputOutput {
 
 		public static byte[] askPhoto() {
 		    try {
-		        String photoPath = InputOutput.askUsername("Introduce photo path:");
+		        String photoPath = InputOutput.askText("Introduce photo path:");
 		        return Utils.loadImage(photoPath);
 		    } catch (Exception e) {
 		        System.out.println("Could not load image.");

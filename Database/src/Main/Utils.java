@@ -2,6 +2,7 @@ package Main;
 
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.util.List;
 
 public class Utils {
 	
@@ -81,6 +82,44 @@ public class Utils {
 	        System.out.println("5- List doctors by appointment");
 	        System.out.println("6- List equipment by surgery");
 	        System.out.println("7- List equipment by category");
+	    }
+
+		public static void printPatientMenu() {
+	        System.out.println("Patient menu:");
+	        System.out.println("1- List");
+	        System.out.println("2- Get");
+	        System.out.println("3- Exit");
+	    }
+
+		public static void printPatientListMenu() {
+	        System.out.println("1- List my surgeries");
+	        System.out.println("2- List my appointments");
+	        System.out.println("3- List doctors by specialty");
+	    }
+
+		public static void printPatientGetMenu() {
+	        System.out.println("1- Get my surgery by ID");
+	        System.out.println("2- Get my patient data");
+	    }
+
+		public static void printList(List<?> list, String emptyMessage) {
+	        if (list == null || list.isEmpty()) {
+	            System.out.println(emptyMessage);
+	            return;
+	        }
+
+	        for (Object element : list) {
+	            System.out.println(element);
+	        }
+	    }
+
+		public static void printObject(Object object, String notFoundMessage) {
+	        if (object == null) {
+	            System.out.println(notFoundMessage);
+	            return;
+	        }
+
+	        System.out.println(object);
 	    }
 
 }

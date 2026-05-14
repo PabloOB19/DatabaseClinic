@@ -1,17 +1,11 @@
 package Main;
 
-import java.util.List;
-
-import Enums.Category;
 import JDBC.JDBCAppointmentManager;
 import JDBC.JDBCDoctorManager;
 import JDBC.JDBCEquipmentManager;
 import JDBC.JDBCPatientManager;
 import JDBC.JDBCSurgeryManager;
 import POJOS.Doctor;
-import POJOS.Equipment;
-import POJOS.Patient;
-import POJOS.Surgery;
 
 public class DoctorMenu {
 
@@ -64,7 +58,7 @@ public class DoctorMenu {
 
         switch (op) {
             case 1:
-                addEquipmentToSurgeryByScreen();
+                Common.addEquipmentToSurgeryByScreen(equipmentManager, surgeryManager);
                 break;
             default:
                 System.out.println("Invalid add option.");
@@ -84,19 +78,19 @@ public class DoctorMenu {
                 listAppointmentsByDoctor();
                 break;
             case 3:
-                listDoctorsBySpecialty();
+                Common.listDoctorsBySpecialty(doctorManager);
                 break;
             case 4:
-                listDoctorsBySurgery();
+                Common.listDoctorsBySurgery(doctorManager);
                 break;
             case 5:
-                listDoctorsByAppointment();
+                Common.listDoctorsByAppointment(doctorManager);
                 break;
             case 6:
-                listEquipmentBySurgery();
+                Common.listEquipmentBySurgery(equipmentManager);
                 break;
             case 7:
-                listEquipmentByCategory();
+                Common.listEquipmentByCategory(equipmentManager);
                 break;
             default:
                 System.out.println("Invalid list option.");
@@ -110,51 +104,18 @@ public class DoctorMenu {
 
         switch (op) {
             case 1:
-                getPatientById();
+                Common.getPatientById(patientManager);
                 break;
             case 2:
-                getDoctorById();
+                Common.getDoctorById(doctorManager);
                 break;
             case 3: 
-            	getEquipmentById();
+            	Common.getEquipmentById(equipmentManager);
             	break;
             default:
                 System.out.println("Invalid get option.");
                 break;
         }
-    }
-
-    private void addEquipmentToSurgeryByScreen() {
-        int equipmentId = InputOutput.askPositiveInt("Introduce equipment ID:");
-        Equipment equipment = equipmentManager.getEquipmentById(equipmentId);
-        if (equipment == null) {
-            System.out.println("Equipment not found.");
-            return;
-        }
-
-        int surgeryId = InputOutput.askPositiveInt("Introduce surgery ID:");
-        Surgery surgery = surgeryManager.getSurgeryById(surgeryId);
-        if (surgery == null) {
-            System.out.println("Surgery not found.");
-            return;
-        }
-
-        if (isEquipmentAlreadyInSurgery(equipmentId, surgeryId)) {
-            System.out.println("This equipment is already assigned to that surgery.");
-            return;
-        }
-
-        if (surgeryManager.addEquipmentToSurgery(equipmentId, surgeryId)) {
-            System.out.println("Equipment assigned to surgery successfully.");
-        } else {
-            System.out.println("Equipment could not be assigned to surgery.");
-        }
-    }
-
-    private void getPatientById() {
-        int id = InputOutput.askPositiveInt("Introduce patient ID:");
-        Patient patient = patientManager.getPatientById(id);
-        printObject(patient, "Patient not found.");
     }
 
     private void listSurgeriesByDoctor() {
@@ -165,7 +126,7 @@ public class DoctorMenu {
             return;
         }
 
-        printList(surgeryManager.listSurgeriesByDoctor(doctorId), "There are no surgeries for that doctor.");
+        Utils.printList(surgeryManager.listSurgeriesByDoctor(doctorId), "There are no surgeries for that doctor.");
     }
 
     private void listAppointmentsByDoctor() {
@@ -176,72 +137,7 @@ public class DoctorMenu {
             return;
         }
 
-        printList(appointmentManager.listAppointmentsByDoctor(doctorId), "There are no appointments for that doctor.");
+        Utils.printList(appointmentManager.listAppointmentsByDoctor(doctorId), "There are no appointments for that doctor.");
     }
 
-    private void getDoctorById() {
-        int id = InputOutput.askPositiveInt("Introduce doctor ID:");
-        Doctor doctor = doctorManager.getDoctorById(id);
-        printObject(doctor, "Doctor not found.");
-    }
-
-    private void getEquipmentById() {
-        int id = InputOutput.askPositiveInt("Introduce equipment ID:");
-        Equipment equipment = equipmentManager.getEquipmentById(id);
-        printObject(equipment, "Equipment not found.");
-    }
-    private void listDoctorsBySpecialty() {
-        String specialty = InputOutput.askString("Introduce doctor's specialty:");
-        printList(doctorManager.listDoctorsBySpecialty(specialty), "There are no doctors with that specialty.");
-    }
-
-    private void listDoctorsBySurgery() {
-        int surgeryId = InputOutput.askPositiveInt("Introduce surgery ID:");
-        printList(doctorManager.listDoctorsBySurgery(surgeryId), "There are no doctors for that surgery.");
-    }
-
-    private void listDoctorsByAppointment() {
-        int appointmentId = InputOutput.askPositiveInt("Introduce appointment ID:");
-        printList(doctorManager.listDoctorsByAppointment(appointmentId), "There are no doctors for that appointment.");
-    }
-
-    private void listEquipmentBySurgery() {
-        int surgeryId = InputOutput.askPositiveInt("Introduce surgery ID:");
-        printList(equipmentManager.listEquipmentBySurgery(surgeryId), "There is no equipment for that surgery.");
-    }
-
-    private void listEquipmentByCategory() {
-        Category category = InputOutput.askCategory();
-        printList(equipmentManager.listEquipmentByCategory(category), "There is no equipment in that category.");
-    }
-
-    private boolean isEquipmentAlreadyInSurgery(int equipmentId, int surgeryId) {
-        for (Equipment equipment : equipmentManager.listEquipmentBySurgery(surgeryId)) {
-            if (equipment.getId() == equipmentId) {
-                return true;
-            }
-        }
-
-        return false;
-    }
-
-    private void printList(List<?> list, String emptyMessage) {
-        if (list == null || list.isEmpty()) {
-            System.out.println(emptyMessage);
-            return;
-        }
-
-        for (Object element : list) {
-            System.out.println(element);
-        }
-    }
-
-    private void printObject(Object object, String notFoundMessage) {
-        if (object == null) {
-            System.out.println(notFoundMessage);
-            return;
-        }
-
-        System.out.println(object);
-    }
 }

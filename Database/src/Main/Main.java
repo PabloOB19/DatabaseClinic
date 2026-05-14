@@ -47,7 +47,7 @@ public class Main {
 					    
 					    switch(op) {
 					    	 case 1:
-					    		    username = InputOutput.askUsername("Introduce your username:");
+					    		    username = InputOutput.askText("Introduce your username:");
 					    		    password = InputOutput.askPassword("Introduce your password:");
 					    		    User loggedUser = userManager.login(username, password);
 					    		    if (loggedUser == null) {
@@ -67,7 +67,7 @@ public class Main {
 					    		                break;
 	
 					    		            case "Patient":
-					    		                patientMenu();
+					    		                patientMenu(loggedUser);
 					    		                break;
 	
 					    		            default:
@@ -109,7 +109,7 @@ public class Main {
 					    		        break;
 					    		    }
 	
-					    		     username = InputOutput.askUsername("Introduce username:");
+					    		     username = InputOutput.askText("Introduce username:");
 					    		     email = InputOutput.askEmail("Introduce email:");
 					    		     password = InputOutput.askPassword("Introduce password:");
 	
@@ -136,7 +136,7 @@ public class Main {
 					    		    break;
 
 					    	 case 3:
-					    		    username = InputOutput.askUsername("Introduce your username:");
+					    		    username = InputOutput.askText("Introduce your username:");
 					    		    email = InputOutput.askEmail("Introduce your email:");
 
 					    		    User user = userManager.getUser(username, email);
@@ -172,8 +172,9 @@ public class Main {
 	    doctorMenu.run();
 	}
 
-	private static void patientMenu() {
-	    System.out.println("Patient menu");
+	private static void patientMenu(User loggedUser) {
+	    PatientMenu patientMenu = new PatientMenu(loggedUser, doctorManager, patientManager, appointmentManager, surgeryManager);
+	    patientMenu.run();
 	}
 
 		
