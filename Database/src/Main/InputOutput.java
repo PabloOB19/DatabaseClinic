@@ -3,6 +3,12 @@ import java.time.LocalDate;
 import java.time.format.DateTimeParseException;
 import java.util.Scanner;
 
+import Enums.Category;
+import Enums.Sex;
+import Enums.Turn;
+import Enums.Type_of_appointment;
+import Enums.Type_of_surgery;
+
 
 public class InputOutput {
 	
@@ -105,33 +111,143 @@ public class InputOutput {
 	}
 
 	
-	public static void ImpresionRoles() {
-		System.out.println("1-Administrator");
-		System.out.println("2-Doctor");
-		System.out.println("3-Patient");
+	public static Sex askSex() {
+	    System.out.println("Choose sex:");
+	    System.out.println("1- Male");
+	    System.out.println("2- Female");
+
+	    int sexOption = InputOutput.askInt("Choose sex:");
+
+	    switch (sexOption) {
+	        case 1:
+	            return Sex.MALE;
+	        case 2:
+	            return Sex.FEMALE;
+	        default:
+	            System.out.println("Invalid sex option.");
+	            return null;
+	    }
+	}
+
+	public static Turn askTurn() {
+	    System.out.println("Choose turn:");
+	    System.out.println("1- Early morning");
+	    System.out.println("2- Late morning");
+	    System.out.println("3- Early afternoon");
+	    System.out.println("4- Evening");
+
+	    int turnOption = InputOutput.askInt("Choose turn:");
+
+	    switch (turnOption) {
+	        case 1:
+	            return Turn.EARLY_MORNING;
+	        case 2:
+	            return Turn.LATE_MORNING;
+	        case 3:
+	            return Turn.EARLY_AFTERNOON;
+	        case 4:
+	            return Turn.EVENING;
+	        default:
+	            System.out.println("Invalid turn.");
+	            return null;
+	    }
+	}
+
+		public static Type_of_appointment askAppointmentType() {
+		    System.out.println("Choose appointment type:");
+	    System.out.println("1- General checkup");
+	    System.out.println("2- Specialist visit");
+	    System.out.println("3- Surgery");
+	    System.out.println("4- Follow up");
+	    System.out.println("5- Emergency");
+
+	    int typeOption = InputOutput.askInt("Choose type:");
+
+	    switch (typeOption) {
+	        case 1:
+	            return Type_of_appointment.GENERAL_CHECKUP;
+	        case 2:
+	            return Type_of_appointment.SPECIALIST_VISIT;
+	        case 3:
+	            return Type_of_appointment.SURGERY;
+	        case 4:
+	            return Type_of_appointment.FOLLOW_UP;
+	        case 5:
+	            return Type_of_appointment.EMERGENCY;
+	        default:
+	            System.out.println("Invalid appointment type.");
+	            return null;
+		    }
+		}
+
+		public static Type_of_surgery askSurgeryType() {
+		    System.out.println("Choose surgery type:");
+		    System.out.println("1- Rhinoplasty");
+		    System.out.println("2- Blepharoplasty");
+		    System.out.println("3- Facelift");
+		    System.out.println("4- Neck lift");
+		    System.out.println("5- Brow lift");
+		    System.out.println("6- Otoplasty");
+		    System.out.println("7- Liposuction");
+		    System.out.println("8- Abdominoplasty");
+		    System.out.println("9- Breast augmentation");
+		    System.out.println("10- Breast reduction");
+		    System.out.println("11- Breast lift");
+		    System.out.println("12- Gynecomastia surgery");
+
+		    int typeOption = InputOutput.askInt("Choose type:");
+
+		    switch (typeOption) {
+		        case 1:
+		            return Type_of_surgery.RHINOPLASTY;
+		        case 2:
+		            return Type_of_surgery.BLEPHAROPLOASTY;
+		        case 3:
+		            return Type_of_surgery.FACELIFT;
+		        case 4:
+		            return Type_of_surgery.NECK_LIFT;
+		        case 5:
+		            return Type_of_surgery.BROW_LIFT;
+		        case 6:
+		            return Type_of_surgery.OTOPLASTY;
+		        case 7:
+		            return Type_of_surgery.LIPOSUCTION;
+		        case 8:
+		            return Type_of_surgery.ABDOMINOPLASTY;
+		        case 9:
+		            return Type_of_surgery.BREAST_AUGMENTATION;
+		        case 10:
+		            return Type_of_surgery.BREAST_REDUCTION;
+		        case 11:
+		            return Type_of_surgery.BREAST_LIFT;
+		        case 12:
+		            return Type_of_surgery.GYNECOMASTIA_SURGERY;
+		        default:
+		            System.out.println("Invalid surgery type.");
+		            return null;
+		    }
+		}
+
+		public static Category askCategory() {
+		    System.out.println("Choose equipment category:");
+		    System.out.println("1- Machine");
+		    System.out.println("2- Instrument");
+		    System.out.println("3- Supply");
+
+		    int categoryOption = InputOutput.askInt("Choose category:");
+
+		    switch (categoryOption) {
+		        case 1:
+		            return Category.MACHINE;
+		        case 2:
+		            return Category.INSTRUMENT;
+		        case 3:
+		            return Category.SUPPLY;
+		        default:
+		            System.out.println("Invalid category.");
+		            return null;
+		    }
+		}
+
 		
 	}
-	
-	public static void ImpresionAdmin() {
-		 System.out.println("Hello again, what do you want to do?");
-		 System.out.println("1- Add");
-		 System.out.println("2- Upload");
-		 System.out.println("3- Delete");
-		 System.out.println("4- List");
-		 System.out.println("5- Get");
-		 System.out.println("6- Exit");
-		 
-	}
-	
-	 
-	public static void ImpresionEntity() {
-		 System.out.println("1- Patient");
-		 System.out.println("2- Doctor");
-		 System.out.println("3- Appointment");
-		 System.out.println("4- Surgery");
-		 System.out.println("5- Equipment");
-
-}
-	
-	
-}

@@ -9,7 +9,6 @@ import JPA.JPAUser;
 import ifaces.*;
 import xml.XmlManagerImplement;
 import POJOS.*;
-import Utils.Utils;
 
 public class Main {
 	private static JDBCDoctorManager doctorManager;
@@ -79,7 +78,7 @@ public class Main {
 					    		    }
 					    		    break;
 					    	 case 2:
-					    		   InputOutput.ImpresionRoles();	
+					    		   Utils.ImpresionRoles();	
 					    		   int roleOption = InputOutput.askInt("Choose role:");					  
 					    		   String roleName = null;
 					    		    switch (roleOption) {
@@ -165,28 +164,49 @@ public class Main {
 				}}
 		
 	private static void adminMenu() {
-	    InputOutput.ImpresionAdmin();
-	    int op = InputOutput.askInt("\n Choose an option: ");
-	    switch (op) {
-	    	case 1: 
-	    		InputOutput.ImpresionEntity();
-	    		int op2 = InputOutput.askInt("\n Choose an option: ");
-	    		switch (op2) {
-	    		case 1: 
-	    			addPatientByScreen();
-	    			break;
-	    		case 2: 
-	    			addDoctorByScreen();
-	    			break;
+	    boolean adminRun = true;
+
+	    while (adminRun) {
+	    	Utils.ImpresionAdmin();
+		    int op = InputOutput.askInt("\n Choose an option: ");
+
+		    switch (op) {
+		    	case 1: 
+		    		addMenu();
+		    		break;
+		    	case 6:
+		    		adminRun = false;
+		    		break;
+		    	default:
+		    		System.out.println("Invalid option.");
+		    		break;
+		    }
+	    }
+	}
+
+	private static void addMenu() {
+		Utils.ImpresionEntity();
+		int op = InputOutput.askInt("\n Choose an option: ");
+		switch (op) {
+    		case 1: 
+    			addPatientByScreen();
+    			break;
+    		case 2: 
+    			addDoctorByScreen();
+    			break;
 	    		case 3: 
 	    			addAppointmentByScreen();
 	    			break;
-	    			
-	    		}
-	    		
-	    		
-	    		
-	    }
+	    		case 4:
+	    			addSurgeryByScreen();
+	    			break;
+	    		case 5:
+	    			addEquipmentByScreen();
+	    			break;
+	    		default:
+	    			System.out.println("Invalid entity option.");
+	    			break;
+		}
 	}
 
 	private static void doctorMenu() {
@@ -203,21 +223,9 @@ public class Main {
 	    String email = InputOutput.askEmail("Introduce doctor's email:");
 	    String specialty = InputOutput.askString("Introduce doctor's specialty:");
 	    LocalDate dob = InputOutput.askDate("Introduce doctor's date of birth:");
-	    System.out.println("Sex:");
-	    System.out.println("1- MALE");
-	    System.out.println("2- FEMALE");
-	    int sexOption = InputOutput.askInt("Select 1 or 2");
-	    Sex sex = null;
-	    switch (sexOption) {
-	        case 1:
-	            sex = Sex.MALE;
-	            break;
-	        case 2:
-	            sex = Sex.FEMALE;
-	            break;
-	        default:
-	            System.out.println("Invalid sex option.");
-	            return;
+	    Sex sex = InputOutput.askSex();
+	    if (sex == null) {
+	    	return;
 	    }
 	    byte[] photo = null;
 	    try {
@@ -241,21 +249,9 @@ public class Main {
 	    double weightDouble = InputOutput.askDouble("Introduce patient's weight:");
 	    float weight = (float) weightDouble;
 	    String info = InputOutput.askString("Introduce patient's info:");
-	    System.out.println("Choose sex:");
-	    System.out.println("1- Male");
-	    System.out.println("2- Female");
-	    int sexOption = InputOutput.askInt("Choose sex:");
-	    Sex sex = null;
-	    switch (sexOption) {
-	        case 1:
-	            sex = Sex.MALE;
-	            break;
-	        case 2:
-	            sex = Sex.FEMALE;
-	            break;
-	        default:
-	            System.out.println("Invalid sex option.");
-	            return;
+	    Sex sex = InputOutput.askSex();
+	    if (sex == null) {
+	    	return;
 	    }
 	    byte[] photo = null;
 	    try {
@@ -271,63 +267,15 @@ public class Main {
 	}
 
 	private static void addAppointmentByScreen() {
-	    System.out.println("Choose appointment type:");
-	    System.out.println("1- General checkup");
-	    System.out.println("2- Specialist visit");
-	    System.out.println("3- Surgery");
-	    System.out.println("4- Follow up");
-	    System.out.println("5- Emergency");
-
-	    int typeOption = InputOutput.askInt("Choose type:");
-
-	    Type_of_appointment type;
-
-	    switch (typeOption) {
-	        case 1:
-	            type = Type_of_appointment.GENERAL_CHECKUP;
-	            break;
-	        case 2:
-	            type = Type_of_appointment.SPECIALIST_VISIT;
-	            break;
-	        case 3:
-	            type = Type_of_appointment.SURGERY;
-	            break;
-	        case 4:
-	            type = Type_of_appointment.FOLLOW_UP;
-	            break;
-	        case 5:
-	            type = Type_of_appointment.EMERGENCY;
-	            break;
-	        default:
-	            System.out.println("Invalid appointment type.");
-	            return;
+	    Type_of_appointment type = InputOutput.askAppointmentType();
+	    if (type == null) {
+	    	return;
 	    }
-
 	    LocalDate date = InputOutput.askDate("Introduce appointment date:");
 	    double price = InputOutput.askDouble("Introduce appointment price:");
-	    System.out.println("Choose turn:");
-	    System.out.println("1- Early morning");
-	    System.out.println("2- Late morning");
-	    System.out.println("3- Early afternoon");
-	    System.out.println("4- Evening");
-	    int turnOption = InputOutput.askInt("Choose number:");
-	    Turn turn;
-	    switch (turnOption) {
-	        case 1:
-	            turn = Turn.EARLY_MORNING;
-	            break;
-	        case 2:
-	            turn = Turn.LATE_MORNING;
-	            break;
-	        case 3:
-	            turn = Turn.EARLY_AFTERNOON;
-	            break;
-	        case 4:
-	            turn = Turn.EVENING;
-	            break;
-	        default:
-	            System.out.println("Invalid turn.");
-	            return;
+	    Turn turn = InputOutput.askTurn();
+	    if (turn == null) {
+	    	return;
 	    }
 	    int doctorId = InputOutput.askInt("Introduce doctor ID:");
 	    Doctor doctor = doctorManager.getDoctorById(doctorId);
@@ -349,5 +297,45 @@ public class Main {
 	    System.out.println("Appointment added successfully with ID: " + appointment.getId());
 	}
 
+	private static void addSurgeryByScreen() {
+	    Type_of_surgery type = InputOutput.askSurgeryType();
+	    if (type == null) {
+	    	return;
+	    }
+	    LocalDate date = InputOutput.askDate("Introduce surgery date:");
+	    double price = InputOutput.askDouble("Introduce surgery price:");
+	    Turn turn = InputOutput.askTurn();
+	    if (turn == null) {
+	    	return;
+	    }
+	    int patientId = InputOutput.askInt("Introduce patient ID:");
+	    Patient patient = patientManager.getPatientById(patientId);
+	    if (patient == null) {
+	        System.out.println("Patient not found.");
+	        return;
+	    }
+	    Surgery surgery = new Surgery(0, date, type, price, turn, patient, null, null);
+	    surgeryManager.insertSurgery(surgery);
+	    System.out.println("Surgery added successfully with ID: " + surgery.getId());
+	}
+
+	private static void addEquipmentByScreen() {
+	    String name = InputOutput.askString("Introduce equipment name:");
+	    Category category = InputOutput.askCategory();
+	    if (category == null) {
+	    	return;
+	    }
+
+	    int quantity = InputOutput.askInt("Introduce equipment quantity:");
+	    double price = InputOutput.askDouble("Introduce equipment price:");
+	    LocalDate expirationDate = InputOutput.askDate("Introduce equipment expiration date:");
+
+	    Equipment equipment = new Equipment(0, name, category, quantity, price, expirationDate, null);
+	    equipmentManager.insertEquipment(equipment);
+	    System.out.println("Equipment added successfully with ID: " + equipment.getId());
+	}
+		
+
+		
 
 	}
