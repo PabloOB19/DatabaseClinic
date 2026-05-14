@@ -1,6 +1,8 @@
 package Main;
 
 import java.sql.Connection;
+import java.time.LocalDate;
+
 import Enums.*;
 import JDBC.*;
 import JPA.JPAUser;
@@ -8,7 +10,6 @@ import ifaces.*;
 import xml.XmlManagerImplement;
 import POJOS.*;
 import Utils.Utils;
-
 
 public class Main {
 	private static JDBCDoctorManager doctorManager;
@@ -40,7 +41,7 @@ public class Main {
 				System.out.println("╚══════════════════════════════╝");
 				while (run) {
 					 System.out.println("\nOPTIONS:");
-					    System.out.println(" 1-LOGIN ");
+					    System.out.println(" 1-LOG IN ");
 					    System.out.println(" 2-REGISTER");
 					    System.out.println(" 3-FORGOT PASSWORD?");
 					    System.out.println(" 0-Exit");
@@ -50,9 +51,7 @@ public class Main {
 					    	 case 1:
 					    		    username = InputOutput.askUsername("Introduce your username:");
 					    		    password = InputOutput.askPassword("Introduce your password:");
-	
 					    		    User loggedUser = userManager.login(username, password);
-	
 					    		    if (loggedUser == null) {
 					    		        System.out.println("Incorrect username or password.");
 					    		    } else if (loggedUser.getRole() == null) {
@@ -80,17 +79,15 @@ public class Main {
 					    		    }
 					    		    break;
 					    	 case 2:
-					    		   InputOutput.Impresion();	
-					    		   int roleOption = InputOutput.askInt("Choose role:");
-					    		   
+					    		   InputOutput.ImpresionRoles();	
+					    		   int roleOption = InputOutput.askInt("Choose role:");					  
 					    		   String roleName = null;
-	
 					    		    switch (roleOption) {
 					    		        case 1:
-					    		            String adminCode = InputOutput.askPassword("Enter admin creation password:");
+					    		            String adminCode = InputOutput.askPassword("Enter admin creation code:");
 	
 					    		            if (!adminCode.equals("1234abc")) {
-					    		                System.out.println("Incorrect admin password. Admin user was not created.");
+					    		                System.out.println("Incorrect admin code. Admin user was not created.");
 					    		                break;
 					    		            }
 	
@@ -158,20 +155,38 @@ public class Main {
 
 					    	 case 0:
 					    		    run = false;
+					    		    System.out.println("Exit");
 					    		    break;
-	
-					     }
-				}
-			} finally {
+					     }}} finally {
 				if (userManager != null) {
 					userManager.close();
 				}
 				connectionManager.closeConnection();
-			}
-		}
+				}}
 		
 	private static void adminMenu() {
-	    System.out.println("Admin menu");
+	    InputOutput.ImpresionAdmin();
+	    int op = InputOutput.askInt("\n Choose an option: ");
+	    switch (op) {
+	    	case 1: 
+	    		InputOutput.ImpresionEntity();
+	    		int op2 = InputOutput.askInt("\n Choose an option: ");
+	    		switch (op2) {
+	    		case 1: 
+	    			addPatientByScreen();
+	    			break;
+	    		case 2: 
+	    			addDoctorByScreen();
+	    			break;
+	    		case 3: 
+	    			addAppointmentByScreen();
+	    			break;
+	    			
+	    		}
+	    		
+	    		
+	    		
+	    }
 	}
 
 	private static void doctorMenu() {
@@ -181,5 +196,158 @@ public class Main {
 	private static void patientMenu() {
 	    System.out.println("Patient menu");
 	}
+
+	private static void addDoctorByScreen() {
+	    String name = InputOutput.askString("Introduce doctor's name:");
+	    String surname = InputOutput.askString("Introduce doctor's surname:");
+	    String email = InputOutput.askEmail("Introduce doctor's email:");
+	    String specialty = InputOutput.askString("Introduce doctor's specialty:");
+	    LocalDate dob = InputOutput.askDate("Introduce doctor's date of birth:");
+	    System.out.println("Sex:");
+	    System.out.println("1- MALE");
+	    System.out.println("2- FEMALE");
+	    int sexOption = InputOutput.askInt("Select 1 or 2");
+	    Sex sex = null;
+	    switch (sexOption) {
+	        case 1:
+	            sex = Sex.MALE;
+	            break;
+	        case 2:
+	            sex = Sex.FEMALE;
+	            break;
+	        default:
+	            System.out.println("Invalid sex option.");
+	            return;
+	    }
+	    byte[] photo = null;
+	    try {
+	        String photoPath = InputOutput.askUsername("Introduce photo path:");
+	        photo = Utils.loadImage(photoPath);
+	    } catch (Exception e) {
+	        System.out.println("Could not load image.");
+	        return;
+	    }
+	    Doctor doctor = new Doctor(0, name, surname, photo, sex, email, specialty, dob, null, null);
+	    doctorManager.insertDoctor(doctor);
+	    System.out.println("Doctor added successfully with ID: " + doctor.getId());
+	}
+	
+	private static void addPatientByScreen() {
+	    String name = InputOutput.askString("Introduce patient's name:");
+	    String surname = InputOutput.askString("Introduce patient's surname:");
+	    String email = InputOutput.askEmail("Introduce patient's email:");
+	    LocalDate dob = InputOutput.askDate("Introduce patient's date of birth:");
+	    int height = InputOutput.askInt("Introduce patient's height:");
+	    double weightDouble = InputOutput.askDouble("Introduce patient's weight:");
+	    float weight = (float) weightDouble;
+	    String info = InputOutput.askString("Introduce patient's info:");
+	    System.out.println("Choose sex:");
+	    System.out.println("1- Male");
+	    System.out.println("2- Female");
+	    int sexOption = InputOutput.askInt("Choose sex:");
+	    Sex sex = null;
+	    switch (sexOption) {
+	        case 1:
+	            sex = Sex.MALE;
+	            break;
+	        case 2:
+	            sex = Sex.FEMALE;
+	            break;
+	        default:
+	            System.out.println("Invalid sex option.");
+	            return;
+	    }
+	    byte[] photo = null;
+	    try {
+	        String photoPath = InputOutput.askUsername("Introduce photo path:");
+	        photo = Utils.loadImage(photoPath);
+	    } catch (Exception e) {
+	        System.out.println("Could not load image.");
+	        return;
+	    }
+	    Patient patient = new Patient(0, sex, name, surname, dob, height, weight, photo, info, email, null, null);
+	    patientManager.insertPatient(patient);
+	    System.out.println("Patient added successfully with ID: " + patient.getId());
+	}
+
+	private static void addAppointmentByScreen() {
+	    System.out.println("Choose appointment type:");
+	    System.out.println("1- General checkup");
+	    System.out.println("2- Specialist visit");
+	    System.out.println("3- Surgery");
+	    System.out.println("4- Follow up");
+	    System.out.println("5- Emergency");
+
+	    int typeOption = InputOutput.askInt("Choose type:");
+
+	    Type_of_appointment type;
+
+	    switch (typeOption) {
+	        case 1:
+	            type = Type_of_appointment.GENERAL_CHECKUP;
+	            break;
+	        case 2:
+	            type = Type_of_appointment.SPECIALIST_VISIT;
+	            break;
+	        case 3:
+	            type = Type_of_appointment.SURGERY;
+	            break;
+	        case 4:
+	            type = Type_of_appointment.FOLLOW_UP;
+	            break;
+	        case 5:
+	            type = Type_of_appointment.EMERGENCY;
+	            break;
+	        default:
+	            System.out.println("Invalid appointment type.");
+	            return;
+	    }
+
+	    LocalDate date = InputOutput.askDate("Introduce appointment date:");
+	    double price = InputOutput.askDouble("Introduce appointment price:");
+	    System.out.println("Choose turn:");
+	    System.out.println("1- Early morning");
+	    System.out.println("2- Late morning");
+	    System.out.println("3- Early afternoon");
+	    System.out.println("4- Evening");
+	    int turnOption = InputOutput.askInt("Choose number:");
+	    Turn turn;
+	    switch (turnOption) {
+	        case 1:
+	            turn = Turn.EARLY_MORNING;
+	            break;
+	        case 2:
+	            turn = Turn.LATE_MORNING;
+	            break;
+	        case 3:
+	            turn = Turn.EARLY_AFTERNOON;
+	            break;
+	        case 4:
+	            turn = Turn.EVENING;
+	            break;
+	        default:
+	            System.out.println("Invalid turn.");
+	            return;
+	    }
+	    int doctorId = InputOutput.askInt("Introduce doctor ID:");
+	    Doctor doctor = doctorManager.getDoctorById(doctorId);
+
+	    if (doctor == null) {
+	        System.out.println("Doctor not found.");
+	        return;
+	    }
+
+	    int patientId = InputOutput.askInt("Introduce patient ID:");
+	    Patient patient = patientManager.getPatientById(patientId);
+
+	    if (patient == null) {
+	        System.out.println("Patient not found.");
+	        return;
+	    }
+	    Appointment appointment = new Appointment(0, type, date, turn, price, doctor,patient );
+	    appointmentManager.insertAppointment(appointment);
+	    System.out.println("Appointment added successfully with ID: " + appointment.getId());
+	}
+
 
 	}
