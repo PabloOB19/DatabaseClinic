@@ -104,6 +104,19 @@ public class InputOutput {
 		    }
 		}
 	}
+	
+	public static LocalDate askFutureDate(String mensaje) {
+	    while (true) {
+	        LocalDate date = askDate(mensaje);
+
+	        if (date.isBefore(LocalDate.now())) {
+	            System.out.println("Date cannot be in the past.");
+	        } else {
+	            return date;
+	        }
+	    }
+	}
+
 
 	public static String askOptionalString(String mensaje, String currentValue) {
 		while (true) {
@@ -151,6 +164,18 @@ public class InputOutput {
 			}
 		}
 	}
+	public static LocalDate askOptionalFutureDate(String mensaje, LocalDate currentValue) {
+	    while (true) {
+	        LocalDate date = askOptionalDate(mensaje, currentValue);
+
+	        if (date.isBefore(LocalDate.now())) {
+	            System.out.println("Date cannot be in the past.");
+	        } else {
+	            return date;
+	        }
+	    }
+	}
+
 
 	public static int askOptionalPositiveInt(String mensaje, int currentValue) {
 		while (true) {

@@ -275,7 +275,7 @@ public class AdminMenu {
         if (type == null) {
             return;
         }
-        LocalDate date = InputOutput.askDate("Introduce appointment date:");
+        LocalDate date = InputOutput.askFutureDate("Introduce appointment date:");
         double price = InputOutput.askPositiveDouble("Introduce appointment price:");
         Turn turn = InputOutput.askTurn();
         if (turn == null) {
@@ -309,7 +309,7 @@ public class AdminMenu {
         if (type == null) {
             return;
         }
-        LocalDate date = InputOutput.askDate("Introduce surgery date:");
+        LocalDate date = InputOutput.askFutureDate("Introduce surgery date:");
         double price = InputOutput.askPositiveDouble("Introduce surgery price:");
         Turn turn = InputOutput.askTurn();
         if (turn == null) {
@@ -427,7 +427,7 @@ public class AdminMenu {
             appointment.setType(InputOutput.askAppointmentType());
         }
 
-        appointment.setDate(InputOutput.askOptionalDate("Introduce new appointment date:", appointment.getDate()));
+        appointment.setDate(InputOutput.askOptionalFutureDate("Introduce new appointment date:", appointment.getDate()));
         appointment.setPrice(InputOutput.askOptionalPositiveDouble("Introduce new appointment price:", appointment.getPrice()));
 
         if (InputOutput.askYesNo("Do you want to update the turn?")) {
@@ -476,7 +476,7 @@ public class AdminMenu {
             surgery.setType(InputOutput.askSurgeryType());
         }
 
-        surgery.setDate(InputOutput.askOptionalDate("Introduce new surgery date:", surgery.getDate()));
+        surgery.setDate(InputOutput.askOptionalFutureDate("Introduce new surgery date:", surgery.getDate()));
         surgery.setPrice(InputOutput.askOptionalPositiveDouble("Introduce new surgery price:", surgery.getPrice()));
 
         if (InputOutput.askYesNo("Do you want to update the turn?")) {
