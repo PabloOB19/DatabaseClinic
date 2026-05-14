@@ -32,6 +32,8 @@ public class Main {
 		equipmentManager = new JDBCEquipmentManager(c);
 		xmlManager = new XmlManagerImplement();
 		userManager = new JPAUser();
+		String username, password, email;
+
 		boolean run = true;
 		System.out.println("\n\n╔══════════════════════════╗");
 		System.out.println("║            WELCOME           ║");
@@ -45,18 +47,119 @@ public class Main {
 			    int op = InputOutput.askInt("\n Choose an option: ");
 			    
 			    switch(op) {
-			    case 1:
-			    	InputOutput.Impresion();
-			    	 int op2 = InputOutput.askInt("\nChoose an option: ");
-			    	 switch(op2) {
 			    	 case 1:
-			    		 
+			    		    username = InputOutput.askString("Introduce your username:");
+			    		    password = InputOutput.askPassword("Introduce your password:");
+
+			    		    User loggedUser = userManager.login(username, password);
+
+			    		    if (loggedUser == null) {
+			    		        System.out.println("Incorrect username or password.");
+			    		    } else if (loggedUser.getRole() == null) {
+			    		        System.out.println("This user does not have a role assigned.");
+			    		    } else {
+			    		        String roleName = loggedUser.getRole().getName();
+
+			    		        switch (roleName) {
+			    		            case "Admin":
+			    		                adminMenu();
+			    		                break;
+
+			    		            case "Doctor":
+			    		                doctorMenu();
+			    		                break;
+
+			    		            case "Patient":
+			    		                patientMenu();
+			    		                break;
+
+			    		            default:
+			    		                System.out.println("Unknown role: " + roleName);
+			    		                break;
+			    		        }
+			    		    }
+			    		    break;
+			    	 case 2:
+			    		    
+			    		   int roleOption = InputOutput.askInt("Choose role:");
+			    		   InputOutput.Impresion();	
+
+			    		    String roleName = null;
+
+			    		    switch (roleOption) {
+			    		        case 1:
+			    		            String adminCode = InputOutput.askPassword("Enter admin creation password:");
+
+			    		            if (!adminCode.equals("1234abc")) {
+			    		                System.out.println("Incorrect admin password. Admin user was not created.");
+			    		                break;
+			    		            }
+
+			    		            roleName = "Admin";
+			    		            break;
+
+			    		        case 2:
+			    		            roleName = "Doctor";
+			    		            break;
+
+			    		        case 3:
+			    		            roleName = "Patient";
+			    		            break;
+
+			    		        default:
+			    		            System.out.println("Invalid role option.");
+			    		            break;
+			    		    }
+
+			    		    if (roleName == null) {
+			    		        break;
+			    		    }
+
+			    		     username = InputOutput.askString("Introduce username:");
+			    		     email = InputOutput.askString("Introduce email:");
+			    		     password = InputOutput.askPassword("Introduce password:");
+
+			    		    User newUser = new User(username, password, email);
+			    		    userManager.register(newUser);
+
+			    		    User savedUser = userManager.getUser(username, email);
+
+			    		    if (savedUser == null) {
+			    		        System.out.println("User could not be registered. Username or email may already exist.");
+			    		        break;
+			    		    }
+
+			    		    Role role = userManager.getRole(roleName);
+
+			    		    if (role == null) {
+			    		        System.out.println("Role not found.");
+			    		        break;
+			    		    }
+
+			    		    userManager.assignRole(savedUser, role);
+
+			    		    System.out.println("User registered successfully as " + roleName + ".");
+			    		    break;
+
+			    		    
 			    	 }
-			    	 
-			    	
+			     
+			    
 			    }
 			    
-			    
+			
+	}
+		
+	private static void adminMenu() {
+	    System.out.println("Admin menu");
+	}
+
+	private static void doctorMenu() {
+	    System.out.println("Doctor menu");
+	}
+
+	private static void patientMenu() {
+	    System.out.println("Patient menu");
+	}
 
 	}
-}}
