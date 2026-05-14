@@ -9,6 +9,14 @@ public class Utils {
 	 public static byte[] loadImage(String path) throws Exception {
 	        return Files.readAllBytes(Paths.get(path));
 	    }
+	 
+	 public static void printMainMenu() {
+			System.out.println("\nOPTIONS:");
+			System.out.println(" 1-LOG IN ");
+			System.out.println(" 2-REGISTER");
+			System.out.println(" 3-FORGOT PASSWORD?");
+			System.out.println(" 0-Exit");
+		}
 
 	 public static void ImpresionRoles() {
 			System.out.println("1-Administrator");
