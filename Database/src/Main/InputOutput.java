@@ -22,6 +22,19 @@ public class InputOutput {
 		    }
 		}
 	}
+
+	public static String askUsername(String mensaje) {
+		while (true) {
+			System.out.println(mensaje);
+			String input = sc.nextLine().trim();
+
+			if (input.isEmpty()) {
+				System.out.println("Username cannot be empty.");
+			} else {
+				return input;
+			}
+		}
+	}
 	
 	public static int askInt(String mensaje) {
 		while (true) {
