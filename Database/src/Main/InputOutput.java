@@ -249,5 +249,13 @@ public class InputOutput {
 		    }
 		}
 
-		
+		public static byte[] askPhoto() {
+		    try {
+		        String photoPath = InputOutput.askUsername("Introduce photo path:");
+		        return Utils.loadImage(photoPath);
+		    } catch (Exception e) {
+		        System.out.println("Could not load image.");
+		        return null;
+		    }
+		}
 	}
