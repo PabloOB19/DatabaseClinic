@@ -40,42 +40,87 @@ public class DoctorMenu {
 
             switch (op) {
                 case 1:
-                    addEquipmentToSurgeryByScreen();
+                    addMenu();
                     break;
                 case 2:
-                    getPatientById();
+                    listMenu();
                     break;
                 case 3:
-                    listSurgeriesByDoctor();
+                    getMenu();
                     break;
                 case 4:
-                    listAppointmentsByDoctor();
-                    break;
-                case 5:
-                    getDoctorById();
-                    break;
-                case 6:
-                    listDoctorsBySpecialty();
-                    break;
-                case 7:
-                    listDoctorsBySurgery();
-                    break;
-                case 8:
-                    listDoctorsByAppointment();
-                    break;
-                case 9:
-                    listEquipmentBySurgery();
-                    break;
-                case 10:
-                    listEquipmentByCategory();
-                    break;
-                case 11:
                     doctorRun = false;
                     break;
                 default:
                     System.out.println("Invalid option.");
                     break;
             }
+        }
+    }
+
+    private void addMenu() {
+        Utils.printDoctorAddMenu();
+        int op = InputOutput.askInt("\n Choose an option: ");
+
+        switch (op) {
+            case 1:
+                addEquipmentToSurgeryByScreen();
+                break;
+            default:
+                System.out.println("Invalid add option.");
+                break;
+        }
+    }
+
+    private void listMenu() {
+        Utils.printDoctorListMenu();
+        int op = InputOutput.askInt("\n Choose an option: ");
+
+        switch (op) {
+            case 1:
+                listSurgeriesByDoctor();
+                break;
+            case 2:
+                listAppointmentsByDoctor();
+                break;
+            case 3:
+                listDoctorsBySpecialty();
+                break;
+            case 4:
+                listDoctorsBySurgery();
+                break;
+            case 5:
+                listDoctorsByAppointment();
+                break;
+            case 6:
+                listEquipmentBySurgery();
+                break;
+            case 7:
+                listEquipmentByCategory();
+                break;
+            default:
+                System.out.println("Invalid list option.");
+                break;
+        }
+    }
+
+    private void getMenu() {
+        Utils.printGetMenu();
+        int op = InputOutput.askInt("\n Choose an option: ");
+
+        switch (op) {
+            case 1:
+                getPatientById();
+                break;
+            case 2:
+                getDoctorById();
+                break;
+            case 3: 
+            	getEquipmentById();
+            	break;
+            default:
+                System.out.println("Invalid get option.");
+                break;
         }
     }
 
@@ -140,6 +185,11 @@ public class DoctorMenu {
         printObject(doctor, "Doctor not found.");
     }
 
+    private void getEquipmentById() {
+        int id = InputOutput.askPositiveInt("Introduce equipment ID:");
+        Equipment equipment = equipmentManager.getEquipmentById(id);
+        printObject(equipment, "Equipment not found.");
+    }
     private void listDoctorsBySpecialty() {
         String specialty = InputOutput.askString("Introduce doctor's specialty:");
         printList(doctorManager.listDoctorsBySpecialty(specialty), "There are no doctors with that specialty.");

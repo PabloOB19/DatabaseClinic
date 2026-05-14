@@ -63,16 +63,24 @@ public class Utils {
 
 		public static void printDoctorMenu() {
 	        System.out.println("Doctor menu:");
-	        System.out.println("1- Add equipment to surgery");
-	        System.out.println("2- Get patient by ID");
-	        System.out.println("3- List surgeries by doctor");
-	        System.out.println("4- List appointments by doctor");
-	        System.out.println("5- Get doctor by ID");
-	        System.out.println("6- List doctors by specialty");
-	        System.out.println("7- List doctors by surgery");
-	        System.out.println("8- List doctors by appointment");
-	        System.out.println("9- List equipment by surgery");
-	        System.out.println("10- List equipment by category");
-	        System.out.println("11- Exit");
+	        System.out.println("1- Add");
+	        System.out.println("2- List");
+	        System.out.println("3- Get");
+	        System.out.println("4- Exit");
 	    }
+
+		public static void printDoctorAddMenu() {
+	        System.out.println("1- Add equipment to surgery");
+	    }
+
+		public static void printDoctorListMenu() {
+	        System.out.println("1- List surgeries by doctor");
+	        System.out.println("2- List appointments by doctor");
+	        System.out.println("3- List doctors by specialty");
+	        System.out.println("4- List doctors by surgery");
+	        System.out.println("5- List doctors by appointment");
+	        System.out.println("6- List equipment by surgery");
+	        System.out.println("7- List equipment by category");
+	    }
+
 }
