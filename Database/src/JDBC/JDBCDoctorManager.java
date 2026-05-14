@@ -16,7 +16,7 @@ public class JDBCDoctorManager implements DoctorManager {
     }
     
     @Override
-    public void insertDoctor(Doctor doctor) {
+    public boolean insertDoctor(Doctor doctor) {
         String sql = "INSERT INTO Doctor (name, surname, email, sex, dob, photo, specialty) VALUES (?, ?, ?, ?, ?, ?, ?)";
 
         try (PreparedStatement p = c.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
@@ -41,10 +41,12 @@ public class JDBCDoctorManager implements DoctorManager {
                     throw new SQLException("Creating doctor failed, no ID obtained.");
                 }
             }
+            return true;
 
         } catch (SQLException e) {
             System.out.println("Database error during insertDoctor.");
             e.printStackTrace();
+            return false;
         }
     }
 
@@ -117,7 +119,7 @@ public class JDBCDoctorManager implements DoctorManager {
     }
 
     @Override
-    public void updateDoctor(Doctor doctor) {
+    public boolean updateDoctor(Doctor doctor) {
         String sql = "UPDATE Doctor SET name = ?, surname = ?, email = ?, sex = ?, dob = ?, photo = ?, specialty = ? WHERE id = ?";
 
         try (PreparedStatement p = c.prepareStatement(sql)) {
@@ -135,16 +137,18 @@ public class JDBCDoctorManager implements DoctorManager {
             if (affectedRows == 0) {
                 throw new SQLException("Updating doctor failed, no rows affected.");
             }
+            return true;
 
         } catch (SQLException e) {
             System.out.println("Database error during updateDoctor.");
             e.printStackTrace();
+            return false;
         }
     }
 
    
     @Override
-    public void deleteDoctor(int id) {
+    public boolean deleteDoctor(int id) {
         String deleteDoctorSurgeriesSql = "DELETE FROM DOCTOR_SURGERY WHERE doctor_id = ?";
         String deleteAppointmentsSql = "DELETE FROM Appointment WHERE doctor_id = ?";
         String deleteDoctorSql = "DELETE FROM Doctor WHERE id = ?";
@@ -164,10 +168,14 @@ public class JDBCDoctorManager implements DoctorManager {
 
             try (PreparedStatement p = c.prepareStatement(deleteDoctorSql)) {
                 p.setInt(1, id);
-                p.executeUpdate();
+                int affectedRows = p.executeUpdate();
+                if (affectedRows == 0) {
+                    throw new SQLException("Deleting doctor failed, no rows affected.");
+                }
             }
 
             c.commit();
+            return true;
 
         } catch (SQLException e) {
             try {
@@ -178,6 +186,7 @@ public class JDBCDoctorManager implements DoctorManager {
 
             System.out.println("Database error during deleteDoctor.");
             e.printStackTrace();
+            return false;
 
         } finally {
             try {
@@ -190,18 +199,20 @@ public class JDBCDoctorManager implements DoctorManager {
 
 
     @Override
-    public void addDoctorToAppointment(int doctor_id, int appointment_id) {
+    public boolean addDoctorToAppointment(int doctor_id, int appointment_id) {
         String sql = "UPDATE Appointment SET doctor_id = ? WHERE id = ?";
 
         try (PreparedStatement p = c.prepareStatement(sql)) {
             p.setInt(1, doctor_id);
             p.setInt(2, appointment_id);
 
-            p.executeUpdate();
+            int affectedRows = p.executeUpdate();
+            return affectedRows > 0;
 
         } catch (SQLException e) {
             System.out.println("Database error during addDoctorToAppointment.");
             e.printStackTrace();
+            return false;
         }
     }
 

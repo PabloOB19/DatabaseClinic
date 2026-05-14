@@ -20,7 +20,7 @@ public class JDBCPatientManager implements PatientManager{
 
     
     @Override
-    public void insertPatient(Patient patient) {
+    public boolean insertPatient(Patient patient) {
 
         String sql = "INSERT INTO Patient "
                 + "(name, surname, email, sex, dob, height, weight, photo, info) "
@@ -51,10 +51,12 @@ public class JDBCPatientManager implements PatientManager{
                     throw new SQLException("Creating patient failed, no ID obtained.");
                 }
             }
+            return true;
 
         } catch (SQLException e) {
             System.out.println("Database error during insertPatient.");
             e.printStackTrace();
+            return false;
         }
     }
     
@@ -134,7 +136,7 @@ public class JDBCPatientManager implements PatientManager{
     
     
     @Override
-    public void updatePatient(Patient patient) {
+    public boolean updatePatient(Patient patient) {
 
         String sql = "UPDATE Patient "
                 + "SET name = ?, surname = ?, email = ?, sex = ?, dob = ?, "
@@ -159,16 +161,18 @@ public class JDBCPatientManager implements PatientManager{
             if (affectedRows == 0) {
                 throw new SQLException("Updating patient failed, no rows affected.");
             }
+            return true;
 
         } catch (SQLException e) {
             System.out.println("Database error during updatePatient.");
             e.printStackTrace();
+            return false;
         }
     }
 
     
     @Override
-    public void deletePatient(int id) {
+    public boolean deletePatient(int id) {
         String deleteAppointmentsSql = "DELETE FROM Appointment WHERE patient_id = ?";
 
         String deleteDoctorSurgerySql =
@@ -207,10 +211,14 @@ public class JDBCPatientManager implements PatientManager{
 
             try (PreparedStatement p = c.prepareStatement(deletePatientSql)) {
                 p.setInt(1, id);
-                p.executeUpdate();
+                int affectedRows = p.executeUpdate();
+                if (affectedRows == 0) {
+                    throw new SQLException("Deleting patient failed, no rows affected.");
+                }
             }
 
             c.commit();
+            return true;
 
         } catch (SQLException e) {
             try {
@@ -221,6 +229,7 @@ public class JDBCPatientManager implements PatientManager{
 
             System.out.println("Database error during deletePatient.");
             e.printStackTrace();
+            return false;
 
         } finally {
             try {

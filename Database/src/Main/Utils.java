@@ -19,7 +19,7 @@ public class Utils {
 		public static void ImpresionAdmin() {
 			 System.out.println("Hello again, what do you want to do?");
 			 System.out.println("1- Add");
-			 System.out.println("2- Upload");
+			 System.out.println("2- Update");
 			 System.out.println("3- Delete");
 			 System.out.println("4- List");
 			 System.out.println("5- Get");

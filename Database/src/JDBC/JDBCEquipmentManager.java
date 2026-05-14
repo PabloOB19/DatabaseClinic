@@ -19,7 +19,7 @@ public class JDBCEquipmentManager implements EquipmentManager {
     }
 
     @Override
-    public void insertEquipment(Equipment equipment) {
+    public boolean insertEquipment(Equipment equipment) {
         String sql = "INSERT INTO Equipment (name, category, quantity, price, expiration_date) VALUES (?, ?, ?, ?, ?)";
 
         try (PreparedStatement p = c.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
@@ -42,10 +42,12 @@ public class JDBCEquipmentManager implements EquipmentManager {
                     throw new SQLException("Creating equipment failed, no ID obtained.");
                 }
             }
+            return true;
 
         } catch (SQLException e) {
             System.out.println("Database error during insertEquipment.");
             e.printStackTrace();
+            return false;
         }
     }
 
@@ -115,7 +117,7 @@ public class JDBCEquipmentManager implements EquipmentManager {
     }
 
     @Override
-    public void updateEquipment(Equipment equipment) {
+    public boolean updateEquipment(Equipment equipment) {
         String sql = "UPDATE Equipment SET name = ?, category = ?, quantity = ?, price = ?, expiration_date = ? WHERE id = ?";
 
         try (PreparedStatement p = c.prepareStatement(sql)) {
@@ -131,16 +133,18 @@ public class JDBCEquipmentManager implements EquipmentManager {
             if (affectedRows == 0) {
                 throw new SQLException("Updating equipment failed, no rows affected.");
             }
+            return true;
 
         } catch (SQLException e) {
             System.out.println("Database error during updateEquipment.");
             e.printStackTrace();
+            return false;
         }
     }
 
    
     @Override
-    public void deleteEquipment(int id) {
+    public boolean deleteEquipment(int id) {
         String deleteRelationsSql = "DELETE FROM SURGERY_EQUIPMENT WHERE equipment_id = ?";
         String deleteEquipmentSql = "DELETE FROM Equipment WHERE id = ?";
 
@@ -154,10 +158,14 @@ public class JDBCEquipmentManager implements EquipmentManager {
 
             try (PreparedStatement p = c.prepareStatement(deleteEquipmentSql)) {
                 p.setInt(1, id);
-                p.executeUpdate();
+                int affectedRows = p.executeUpdate();
+                if (affectedRows == 0) {
+                    throw new SQLException("Deleting equipment failed, no rows affected.");
+                }
             }
 
             c.commit();
+            return true;
 
         } catch (SQLException e) {
             try {
@@ -168,6 +176,7 @@ public class JDBCEquipmentManager implements EquipmentManager {
 
             System.out.println("Database error during deleteEquipment.");
             e.printStackTrace();
+            return false;
 
         } finally {
             try {
