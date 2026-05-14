@@ -2,7 +2,6 @@ package Main;
 
 import java.sql.Connection;
 import Enums.*;
-import java.util.*;
 import JDBC.*;
 import JPA.JPAUser;
 import ifaces.*;
@@ -36,7 +35,7 @@ public class Main {
 				String username, password, email;
 
 				boolean run = true;
-				System.out.println("\n\n╔══════════════════════════╗");
+				System.out.println("\n\n╔══════════════════════════════╗");
 				System.out.println("║            WELCOME           ║");
 				System.out.println("╚══════════════════════════════╝");
 				while (run) {
@@ -139,6 +138,22 @@ public class Main {
 					    		    userManager.assignRole(savedUser, role);
 	
 					    		    System.out.println("User registered successfully as " + roleName + ".");
+					    		    break;
+
+					    	 case 3:
+					    		    username = InputOutput.askUsername("Introduce your username:");
+					    		    email = InputOutput.askEmail("Introduce your email:");
+
+					    		    User user = userManager.getUser(username, email);
+
+					    		    if (user == null) {
+					    		        System.out.println("No user found with that username and email.");
+					    		        break;
+					    		    }
+
+					    		    password = InputOutput.askPassword("Introduce your new password:");
+					    		    userManager.updatePassword(user, password);
+					    		    System.out.println("Password updated successfully.");
 					    		    break;
 
 					    	 case 0:
