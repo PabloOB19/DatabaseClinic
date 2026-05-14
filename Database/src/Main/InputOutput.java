@@ -110,6 +110,21 @@ public class InputOutput {
 		}
 	}
 
+	public static boolean askYesNo(String mensaje) {
+		while (true) {
+			System.out.println(mensaje + " (y/n)");
+			String input = sc.nextLine().trim().toLowerCase();
+
+			if (input.equals("y") || input.equals("yes") || input.equals("s") || input.equals("si")) {
+				return true;
+			} else if (input.equals("n") || input.equals("no")) {
+				return false;
+			} else {
+				System.out.println("Please answer yes or no.");
+			}
+		}
+	}
+
 	
 	public static Sex askSex() {
 	    System.out.println("Choose sex:");

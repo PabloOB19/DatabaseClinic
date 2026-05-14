@@ -1,14 +1,13 @@
 package Main;
 
 import java.sql.Connection;
-import java.time.LocalDate;
 
-import Enums.*;
 import JDBC.*;
 import JPA.JPAUser;
+import POJOS.Role;
+import POJOS.User;
 import ifaces.*;
 import xml.XmlManagerImplement;
-import POJOS.*;
 
 public class Main {
 	private static JDBCDoctorManager doctorManager;
@@ -164,78 +163,9 @@ public class Main {
 				}}
 		
 	private static void adminMenu() {
-	    boolean adminRun = true;
-
-	    while (adminRun) {
-	    	Utils.ImpresionAdmin();
-		    int op = InputOutput.askInt("\n Choose an option: ");
-
-		    switch (op) {
-		    	case 1: 
-		    		addMenu();
-		    		break;
-		    	case 2: 
-		    		updateMenu();
-		    	case 6:
-		    		adminRun = false;
-		    		break;
-		    	default:
-		    		System.out.println("Invalid option.");
-		    		break;
-		    }
-	    }
+	    AdminMenu adminMenu = new AdminMenu(doctorManager, patientManager, appointmentManager, surgeryManager, equipmentManager);
+	    adminMenu.run();
 	}
-
-	private static void addMenu() {
-		Utils.ImpresionEntity();
-		int op = InputOutput.askInt("\n Choose an option: ");
-		switch (op) {
-    		case 1: 
-    			addPatientByScreen();
-    			break;
-    		case 2: 
-    			addDoctorByScreen();
-    			break;
-	    		case 3: 
-	    			addAppointmentByScreen();
-	    			break;
-	    		case 4:
-	    			addSurgeryByScreen();
-	    			break;
-	    		case 5:
-	    			addEquipmentByScreen();
-	    			break;
-	    		default:
-	    			System.out.println("Invalid entity option.");
-	    			break;
-		}
-	}
-	private static void updateMenu() {
-	    Utils.ImpresionEntity();
-	    int op = InputOutput.askInt("\n Choose an option: ");
-
-	    switch (op) {
-	        case 1:
-	            updatePatientByScreen();
-	            break;
-	        case 2:
-	            updateDoctorByScreen();
-	            break;
-	        case 3:
-	            updateAppointmentByScreen();
-	            break;
-	        case 4:
-	            updateSurgeryByScreen();
-	            break;
-	        case 5:
-	            updateEquipmentByScreen();
-	            break;
-	        default:
-	            System.out.println("Invalid entity option.");
-	            break;
-	    }
-	}
-
 
 	private static void doctorMenu() {
 	    System.out.println("Doctor menu");
@@ -243,175 +173,6 @@ public class Main {
 
 	private static void patientMenu() {
 	    System.out.println("Patient menu");
-	}
-
-	private static void addDoctorByScreen() {
-	    String name = InputOutput.askString("Introduce doctor's name:");
-	    String surname = InputOutput.askString("Introduce doctor's surname:");
-	    String email = InputOutput.askEmail("Introduce doctor's email:");
-	    String specialty = InputOutput.askString("Introduce doctor's specialty:");
-	    LocalDate dob = InputOutput.askDate("Introduce doctor's date of birth:");
-	    Sex sex = InputOutput.askSex();
-	    if (sex == null) {
-	    	return;
-	    }
-	    byte[] photo = InputOutput.askPhoto();
-	    if (photo == null) {
-	    	return;
-	    }
-	    Doctor doctor = new Doctor(0, name, surname, photo, sex, email, specialty, dob, null, null);
-	    doctorManager.insertDoctor(doctor);
-	    System.out.println("Doctor added successfully with ID: " + doctor.getId());
-	}
-	
-	private static void addPatientByScreen() {
-	    String name = InputOutput.askString("Introduce patient's name:");
-	    String surname = InputOutput.askString("Introduce patient's surname:");
-	    String email = InputOutput.askEmail("Introduce patient's email:");
-	    LocalDate dob = InputOutput.askDate("Introduce patient's date of birth:");
-	    int height = InputOutput.askInt("Introduce patient's height:");
-	    double weightDouble = InputOutput.askDouble("Introduce patient's weight:");
-	    float weight = (float) weightDouble;
-	    String info = InputOutput.askString("Introduce patient's info:");
-	    Sex sex = InputOutput.askSex();
-	    if (sex == null) {
-	    	return;
-	    }
-	    byte[] photo = InputOutput.askPhoto();
-	    if (photo == null) {
-	    	return;
-	    }
-	    Patient patient = new Patient(0, sex, name, surname, dob, height, weight, photo, info, email, null, null);
-	    patientManager.insertPatient(patient);
-	    System.out.println("Patient added successfully with ID: " + patient.getId());
-	}
-
-	private static void addAppointmentByScreen() {
-	    Type_of_appointment type = InputOutput.askAppointmentType();
-	    if (type == null) {
-	    	return;
-	    }
-	    LocalDate date = InputOutput.askDate("Introduce appointment date:");
-	    double price = InputOutput.askDouble("Introduce appointment price:");
-	    Turn turn = InputOutput.askTurn();
-	    if (turn == null) {
-	    	return;
-	    }
-	    int doctorId = InputOutput.askInt("Introduce doctor ID:");
-	    Doctor doctor = doctorManager.getDoctorById(doctorId);
-
-	    if (doctor == null) {
-	        System.out.println("Doctor not found.");
-	        return;
-	    }
-
-	    int patientId = InputOutput.askInt("Introduce patient ID:");
-	    Patient patient = patientManager.getPatientById(patientId);
-
-	    if (patient == null) {
-	        System.out.println("Patient not found.");
-	        return;
-	    }
-	    Appointment appointment = new Appointment(0, type, date, turn, price, doctor,patient );
-	    appointmentManager.insertAppointment(appointment);
-	    System.out.println("Appointment added successfully with ID: " + appointment.getId());
-	}
-
-	private static void addSurgeryByScreen() {
-	    Type_of_surgery type = InputOutput.askSurgeryType();
-	    if (type == null) {
-	    	return;
-	    }
-	    LocalDate date = InputOutput.askDate("Introduce surgery date:");
-	    double price = InputOutput.askDouble("Introduce surgery price:");
-	    Turn turn = InputOutput.askTurn();
-	    if (turn == null) {
-	    	return;
-	    }
-	    int patientId = InputOutput.askInt("Introduce patient ID:");
-	    Patient patient = patientManager.getPatientById(patientId);
-	    if (patient == null) {
-	        System.out.println("Patient not found.");
-	        return;
-	    }
-	    Surgery surgery = new Surgery(0, date, type, price, turn, patient, null, null);
-	    surgeryManager.insertSurgery(surgery);
-	    System.out.println("Surgery added successfully with ID: " + surgery.getId());
-	}
-
-	private static void addEquipmentByScreen() {
-	    String name = InputOutput.askString("Introduce equipment name:");
-	    Category category = InputOutput.askCategory();
-	    if (category == null) {
-	    	return;
-	    }
-	    int quantity = InputOutput.askInt("Introduce equipment quantity:");
-	    double price = InputOutput.askDouble("Introduce equipment price:");
-	    LocalDate expirationDate = InputOutput.askDate("Introduce equipment expiration date:");
-	    Equipment equipment = new Equipment(0, name, category, quantity, price, expirationDate, null);
-	    equipmentManager.insertEquipment(equipment);
-	    System.out.println("Equipment added successfully with ID: " + equipment.getId());
-	}
-
-	private static void updateDoctorByScreen() {
-	    int id = InputOutput.askInt("Introduce doctor ID:");
-	    Doctor doctor = doctorManager.getDoctorById(id);
-	    if (doctor == null) {
-	        System.out.println("Doctor not found.");
-	        return;
-	    }
-	    doctor.setName(InputOutput.askString("Introduce new doctor's name:"));
-	    doctor.setSurname(InputOutput.askString("Introduce new doctor's surname:"));
-	    doctor.setEmail(InputOutput.askEmail("Introduce new doctor's email:"));
-	    doctor.setSpecialty(InputOutput.askString("Introduce new doctor's specialty:"));
-	    doctor.setDob(InputOutput.askDate("Introduce new doctor's date of birth:"));
-	    Sex sex = InputOutput.askSex();
-	    if (sex == null) {
-	        return;
-	    }
-	    doctor.setSex(sex);
-	    byte[] photo = InputOutput.askPhoto();
-	    if (photo == null) {
-	        return;
-	    }
-	    doctor.setPhoto(photo);
-	    doctorManager.updateDoctor(doctor);
-	    System.out.println("Doctor updated successfully.");
-	}
-	private static void updatePatientByScreen() {
-	    int id = InputOutput.askInt("Introduce patient ID:");
-	    Patient patient = patientManager.getPatientById(id);
-
-	    if (patient == null) {
-	        System.out.println("Patient not found.");
-	        return;
-	    }
-
-	    patient.setName(InputOutput.askString("Introduce new patient's name:"));
-	    patient.setSurname(InputOutput.askString("Introduce new patient's surname:"));
-	    patient.setEmail(InputOutput.askEmail("Introduce new patient's email:"));
-	    patient.setDob(InputOutput.askDate("Introduce new patient's date of birth:"));
-	    patient.setHeight(InputOutput.askInt("Introduce new patient's height:"));
-
-	    double weightDouble = InputOutput.askDouble("Introduce new patient's weight:");
-	    patient.setWeight((float) weightDouble);
-
-	    patient.setInfo(InputOutput.askString("Introduce new patient's info:"));
-
-	    Sex sex = InputOutput.askSex();
-	    if (sex == null) {
-	        return;
-	    }
-	    patient.setSex(sex);
-
-	    byte[] photo = InputOutput.askPhoto();
-	    if (photo == null) {
-	        return;
-	    }
-	    patient.setPhoto(photo);
-
-	    patientManager.updatePatient(patient);
-	    System.out.println("Patient updated successfully.");
 	}
 
 		
