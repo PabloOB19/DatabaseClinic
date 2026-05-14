@@ -77,6 +77,7 @@ public class XmlAdmin {
             DatabaseWrapper wrapper = buildDatabaseWrapper();
             xmlManager.export_to_XML(wrapper);
             System.out.println("Database exported to XML successfully.");
+            System.out.println("File generated at: Database/XmlFiles/DataXML.xml");
         } catch (Exception e) {
             System.out.println("Database could not be exported to XML: " + e.getMessage());
         }
@@ -103,6 +104,7 @@ public class XmlAdmin {
         try {
             xmlManager.convert_to_HTML();
             System.out.println("HTML generated successfully.");
+            System.out.println("File generated at: Database/XmlFiles/DataHTML.html");
         } catch (Exception e) {
             System.out.println("HTML could not be generated: " + e.getMessage());
         }
