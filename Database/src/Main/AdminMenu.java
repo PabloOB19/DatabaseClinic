@@ -45,7 +45,13 @@ public class AdminMenu {
                 case 4:
                     listMenu();
                     break;
+                case 5:
+                    getMenu();
+                    break;
                 case 6:
+                    assignMenu();
+                    break;
+                case 7:
                     adminRun = false;
                     break;
                 default:
@@ -134,7 +140,7 @@ public class AdminMenu {
     }
 
     private void listMenu() {
-        printListMenu();
+        Utils.printListMenu();
         int op = InputOutput.askInt("\n Choose an option: ");
 
         switch (op) {
@@ -174,18 +180,43 @@ public class AdminMenu {
         }
     }
 
-    private void printListMenu() {
-        System.out.println("1- List all patients");
-        System.out.println("2- List all doctors");
-        System.out.println("3- List all appointments");
-        System.out.println("4- List all surgeries");
-        System.out.println("5- List all equipment");
-        System.out.println("6- List doctors by specialty");
-        System.out.println("7- List doctors by surgery");
-        System.out.println("8- List doctors by appointment");
-        System.out.println("9- List equipment by surgery");
-        System.out.println("10- List equipment by category");
+    private void getMenu() {
+        Utils.printGetMenu();
+        int op = InputOutput.askInt("\n Choose an option: ");
+
+        switch (op) {
+            case 1:
+                getDoctorById();
+                break;
+            case 2:
+                getPatientById();
+                break;
+            case 3:
+                getEquipmentById();
+                break;
+            default:
+                System.out.println("Invalid get option.");
+                break;
+        }
     }
+
+    private void assignMenu() {
+        Utils.printAssignMenu();
+        int op = InputOutput.askInt("\n Choose an option: ");
+
+        switch (op) {
+            case 1:
+                addDoctorToSurgeryByScreen();
+                break;
+            case 2:
+                addEquipmentToSurgeryByScreen();
+                break;
+            default:
+                System.out.println("Invalid assign option.");
+                break;
+        }
+    }
+
 
     private void addDoctorByScreen() {
         String name = InputOutput.askString("Introduce doctor's name:");
@@ -590,6 +621,92 @@ public class AdminMenu {
         printList(equipmentManager.listEquipmentByCategory(category), "There is no equipment in that category.");
     }
 
+    private void getDoctorById() {
+        int id = InputOutput.askInt("Introduce doctor ID:");
+        Doctor doctor = doctorManager.getDoctorById(id);
+        printObject(doctor, "Doctor not found.");
+    }
+
+    private void getPatientById() {
+        int id = InputOutput.askInt("Introduce patient ID:");
+        Patient patient = patientManager.getPatientById(id);
+        printObject(patient, "Patient not found.");
+    }
+
+    private void getEquipmentById() {
+        int id = InputOutput.askInt("Introduce equipment ID:");
+        Equipment equipment = equipmentManager.getEquipmentById(id);
+        printObject(equipment, "Equipment not found.");
+    }
+
+    private void addDoctorToSurgeryByScreen() {
+        int doctorId = InputOutput.askInt("Introduce doctor ID:");
+        Doctor doctor = doctorManager.getDoctorById(doctorId);
+        if (doctor == null) {
+            System.out.println("Doctor not found.");
+            return;
+        }
+
+        int surgeryId = InputOutput.askInt("Introduce surgery ID:");
+        Surgery surgery = surgeryManager.getSurgeryById(surgeryId);
+        if (surgery == null) {
+            System.out.println("Surgery not found.");
+            return;
+        }
+
+        if (isDoctorAlreadyInSurgery(doctorId, surgeryId)) {
+            System.out.println("This doctor is already assigned to that surgery.");
+            return;
+        }
+
+        surgeryManager.addDoctorToSurgery(doctorId, surgeryId);
+        System.out.println("Doctor assigned to surgery successfully.");
+    }
+
+    private void addEquipmentToSurgeryByScreen() {
+        int equipmentId = InputOutput.askInt("Introduce equipment ID:");
+        Equipment equipment = equipmentManager.getEquipmentById(equipmentId);
+        if (equipment == null) {
+            System.out.println("Equipment not found.");
+            return;
+        }
+
+        int surgeryId = InputOutput.askInt("Introduce surgery ID:");
+        Surgery surgery = surgeryManager.getSurgeryById(surgeryId);
+        if (surgery == null) {
+            System.out.println("Surgery not found.");
+            return;
+        }
+
+        if (isEquipmentAlreadyInSurgery(equipmentId, surgeryId)) {
+            System.out.println("This equipment is already assigned to that surgery.");
+            return;
+        }
+
+        surgeryManager.addEquipmentToSurgery(equipmentId, surgeryId);
+        System.out.println("Equipment assigned to surgery successfully.");
+    }
+
+    private boolean isDoctorAlreadyInSurgery(int doctorId, int surgeryId) {
+        for (Doctor doctor : doctorManager.listDoctorsBySurgery(surgeryId)) {
+            if (doctor.getId() == doctorId) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    private boolean isEquipmentAlreadyInSurgery(int equipmentId, int surgeryId) {
+        for (Equipment equipment : equipmentManager.listEquipmentBySurgery(surgeryId)) {
+            if (equipment.getId() == equipmentId) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
     private void printList(List<?> list, String emptyMessage) {
         if (list == null || list.isEmpty()) {
             System.out.println(emptyMessage);
@@ -599,5 +716,14 @@ public class AdminMenu {
         for (Object element : list) {
             System.out.println(element);
         }
+    }
+
+    private void printObject(Object object, String notFoundMessage) {
+        if (object == null) {
+            System.out.println(notFoundMessage);
+            return;
+        }
+
+        System.out.println(object);
     }
 }
