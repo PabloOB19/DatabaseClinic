@@ -22,7 +22,7 @@
 
             <!-- Tables are created manually in JPAUser -->
             <property name="eclipselink.ddl-generation" value="none" />
-            <property name="eclipselink.logging.level" value="FINE" />
+            <property name="eclipselink.logging.level" value="WARNING" />
         </properties>
     </persistence-unit>
 </persistence>

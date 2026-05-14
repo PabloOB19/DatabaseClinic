@@ -80,11 +80,10 @@ public class Main {
 			    		    }
 			    		    break;
 			    	 case 2:
-			    		    
-			    		   int roleOption = InputOutput.askInt("Choose role:");
 			    		   InputOutput.Impresion();	
-
-			    		    String roleName = null;
+			    		   int roleOption = InputOutput.askInt("Choose role:");
+			    		   
+			    		   String roleName = null;
 
 			    		    switch (roleOption) {
 			    		        case 1:
