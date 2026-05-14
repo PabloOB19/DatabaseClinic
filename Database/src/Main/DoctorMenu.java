@@ -6,6 +6,9 @@ import JDBC.JDBCEquipmentManager;
 import JDBC.JDBCPatientManager;
 import JDBC.JDBCSurgeryManager;
 import POJOS.Doctor;
+import POJOS.Equipment;
+import POJOS.Surgery;
+import POJOS.User;
 
 public class DoctorMenu {
 
@@ -14,8 +17,9 @@ public class DoctorMenu {
     private JDBCAppointmentManager appointmentManager;
     private JDBCSurgeryManager surgeryManager;
     private JDBCEquipmentManager equipmentManager;
+    private Doctor currentDoctor;
 
-    public DoctorMenu(JDBCDoctorManager doctorManager, JDBCPatientManager patientManager,
+    public DoctorMenu(User loggedUser, JDBCDoctorManager doctorManager, JDBCPatientManager patientManager,
             JDBCAppointmentManager appointmentManager, JDBCSurgeryManager surgeryManager,
             JDBCEquipmentManager equipmentManager) {
         this.doctorManager = doctorManager;
@@ -23,9 +27,15 @@ public class DoctorMenu {
         this.appointmentManager = appointmentManager;
         this.surgeryManager = surgeryManager;
         this.equipmentManager = equipmentManager;
+        this.currentDoctor = findDoctorByUserEmail(loggedUser);
     }
 
     public void run() {
+        if (currentDoctor == null) {
+            System.out.println("Contact with administration.");
+            return;
+        }
+
         boolean doctorRun = true;
 
         while (doctorRun) {
@@ -58,7 +68,7 @@ public class DoctorMenu {
 
         switch (op) {
             case 1:
-                Common.addEquipmentToSurgeryByScreen(equipmentManager, surgeryManager);
+                addEquipmentToMySurgeryByScreen();
                 break;
             default:
                 System.out.println("Invalid add option.");
@@ -72,10 +82,10 @@ public class DoctorMenu {
 
         switch (op) {
             case 1:
-                listSurgeriesByDoctor();
+                listSurgeriesByCurrentDoctor();
                 break;
             case 2:
-                listAppointmentsByDoctor();
+                listAppointmentsByCurrentDoctor();
                 break;
             case 3:
                 Common.listDoctorsBySpecialty(doctorManager);
@@ -99,7 +109,7 @@ public class DoctorMenu {
     }
 
     private void getMenu() {
-        Utils.printGetMenu();
+        Utils.printDoctorGetMenu();
         int op = InputOutput.askInt("\n Choose an option: ");
 
         switch (op) {
@@ -107,7 +117,7 @@ public class DoctorMenu {
                 Common.getPatientById(patientManager);
                 break;
             case 2:
-                Common.getDoctorById(doctorManager);
+                getCurrentDoctorById();
                 break;
             case 3: 
             	Common.getEquipmentById(equipmentManager);
@@ -118,26 +128,63 @@ public class DoctorMenu {
         }
     }
 
-    private void listSurgeriesByDoctor() {
-        int doctorId = InputOutput.askPositiveInt("Introduce doctor ID:");
-        Doctor doctor = doctorManager.getDoctorById(doctorId);
-        if (doctor == null) {
-            System.out.println("Doctor not found.");
-            return;
+    private Doctor findDoctorByUserEmail(User loggedUser) {
+        if (loggedUser == null || loggedUser.getEmail() == null) {
+            return null;
         }
 
-        Utils.printList(surgeryManager.listSurgeriesByDoctor(doctorId), "There are no surgeries for that doctor.");
+        for (Doctor doctor : doctorManager.listAllDoctors()) {
+            if (doctor.getEmail() != null && doctor.getEmail().equalsIgnoreCase(loggedUser.getEmail())) {
+                return doctor;
+            }
+        }
+
+        return null;
     }
 
-    private void listAppointmentsByDoctor() {
-        int doctorId = InputOutput.askPositiveInt("Introduce doctor ID:");
-        Doctor doctor = doctorManager.getDoctorById(doctorId);
-        if (doctor == null) {
-            System.out.println("Doctor not found.");
+    private void addEquipmentToMySurgeryByScreen() {
+        int equipmentId = InputOutput.askPositiveInt("Introduce equipment ID:");
+        Equipment equipment = equipmentManager.getEquipmentById(equipmentId);
+        if (equipment == null) {
+            System.out.println("Equipment not found.");
             return;
         }
 
-        Utils.printList(appointmentManager.listAppointmentsByDoctor(doctorId), "There are no appointments for that doctor.");
+        int surgeryId = InputOutput.askPositiveInt("Introduce surgery ID:");
+        Surgery surgery = surgeryManager.getSurgeryById(surgeryId);
+        if (surgery == null) {
+            System.out.println("Surgery not found.");
+            return;
+        }
+
+        if (!Common.isDoctorAlreadyInSurgery(doctorManager, currentDoctor.getId(), surgeryId)) {
+            System.out.println("You cannot add equipment to this surgery.");
+            return;
+        }
+
+        if (Common.isEquipmentAlreadyInSurgery(equipmentManager, equipmentId, surgeryId)) {
+            System.out.println("This equipment is already assigned to that surgery.");
+            return;
+        }
+
+        if (surgeryManager.addEquipmentToSurgery(equipmentId, surgeryId)) {
+            System.out.println("Equipment assigned to surgery successfully.");
+        } else {
+            System.out.println("Equipment could not be assigned to surgery.");
+        }
+    }
+
+    private void listSurgeriesByCurrentDoctor() {
+        Utils.printList(surgeryManager.listSurgeriesByDoctor(currentDoctor.getId()), "There are no surgeries for your doctor profile.");
+    }
+
+    private void listAppointmentsByCurrentDoctor() {
+        Utils.printList(appointmentManager.listAppointmentsByDoctor(currentDoctor.getId()), "There are no appointments for your doctor profile.");
+    }
+
+    private void getCurrentDoctorById() {
+        Doctor doctor = doctorManager.getDoctorById(currentDoctor.getId());
+        Utils.printObject(doctor, "Doctor not found.");
     }
 
 }

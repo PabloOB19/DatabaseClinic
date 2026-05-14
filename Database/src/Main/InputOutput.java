@@ -35,7 +35,7 @@ public class InputOutput {
 			String input = sc.nextLine().trim();
 
 			if (input.isEmpty()) {
-				System.out.println("Username cannot be empty.");
+				System.out.println("Cannot be empty.");
 			} else {
 				return input;
 			}
@@ -117,6 +117,18 @@ public class InputOutput {
 	    }
 	}
 
+	public static LocalDate askPastDate(String mensaje) {
+	    while (true) {
+	        LocalDate date = askDate(mensaje);
+
+	        if (date.isAfter(LocalDate.now())) {
+	            System.out.println("Date cannot be in the future.");
+	        } else {
+	            return date;
+	        }
+	    }
+	}
+
 
 	public static String askOptionalString(String mensaje, String currentValue) {
 		while (true) {
@@ -132,6 +144,18 @@ public class InputOutput {
 			}
 		}
 	}
+		public static String askOptionalText(String mensaje, String currentValue) {
+			while (true) {
+				System.out.println(mensaje + " (press Enter to keep current: " + currentValue + ")");
+				String input = sc.nextLine().trim();
+
+				if (input.isEmpty()) {
+					return currentValue;
+				} else {
+					return input;
+				}
+			}
+		}
 
 	public static String askOptionalEmail(String mensaje, String currentValue) {
 		while (true) {
@@ -170,6 +194,18 @@ public class InputOutput {
 
 	        if (date.isBefore(LocalDate.now())) {
 	            System.out.println("Date cannot be in the past.");
+	        } else {
+	            return date;
+	        }
+	    }
+	}
+
+	public static LocalDate askOptionalPastDate(String mensaje, LocalDate currentValue) {
+	    while (true) {
+	        LocalDate date = askOptionalDate(mensaje, currentValue);
+
+	        if (date.isAfter(LocalDate.now())) {
+	            System.out.println("Date cannot be in the future.");
 	        } else {
 	            return date;
 	        }

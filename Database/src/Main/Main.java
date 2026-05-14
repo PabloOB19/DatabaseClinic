@@ -98,7 +98,7 @@ public class Main {
 				adminMenu();
 				break;
 			case ROLE_DOCTOR:
-				doctorMenu();
+				doctorMenu(loggedUser);
 				break;
 			case ROLE_PATIENT:
 				patientMenu(loggedUser);
@@ -183,12 +183,13 @@ public class Main {
 	}
 		
 	private static void adminMenu() {
-	    AdminMenu adminMenu = new AdminMenu(doctorManager, patientManager, appointmentManager, surgeryManager, equipmentManager);
+	    AdminMenu adminMenu = new AdminMenu(doctorManager, patientManager, appointmentManager, surgeryManager,
+	    		equipmentManager, userManager, xmlManager);
 	    adminMenu.run();
 	}
 
-	private static void doctorMenu() {
-	    DoctorMenu doctorMenu = new DoctorMenu(doctorManager, patientManager, appointmentManager, surgeryManager, equipmentManager);
+	private static void doctorMenu(User loggedUser) {
+	    DoctorMenu doctorMenu = new DoctorMenu(loggedUser, doctorManager, patientManager, appointmentManager, surgeryManager, equipmentManager);
 	    doctorMenu.run();
 	}
 

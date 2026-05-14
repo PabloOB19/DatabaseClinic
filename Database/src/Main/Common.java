@@ -1,14 +1,9 @@
 package Main;
 
 import Enums.Category;
-import JDBC.JDBCDoctorManager;
-import JDBC.JDBCEquipmentManager;
-import JDBC.JDBCPatientManager;
-import JDBC.JDBCSurgeryManager;
-import POJOS.Doctor;
-import POJOS.Equipment;
-import POJOS.Patient;
-import POJOS.Surgery;
+import JDBC.*;
+import POJOS.*;
+import ifaces.*;
 
 public class Common {
 

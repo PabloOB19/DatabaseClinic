@@ -5,6 +5,8 @@ import java.time.LocalDate;
 import Enums.*;
 import JDBC.*;
 import POJOS.*;
+import ifaces.UserManager;
+import ifaces.XmlManager;
 
 public class AdminMenu {
 
@@ -13,15 +15,18 @@ public class AdminMenu {
     private JDBCAppointmentManager appointmentManager;
     private JDBCSurgeryManager surgeryManager;
     private JDBCEquipmentManager equipmentManager;
+    private XmlAdmin xmlAdmin;
 
     public AdminMenu(JDBCDoctorManager doctorManager, JDBCPatientManager patientManager,
             JDBCAppointmentManager appointmentManager, JDBCSurgeryManager surgeryManager,
-            JDBCEquipmentManager equipmentManager) {
+            JDBCEquipmentManager equipmentManager, UserManager userManager, XmlManager xmlManager) {
         this.doctorManager = doctorManager;
         this.patientManager = patientManager;
         this.appointmentManager = appointmentManager;
         this.surgeryManager = surgeryManager;
         this.equipmentManager = equipmentManager;
+        this.xmlAdmin = new XmlAdmin(doctorManager, patientManager, appointmentManager, surgeryManager,
+                equipmentManager, userManager, xmlManager);
     }
 
     public void run() {
@@ -51,6 +56,9 @@ public class AdminMenu {
                     assignMenu();
                     break;
                 case 7:
+                    xmlAdmin.run();
+                    break;
+                case 8:
                     adminRun = false;
                     break;
                 default:
@@ -185,10 +193,10 @@ public class AdminMenu {
 
         switch (op) {
             case 1:
-                Common.getDoctorById(doctorManager);
+                Common.getPatientById(patientManager);
                 break;
             case 2:
-                Common.getPatientById(patientManager);
+                Common.getDoctorById(doctorManager);
                 break;
             case 3:
                 Common.getEquipmentById(equipmentManager);
@@ -222,7 +230,7 @@ public class AdminMenu {
         String surname = InputOutput.askString("Introduce doctor's surname:");
         String email = InputOutput.askEmail("Introduce doctor's email:");
         String specialty = InputOutput.askString("Introduce doctor's specialty:");
-        LocalDate dob = InputOutput.askDate("Introduce doctor's date of birth:");
+        LocalDate dob = InputOutput.askPastDate("Introduce doctor's date of birth:");
         Sex sex = InputOutput.askSex();
         if (sex == null) {
             return;
@@ -246,11 +254,11 @@ public class AdminMenu {
         String name = InputOutput.askString("Introduce patient's name:");
         String surname = InputOutput.askString("Introduce patient's surname:");
         String email = InputOutput.askEmail("Introduce patient's email:");
-        LocalDate dob = InputOutput.askDate("Introduce patient's date of birth:");
+        LocalDate dob = InputOutput.askPastDate("Introduce patient's date of birth:");
         int height = InputOutput.askPositiveInt("Introduce patient's height:");
         double weightDouble = InputOutput.askPositiveDouble("Introduce patient's weight:");
         float weight = (float) weightDouble;
-        String info = InputOutput.askString("Introduce patient's info:");
+        String info = InputOutput.askText("Introduce patient's info:");
         Sex sex = InputOutput.askSex();
         if (sex == null) {
             return;
@@ -337,7 +345,7 @@ public class AdminMenu {
         }
         int quantity = InputOutput.askPositiveInt("Introduce equipment quantity:");
         double price = InputOutput.askPositiveDouble("Introduce equipment price:");
-        LocalDate expirationDate = InputOutput.askDate("Introduce equipment expiration date:");
+        LocalDate expirationDate = InputOutput.askFutureDate("Introduce equipment expiration date:");
         Equipment equipment = new Equipment(0, name, category, quantity, price, expirationDate, null);
         if (equipmentManager.insertEquipment(equipment)) {
             System.out.println("Equipment added successfully with ID: " + equipment.getId());
@@ -357,7 +365,7 @@ public class AdminMenu {
         doctor.setSurname(InputOutput.askOptionalString("Introduce new doctor's surname:", doctor.getSurname()));
         doctor.setEmail(InputOutput.askOptionalEmail("Introduce new doctor's email:", doctor.getEmail()));
         doctor.setSpecialty(InputOutput.askOptionalString("Introduce new doctor's specialty:", doctor.getSpecialty()));
-        doctor.setDob(InputOutput.askOptionalDate("Introduce new doctor's date of birth:", doctor.getDob()));
+        doctor.setDob(InputOutput.askOptionalPastDate("Introduce new doctor's date of birth:", doctor.getDob()));
         if (InputOutput.askYesNo("Do you want to update the sex?")) {
             doctor.setSex(InputOutput.askSex());
         }
@@ -387,13 +395,13 @@ public class AdminMenu {
         patient.setName(InputOutput.askOptionalString("Introduce new patient's name:", patient.getName()));
         patient.setSurname(InputOutput.askOptionalString("Introduce new patient's surname:", patient.getSurname()));
         patient.setEmail(InputOutput.askOptionalEmail("Introduce new patient's email:", patient.getEmail()));
-        patient.setDob(InputOutput.askOptionalDate("Introduce new patient's date of birth:", patient.getDob()));
+        patient.setDob(InputOutput.askOptionalPastDate("Introduce new patient's date of birth:", patient.getDob()));
         patient.setHeight(InputOutput.askOptionalPositiveInt("Introduce new patient's height:", patient.getHeight()));
 
         double weightDouble = InputOutput.askOptionalPositiveDouble("Introduce new patient's weight:", patient.getWeight());
         patient.setWeight((float) weightDouble);
 
-        patient.setInfo(InputOutput.askOptionalString("Introduce new patient's info:", patient.getInfo()));
+        patient.setInfo(InputOutput.askOptionalText("Introduce new patient's info:", patient.getInfo()));
 
         if (InputOutput.askYesNo("Do you want to update the sex?")) {
             patient.setSex(InputOutput.askSex());
@@ -518,7 +526,7 @@ public class AdminMenu {
 
         equipment.setQuantity(InputOutput.askOptionalPositiveInt("Introduce new equipment quantity:", equipment.getQuantity()));
         equipment.setPrice(InputOutput.askOptionalPositiveDouble("Introduce new equipment price:", equipment.getPrice()));
-        equipment.setExpiration_date(InputOutput.askOptionalDate("Introduce new equipment expiration date:", equipment.getExpiration_date()));
+        equipment.setExpiration_date(InputOutput.askOptionalFutureDate("Introduce new equipment expiration date:", equipment.getExpiration_date()));
 
         if (equipmentManager.updateEquipment(equipment)) {
             System.out.println("Equipment updated successfully.");
