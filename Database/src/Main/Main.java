@@ -2,14 +2,11 @@ package Main;
 
 import java.sql.Connection;
 import Enums.Sex;
-import java.util.List;
-import java.util.ArrayList;
-import JDBC.JDBCConnectionManager;
-import JDBC.JDBCDoctorManager;
-import POJOS.Appointment;
-import POJOS.Doctor;
-import POJOS.Surgery;
+import java.util.*;
+import JDBC.*;
+import POJOS.*;
 import Utils.Utils;
+
 
 public class Main {
 	 
