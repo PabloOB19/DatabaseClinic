@@ -338,7 +338,7 @@ public class AdminMenu {
     }
 
     private void addEquipmentByScreen() {
-        String name = InputOutput.askString("Introduce equipment name:");
+        String name = InputOutput.askText("Introduce equipment name:");
         Category category = InputOutput.askCategory();
         if (category == null) {
             return;
@@ -518,7 +518,7 @@ public class AdminMenu {
             return;
         }
 
-        equipment.setName(InputOutput.askOptionalString("Introduce new equipment name:", equipment.getName()));
+        equipment.setName(InputOutput.askOptionalText("Introduce new equipment name:", equipment.getName()));
 
         if (InputOutput.askYesNo("Do you want to update the category?")) {
             equipment.setCategory(InputOutput.askCategory());

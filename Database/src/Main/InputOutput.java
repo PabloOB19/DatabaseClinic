@@ -443,12 +443,13 @@ public class InputOutput {
 		}
 
 		public static byte[] askPhoto() {
-		    try {
-		        String photoPath = InputOutput.askText("Introduce photo path:");
-		        return Utils.loadImage(photoPath);
-		    } catch (Exception e) {
-		        System.out.println("Could not load image.");
-		        return null;
+		    while (true) {
+			    try {
+			        String photoPath = InputOutput.askText("Introduce photo path:");
+			        return Utils.loadImage(photoPath);
+			    } catch (Exception e) {
+			        System.out.println("Could not load image. Please introduce a valid path.");
+			    }
 		    }
 		}
 	}
