@@ -168,7 +168,8 @@ public class Main {
 	}
 
 	private static void doctorMenu() {
-	    System.out.println("Doctor menu");
+	    DoctorMenu doctorMenu = new DoctorMenu(doctorManager, patientManager, appointmentManager, surgeryManager, equipmentManager);
+	    doctorMenu.run();
 	}
 
 	private static void patientMenu() {
