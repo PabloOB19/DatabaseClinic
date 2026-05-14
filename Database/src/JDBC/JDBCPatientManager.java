@@ -54,7 +54,6 @@ public class JDBCPatientManager implements PatientManager{
 
         } catch (SQLException e) {
             System.out.println("Database error during insertPatient.");
-            e.printStackTrace();
             return false;
         }
     }
@@ -89,7 +88,6 @@ public class JDBCPatientManager implements PatientManager{
 
         } catch (SQLException e) {
             System.out.println("Database error during getPatientById.");
-            e.printStackTrace();
         }
 
         return patient;
@@ -126,7 +124,6 @@ public class JDBCPatientManager implements PatientManager{
 
         } catch (SQLException e) {
             System.out.println("Database error during listAllPatients.");
-            e.printStackTrace();
         }
 
         return list;
@@ -164,7 +161,6 @@ public class JDBCPatientManager implements PatientManager{
 
         } catch (SQLException e) {
             System.out.println("Database error during updatePatient.");
-            e.printStackTrace();
             return false;
         }
     }
@@ -223,18 +219,17 @@ public class JDBCPatientManager implements PatientManager{
             try {
                 c.rollback();
             } catch (SQLException rollbackException) {
-                rollbackException.printStackTrace();
+                System.out.println("Database rollback error during deletePatient.");
             }
 
             System.out.println("Database error during deletePatient.");
-            e.printStackTrace();
             return false;
 
         } finally {
             try {
                 c.setAutoCommit(true);
             } catch (SQLException e) {
-                e.printStackTrace();
+                System.out.println("Database error restoring auto-commit.");
             }
         }
     }

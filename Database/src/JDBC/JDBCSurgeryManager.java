@@ -49,7 +49,6 @@ public class JDBCSurgeryManager implements SurgeryManager
 
 	    } catch (SQLException e) {
 	        System.out.println("Database error during insertSurgery.");
-	        e.printStackTrace();
 	        return false;
 	    }
 	}
@@ -113,7 +112,6 @@ public class JDBCSurgeryManager implements SurgeryManager
 
 	    } catch (SQLException e) {
 	        System.out.println("Database error during getSurgeryById.");
-	        e.printStackTrace();
 	    }
 
 	    return surgery;
@@ -147,7 +145,6 @@ public class JDBCSurgeryManager implements SurgeryManager
 
         } catch (SQLException e) {
             System.out.println("Database error during listAllSurgeries.");
-            e.printStackTrace();
         }
 
         return list;
@@ -178,7 +175,6 @@ public class JDBCSurgeryManager implements SurgeryManager
 
 	    } catch (SQLException e) {
 	        System.out.println("Database error during updateSurgery.");
-	        e.printStackTrace();
 	        return false;
 	    }
 	}
@@ -220,18 +216,17 @@ public class JDBCSurgeryManager implements SurgeryManager
 	        try {
 	            c.rollback();
 	        } catch (SQLException rollbackException) {
-	            rollbackException.printStackTrace();
+	            System.out.println("Database rollback error during deleteSurgery.");
 	        }
 
 	        System.out.println("Database error during deleteSurgery.");
-	        e.printStackTrace();
 	        return false;
 
 	    } finally {
 	        try {
 	            c.setAutoCommit(true);
 	        } catch (SQLException e) {
-	            e.printStackTrace();
+	            System.out.println("Database error restoring auto-commit.");
 	        }
 	    }
 	}
@@ -269,7 +264,6 @@ public class JDBCSurgeryManager implements SurgeryManager
 
         } catch (SQLException e) {
             System.out.println("Database error during listSurgeriesByDoctor.");
-            e.printStackTrace();
         }
 
         return list;
@@ -306,7 +300,6 @@ public class JDBCSurgeryManager implements SurgeryManager
 
         } catch (SQLException e) {
             System.out.println("Database error during listSurgeriesByPatient.");
-            e.printStackTrace();
         }
 
         return list;
@@ -325,7 +318,6 @@ public class JDBCSurgeryManager implements SurgeryManager
 
 	    } catch (SQLException e) {
 	        System.out.println("Database error during addDoctorToSurgery.");
-	        e.printStackTrace();
 	        return false;
 	    }
 	}
@@ -342,7 +334,6 @@ public class JDBCSurgeryManager implements SurgeryManager
 
 	    } catch (SQLException e) {
 	        System.out.println("Database error during addEquipmentToSurgery.");
-	        e.printStackTrace();
 	        return false;
 	    }
 	}

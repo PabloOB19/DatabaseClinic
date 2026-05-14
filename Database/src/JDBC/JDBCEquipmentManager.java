@@ -45,7 +45,6 @@ public class JDBCEquipmentManager implements EquipmentManager {
 
         } catch (SQLException e) {
             System.out.println("Database error during insertEquipment.");
-            e.printStackTrace();
             return false;
         }
     }
@@ -77,7 +76,6 @@ public class JDBCEquipmentManager implements EquipmentManager {
 
         } catch (SQLException e) {
             System.out.println("Database error during getEquipmentById.");
-            e.printStackTrace();
         }
 
         return result;
@@ -109,7 +107,6 @@ public class JDBCEquipmentManager implements EquipmentManager {
 
         } catch (SQLException e) {
             System.out.println("Database error during listAllEquipment.");
-            e.printStackTrace();
         }
 
         return list;
@@ -136,7 +133,6 @@ public class JDBCEquipmentManager implements EquipmentManager {
 
         } catch (SQLException e) {
             System.out.println("Database error during updateEquipment.");
-            e.printStackTrace();
             return false;
         }
     }
@@ -170,18 +166,17 @@ public class JDBCEquipmentManager implements EquipmentManager {
             try {
                 c.rollback();
             } catch (SQLException rollbackException) {
-                rollbackException.printStackTrace();
+                System.out.println("Database rollback error during deleteEquipment.");
             }
 
             System.out.println("Database error during deleteEquipment.");
-            e.printStackTrace();
             return false;
 
         } finally {
             try {
                 c.setAutoCommit(true);
             } catch (SQLException e) {
-                e.printStackTrace();
+                System.out.println("Database error restoring auto-commit.");
             }
         }
     }
@@ -216,7 +211,6 @@ public class JDBCEquipmentManager implements EquipmentManager {
 
         } catch (SQLException e) {
             System.out.println("Database error during listEquipmentBySurgery.");
-            e.printStackTrace();
         }
 
         return list;
@@ -250,7 +244,6 @@ public class JDBCEquipmentManager implements EquipmentManager {
 
         } catch (SQLException e) {
             System.out.println("Database error during listEquipmentByCategory.");
-            e.printStackTrace();
         }
 
         return list;

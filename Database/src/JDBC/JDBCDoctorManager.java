@@ -45,7 +45,6 @@ public class JDBCDoctorManager implements DoctorManager {
 
         } catch (SQLException e) {
             System.out.println("Database error during insertDoctor.");
-            e.printStackTrace();
             return false;
         }
     }
@@ -78,7 +77,6 @@ public class JDBCDoctorManager implements DoctorManager {
 
         } catch (SQLException e) {
             System.out.println("Database error during getDoctorById.");
-            e.printStackTrace();
         }
 
         return result;
@@ -112,7 +110,6 @@ public class JDBCDoctorManager implements DoctorManager {
 
         } catch (SQLException e) {
             System.out.println("Database error during listAllDoctors.");
-            e.printStackTrace();
         }
 
         return list;
@@ -141,7 +138,6 @@ public class JDBCDoctorManager implements DoctorManager {
 
         } catch (SQLException e) {
             System.out.println("Database error during updateDoctor.");
-            e.printStackTrace();
             return false;
         }
     }
@@ -181,18 +177,17 @@ public class JDBCDoctorManager implements DoctorManager {
             try {
                 c.rollback();
             } catch (SQLException rollbackException) {
-                rollbackException.printStackTrace();
+                System.out.println("Database rollback error during deleteDoctor.");
             }
 
             System.out.println("Database error during deleteDoctor.");
-            e.printStackTrace();
             return false;
 
         } finally {
             try {
                 c.setAutoCommit(true);
             } catch (SQLException e) {
-                e.printStackTrace();
+                System.out.println("Database error restoring auto-commit.");
             }
         }
     }
@@ -211,7 +206,6 @@ public class JDBCDoctorManager implements DoctorManager {
 
         } catch (SQLException e) {
             System.out.println("Database error during addDoctorToAppointment.");
-            e.printStackTrace();
             return false;
         }
     }
@@ -246,7 +240,6 @@ public class JDBCDoctorManager implements DoctorManager {
 
         } catch (SQLException e) {
             System.out.println("Database error during listDoctorsBySpecialty.");
-            e.printStackTrace();
         }
 
         return list;
@@ -285,7 +278,6 @@ public class JDBCDoctorManager implements DoctorManager {
 
         } catch (SQLException e) {
             System.out.println("Database error during listDoctorsBySurgery.");
-            e.printStackTrace();
         }
 
         return list;
@@ -324,7 +316,6 @@ public class JDBCDoctorManager implements DoctorManager {
 
         } catch (SQLException e) {
             System.out.println("Database error during listDoctorsByAppointment.");
-            e.printStackTrace();
         }
 
         return list;

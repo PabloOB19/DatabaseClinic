@@ -45,7 +45,6 @@ public class JDBCAppointmentManager implements AppointmentManager {
 
         } catch (SQLException e) {
             System.out.println("Database error during insertAppointment.");
-            e.printStackTrace();
             return false;
         }
     }
@@ -138,7 +137,6 @@ public class JDBCAppointmentManager implements AppointmentManager {
 
         } catch (SQLException e) {
             System.out.println("Database error during getAppointmentById.");
-            e.printStackTrace();
         }
 
         return result;
@@ -172,7 +170,6 @@ public class JDBCAppointmentManager implements AppointmentManager {
 
         } catch (SQLException e) {
             System.out.println("Database error during listAllAppointments.");
-            e.printStackTrace();
         }
 
         return list;
@@ -200,7 +197,6 @@ public class JDBCAppointmentManager implements AppointmentManager {
 
         } catch (SQLException e) {
             System.out.println("Database error during updateAppointment.");
-            e.printStackTrace();
             return false;
         }
     }
@@ -215,7 +211,6 @@ public class JDBCAppointmentManager implements AppointmentManager {
             return affectedRows > 0;
         } catch (SQLException e) {
             System.out.println("Database error during deleteAppointment.");
-            e.printStackTrace();
             return false;
         }
     }
@@ -250,7 +245,6 @@ public class JDBCAppointmentManager implements AppointmentManager {
 
         } catch (SQLException e) {
             System.out.println("Database error during listAppointmentsByDoctor.");
-            e.printStackTrace();
         }
 
         return list;
@@ -286,7 +280,6 @@ public class JDBCAppointmentManager implements AppointmentManager {
 
         } catch (SQLException e) {
             System.out.println("Database error during listAppointmentsByPatient.");
-            e.printStackTrace();
         }
 
         return list;

@@ -116,7 +116,7 @@ public class JPAUser implements UserManager {
             em.getTransaction().commit();
         } catch (Exception e) {
             rollback();
-            e.printStackTrace();
+            System.out.println("Role could not be assigned.");
         }
     }
 
@@ -180,7 +180,7 @@ public class JPAUser implements UserManager {
             em.getTransaction().commit();
         } catch (Exception e) {
             rollback();
-            e.printStackTrace();
+            System.out.println("User could not be updated.");
         }
     }
 
@@ -201,7 +201,7 @@ public class JPAUser implements UserManager {
             em.getTransaction().commit();
         } catch (Exception e) {
             rollback();
-            e.printStackTrace();
+            System.out.println("Password could not be updated.");
         }
     }
 
@@ -218,7 +218,7 @@ public class JPAUser implements UserManager {
             em.getTransaction().commit();
         } catch (Exception e) {
             rollback();
-            e.printStackTrace();
+            System.out.println("User could not be deleted.");
         }
     }
 
