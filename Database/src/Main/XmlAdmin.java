@@ -78,7 +78,7 @@ public class XmlAdmin {
             xmlManager.export_to_XML(wrapper);
             System.out.println("Database exported to XML successfully.");
         } catch (Exception e) {
-            System.out.println("Database could not be exported to XML.");
+            System.out.println("Database could not be exported to XML: " + e.getMessage());
         }
     }
 
@@ -95,7 +95,7 @@ public class XmlAdmin {
             Utils.printList(wrapper.getRoles(), "No roles in XML.");
             Utils.printList(wrapper.getUsers(), "No users in XML.");
         } catch (Exception e) {
-            System.out.println("XML could not be imported to Java.");
+            System.out.println("XML could not be imported to Java: " + e.getMessage());
         }
     }
 
@@ -104,7 +104,7 @@ public class XmlAdmin {
             xmlManager.convert_to_HTML();
             System.out.println("HTML generated successfully.");
         } catch (Exception e) {
-            System.out.println("HTML could not be generated.");
+            System.out.println("HTML could not be generated: " + e.getMessage());
         }
     }
 }

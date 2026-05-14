@@ -3,7 +3,6 @@ package Main;
 import Enums.Category;
 import JDBC.*;
 import POJOS.*;
-import ifaces.*;
 
 public class Common {
 
