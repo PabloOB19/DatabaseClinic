@@ -13,10 +13,12 @@ import ifaces.UserManager;
 
 public class JPAUser implements UserManager {
 
+    private EntityManagerFactory emf;
     private EntityManager em;
 
     public JPAUser() {
-        em = Persistence.createEntityManagerFactory("miUnidad").createEntityManager();
+        emf = Persistence.createEntityManagerFactory("miUnidad");
+        em = emf.createEntityManager();
 
         em.getTransaction().begin();
         em.createNativeQuery("PRAGMA foreign_keys=ON").executeUpdate();
@@ -32,7 +34,13 @@ public class JPAUser implements UserManager {
 
     @Override
     public void close() {
-        em.close();
+        if (em != null && em.isOpen()) {
+            em.close();
+        }
+
+        if (emf != null && emf.isOpen()) {
+            emf.close();
+        }
     }
 
     private void createTables() {
@@ -108,7 +116,7 @@ public class JPAUser implements UserManager {
             em.getTransaction().commit();
         } catch (Exception e) {
             rollback();
-            e.printStackTrace();
+            System.out.println("Role could not be assigned.");
         }
     }
 
@@ -172,7 +180,7 @@ public class JPAUser implements UserManager {
             em.getTransaction().commit();
         } catch (Exception e) {
             rollback();
-            e.printStackTrace();
+            System.out.println("User could not be updated.");
         }
     }
 
@@ -193,7 +201,7 @@ public class JPAUser implements UserManager {
             em.getTransaction().commit();
         } catch (Exception e) {
             rollback();
-            e.printStackTrace();
+            System.out.println("Password could not be updated.");
         }
     }
 
@@ -210,7 +218,7 @@ public class JPAUser implements UserManager {
             em.getTransaction().commit();
         } catch (Exception e) {
             rollback();
-            e.printStackTrace();
+            System.out.println("User could not be deleted.");
         }
     }
 

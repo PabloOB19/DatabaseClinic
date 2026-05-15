@@ -6,14 +6,14 @@ import POJOS.Surgery;
 
 public interface SurgeryManager 
 {
-	void insertSurgery(Surgery surgery);
+	boolean insertSurgery(Surgery surgery);
 	Surgery getSurgeryById(int id);
 	List<Surgery> listAllSurgeries();
-	void updateSurgery(Surgery surgery);
-	void deleteSurgery(int id);
+	boolean updateSurgery(Surgery surgery);
+	boolean deleteSurgery(int id);
 	List<Surgery> listSurgeriesByDoctor(int doctorId);
 	List<Surgery> listSurgeriesByPatient(int patientId);
-	void addDoctorToSurgery(int doctorId, int surgeryId);
-	void addEquipmentToSurgery(int equipmentId, int surgeryId);
+	boolean addDoctorToSurgery(int doctorId, int surgeryId);
+	boolean addEquipmentToSurgery(int equipmentId, int surgeryId);
 
 }

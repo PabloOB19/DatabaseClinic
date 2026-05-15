@@ -1,7 +1,6 @@
 package JDBC;
 
 import java.sql.*;
-import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -19,7 +18,7 @@ public class JDBCSurgeryManager implements SurgeryManager
 	
   
 	@Override
-	public void insertSurgery(Surgery surgery) {
+	public boolean insertSurgery(Surgery surgery) {
 
 	    String sql = "INSERT INTO Surgery "
 	            + "(type, date, price, turn, patient_id) "
@@ -46,10 +45,11 @@ public class JDBCSurgeryManager implements SurgeryManager
 	                throw new SQLException("Creating surgery failed, no ID obtained.");
 	            }
 	        }
+	        return true;
 
 	    } catch (SQLException e) {
 	        System.out.println("Database error during insertSurgery.");
-	        e.printStackTrace();
+	        return false;
 	    }
 	}
 	
@@ -67,7 +67,7 @@ public class JDBCSurgeryManager implements SurgeryManager
                             Sex.valueOf(rs.getString("sex")),
                             rs.getString("name"),
                             rs.getString("surname"),
-                            LocalDate.parse(rs.getString("dob")),
+                            JDBCDateUtils.parseLocalDate(rs.getString("dob")),
                             rs.getInt("height"),
                             rs.getFloat("weight"),
                             rs.getBytes("photo"),
@@ -99,7 +99,7 @@ public class JDBCSurgeryManager implements SurgeryManager
 
 	                surgery = new Surgery(
 	                        rs.getInt("id"),
-	                        LocalDate.parse(rs.getString("date")),
+	                        JDBCDateUtils.parseLocalDate(rs.getString("date")),
 	                        Type_of_surgery.valueOf(rs.getString("type")),
 	                        rs.getDouble("price"),
 	                        Turn.valueOf(rs.getString("turn")),
@@ -112,7 +112,6 @@ public class JDBCSurgeryManager implements SurgeryManager
 
 	    } catch (SQLException e) {
 	        System.out.println("Database error during getSurgeryById.");
-	        e.printStackTrace();
 	    }
 
 	    return surgery;
@@ -132,7 +131,7 @@ public class JDBCSurgeryManager implements SurgeryManager
 
                 Surgery surgery = new Surgery(
                         rs.getInt("id"),
-                        LocalDate.parse(rs.getString("date")),
+                        JDBCDateUtils.parseLocalDate(rs.getString("date")),
                         Type_of_surgery.valueOf(rs.getString("type")),
                         rs.getDouble("price"),
                         Turn.valueOf(rs.getString("turn")),
@@ -146,14 +145,13 @@ public class JDBCSurgeryManager implements SurgeryManager
 
         } catch (SQLException e) {
             System.out.println("Database error during listAllSurgeries.");
-            e.printStackTrace();
         }
 
         return list;
     }
 	
 	@Override
-	public void updateSurgery(Surgery surgery) {
+	public boolean updateSurgery(Surgery surgery) {
 
 	    String sql = "UPDATE Surgery "
 	            + "SET type = ?, date = ?, price = ?, turn = ?, patient_id = ? "
@@ -173,15 +171,16 @@ public class JDBCSurgeryManager implements SurgeryManager
 	        if (affectedRows == 0) {
 	            throw new SQLException("Updating surgery failed, no rows affected.");
 	        }
+	        return true;
 
 	    } catch (SQLException e) {
 	        System.out.println("Database error during updateSurgery.");
-	        e.printStackTrace();
+	        return false;
 	    }
 	}
 
 	@Override
-	public void deleteSurgery(int id) {
+	public boolean deleteSurgery(int id) {
 
 	    String deleteDoctorsSql = "DELETE FROM DOCTOR_SURGERY WHERE surgery_id = ?";
 	    String deleteEquipmentSql = "DELETE FROM SURGERY_EQUIPMENT WHERE surgery_id = ?";
@@ -211,22 +210,23 @@ public class JDBCSurgeryManager implements SurgeryManager
 	        }
 
 	        c.commit();
+	        return true;
 
 	    } catch (SQLException e) {
 	        try {
 	            c.rollback();
 	        } catch (SQLException rollbackException) {
-	            rollbackException.printStackTrace();
+	            System.out.println("Database rollback error during deleteSurgery.");
 	        }
 
 	        System.out.println("Database error during deleteSurgery.");
-	        e.printStackTrace();
+	        return false;
 
 	    } finally {
 	        try {
 	            c.setAutoCommit(true);
 	        } catch (SQLException e) {
-	            e.printStackTrace();
+	            System.out.println("Database error restoring auto-commit.");
 	        }
 	    }
 	}
@@ -249,7 +249,7 @@ public class JDBCSurgeryManager implements SurgeryManager
 
                     Surgery surgery = new Surgery(
                             rs.getInt("id"),
-                            LocalDate.parse(rs.getString("date")),
+                            JDBCDateUtils.parseLocalDate(rs.getString("date")),
                             Type_of_surgery.valueOf(rs.getString("type")),
                             rs.getDouble("price"),
                             Turn.valueOf(rs.getString("turn")),
@@ -264,7 +264,6 @@ public class JDBCSurgeryManager implements SurgeryManager
 
         } catch (SQLException e) {
             System.out.println("Database error during listSurgeriesByDoctor.");
-            e.printStackTrace();
         }
 
         return list;
@@ -286,7 +285,7 @@ public class JDBCSurgeryManager implements SurgeryManager
 
                     Surgery surgery = new Surgery(
                             rs.getInt("id"),
-                            LocalDate.parse(rs.getString("date")),
+                            JDBCDateUtils.parseLocalDate(rs.getString("date")),
                             Type_of_surgery.valueOf(rs.getString("type")),
                             rs.getDouble("price"),
                             Turn.valueOf(rs.getString("turn")),
@@ -301,40 +300,41 @@ public class JDBCSurgeryManager implements SurgeryManager
 
         } catch (SQLException e) {
             System.out.println("Database error during listSurgeriesByPatient.");
-            e.printStackTrace();
         }
 
         return list;
     }
 
 	@Override
-	public void addDoctorToSurgery(int doctorId, int surgeryId) {
+	public boolean addDoctorToSurgery(int doctorId, int surgeryId) {
 	    String sql = "INSERT INTO DOCTOR_SURGERY (doctor_id, surgery_id) VALUES (?, ?)";
 
 	    try (PreparedStatement p = c.prepareStatement(sql)) {
 	        p.setInt(1, doctorId);
 	        p.setInt(2, surgeryId);
 
-	        p.executeUpdate();
+	        int affectedRows = p.executeUpdate();
+	        return affectedRows > 0;
 
 	    } catch (SQLException e) {
 	        System.out.println("Database error during addDoctorToSurgery.");
-	        e.printStackTrace();
+	        return false;
 	    }
 	}
 	@Override
-	public void addEquipmentToSurgery(int equipmentId, int surgeryId) {
+	public boolean addEquipmentToSurgery(int equipmentId, int surgeryId) {
 	    String sql = "INSERT INTO SURGERY_EQUIPMENT (surgery_id, equipment_id) VALUES (?, ?)";
 
 	    try (PreparedStatement p = c.prepareStatement(sql)) {
 	        p.setInt(1, surgeryId);
 	        p.setInt(2, equipmentId);
 
-	        p.executeUpdate();
+	        int affectedRows = p.executeUpdate();
+	        return affectedRows > 0;
 
 	    } catch (SQLException e) {
 	        System.out.println("Database error during addEquipmentToSurgery.");
-	        e.printStackTrace();
+	        return false;
 	    }
 	}
 

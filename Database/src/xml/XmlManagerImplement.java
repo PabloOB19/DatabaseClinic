@@ -43,14 +43,17 @@ public class XmlManagerImplement implements XmlManager {
 
 		JAXBContext context = JAXBContext.newInstance(DatabaseWrapper.class);
 		Marshaller marshaller = context.createMarshaller();
-		marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.FALSE);
-		marshaller.setProperty("com.sun.xml.bind.xmlHeaders",
-				"<!DOCTYPE DataBase SYSTEM \"" + DTD_FILE + "\">");
+		marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE);
+		marshaller.setProperty(Marshaller.JAXB_FRAGMENT, Boolean.TRUE);
 
 		File tempFile = null;
 		try {
 			tempFile = File.createTempFile("DataXML", ".tmp", directory);
-			marshaller.marshal(dbWrapper, tempFile);
+			try (Writer writer = new OutputStreamWriter(new FileOutputStream(tempFile), "UTF-8")) {
+				writer.write("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n");
+				writer.write("<!DOCTYPE DataBase SYSTEM \"" + DTD_FILE + "\">\n");
+				marshaller.marshal(dbWrapper, writer);
+			}
 			validateXML(tempFile);
 			Files.move(tempFile.toPath(), xmlFile.toPath(), StandardCopyOption.REPLACE_EXISTING);
 		} catch (JAXBException ex) {

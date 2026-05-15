@@ -1,7 +1,6 @@
 package JDBC;
 
 import java.sql.*;
-import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -17,7 +16,7 @@ public class JDBCDoctorManager implements DoctorManager {
     }
     
     @Override
-    public void insertDoctor(Doctor doctor) {
+    public boolean insertDoctor(Doctor doctor) {
         String sql = "INSERT INTO Doctor (name, surname, email, sex, dob, photo, specialty) VALUES (?, ?, ?, ?, ?, ?, ?)";
 
         try (PreparedStatement p = c.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
@@ -42,10 +41,11 @@ public class JDBCDoctorManager implements DoctorManager {
                     throw new SQLException("Creating doctor failed, no ID obtained.");
                 }
             }
+            return true;
 
         } catch (SQLException e) {
             System.out.println("Database error during insertDoctor.");
-            e.printStackTrace();
+            return false;
         }
     }
 
@@ -68,7 +68,7 @@ public class JDBCDoctorManager implements DoctorManager {
                             Enums.Sex.valueOf(rs.getString("sex")),
                             rs.getString("email"),
                             rs.getString("specialty"),
-                            LocalDate.parse(rs.getString("dob")),
+                            JDBCDateUtils.parseLocalDate(rs.getString("dob")),
                             null,
                             null
                     );
@@ -77,7 +77,6 @@ public class JDBCDoctorManager implements DoctorManager {
 
         } catch (SQLException e) {
             System.out.println("Database error during getDoctorById.");
-            e.printStackTrace();
         }
 
         return result;
@@ -101,7 +100,7 @@ public class JDBCDoctorManager implements DoctorManager {
                         Enums.Sex.valueOf(rs.getString("sex")),
                         rs.getString("email"),
                         rs.getString("specialty"),
-                        LocalDate.parse(rs.getString("dob")),
+                        JDBCDateUtils.parseLocalDate(rs.getString("dob")),
                         null,
                         null
                 );
@@ -111,14 +110,13 @@ public class JDBCDoctorManager implements DoctorManager {
 
         } catch (SQLException e) {
             System.out.println("Database error during listAllDoctors.");
-            e.printStackTrace();
         }
 
         return list;
     }
 
     @Override
-    public void updateDoctor(Doctor doctor) {
+    public boolean updateDoctor(Doctor doctor) {
         String sql = "UPDATE Doctor SET name = ?, surname = ?, email = ?, sex = ?, dob = ?, photo = ?, specialty = ? WHERE id = ?";
 
         try (PreparedStatement p = c.prepareStatement(sql)) {
@@ -136,16 +134,17 @@ public class JDBCDoctorManager implements DoctorManager {
             if (affectedRows == 0) {
                 throw new SQLException("Updating doctor failed, no rows affected.");
             }
+            return true;
 
         } catch (SQLException e) {
             System.out.println("Database error during updateDoctor.");
-            e.printStackTrace();
+            return false;
         }
     }
 
    
     @Override
-    public void deleteDoctor(int id) {
+    public boolean deleteDoctor(int id) {
         String deleteDoctorSurgeriesSql = "DELETE FROM DOCTOR_SURGERY WHERE doctor_id = ?";
         String deleteAppointmentsSql = "DELETE FROM Appointment WHERE doctor_id = ?";
         String deleteDoctorSql = "DELETE FROM Doctor WHERE id = ?";
@@ -165,44 +164,49 @@ public class JDBCDoctorManager implements DoctorManager {
 
             try (PreparedStatement p = c.prepareStatement(deleteDoctorSql)) {
                 p.setInt(1, id);
-                p.executeUpdate();
+                int affectedRows = p.executeUpdate();
+                if (affectedRows == 0) {
+                    throw new SQLException("Deleting doctor failed, no rows affected.");
+                }
             }
 
             c.commit();
+            return true;
 
         } catch (SQLException e) {
             try {
                 c.rollback();
             } catch (SQLException rollbackException) {
-                rollbackException.printStackTrace();
+                System.out.println("Database rollback error during deleteDoctor.");
             }
 
             System.out.println("Database error during deleteDoctor.");
-            e.printStackTrace();
+            return false;
 
         } finally {
             try {
                 c.setAutoCommit(true);
             } catch (SQLException e) {
-                e.printStackTrace();
+                System.out.println("Database error restoring auto-commit.");
             }
         }
     }
 
 
     @Override
-    public void addDoctorToAppointment(int doctor_id, int appointment_id) {
+    public boolean addDoctorToAppointment(int doctor_id, int appointment_id) {
         String sql = "UPDATE Appointment SET doctor_id = ? WHERE id = ?";
 
         try (PreparedStatement p = c.prepareStatement(sql)) {
             p.setInt(1, doctor_id);
             p.setInt(2, appointment_id);
 
-            p.executeUpdate();
+            int affectedRows = p.executeUpdate();
+            return affectedRows > 0;
 
         } catch (SQLException e) {
             System.out.println("Database error during addDoctorToAppointment.");
-            e.printStackTrace();
+            return false;
         }
     }
 
@@ -225,7 +229,7 @@ public class JDBCDoctorManager implements DoctorManager {
                             Enums.Sex.valueOf(rs.getString("sex")),
                             rs.getString("email"),
                             rs.getString("specialty"),
-                            LocalDate.parse(rs.getString("dob")),
+                            JDBCDateUtils.parseLocalDate(rs.getString("dob")),
                             null,
                             null
                     );
@@ -236,7 +240,6 @@ public class JDBCDoctorManager implements DoctorManager {
 
         } catch (SQLException e) {
             System.out.println("Database error during listDoctorsBySpecialty.");
-            e.printStackTrace();
         }
 
         return list;
@@ -264,7 +267,7 @@ public class JDBCDoctorManager implements DoctorManager {
                             Enums.Sex.valueOf(rs.getString("sex")),
                             rs.getString("email"),
                             rs.getString("specialty"),
-                            LocalDate.parse(rs.getString("dob")),
+                            JDBCDateUtils.parseLocalDate(rs.getString("dob")),
                             null,
                             null
                     );
@@ -275,7 +278,44 @@ public class JDBCDoctorManager implements DoctorManager {
 
         } catch (SQLException e) {
             System.out.println("Database error during listDoctorsBySurgery.");
-            e.printStackTrace();
+        }
+
+        return list;
+    }
+
+    @Override
+    public List<Doctor> listDoctorsByAppointment(int appointmentId) {
+        List<Doctor> list = new ArrayList<>();
+
+        String sql = "SELECT d.* " +
+                     "FROM Doctor d " +
+                     "JOIN Appointment a ON d.id = a.doctor_id " +
+                     "WHERE a.id = ?";
+
+        try (PreparedStatement p = c.prepareStatement(sql)) {
+            p.setInt(1, appointmentId);
+
+            try (ResultSet rs = p.executeQuery()) {
+                while (rs.next()) {
+                    Doctor doctor = new Doctor(
+                            rs.getInt("id"),
+                            rs.getString("name"),
+                            rs.getString("surname"),
+                            rs.getBytes("photo"),
+                            Enums.Sex.valueOf(rs.getString("sex")),
+                            rs.getString("email"),
+                            rs.getString("specialty"),
+                            JDBCDateUtils.parseLocalDate(rs.getString("dob")),
+                            null,
+                            null
+                    );
+
+                    list.add(doctor);
+                }
+            }
+
+        } catch (SQLException e) {
+            System.out.println("Database error during listDoctorsByAppointment.");
         }
 
         return list;

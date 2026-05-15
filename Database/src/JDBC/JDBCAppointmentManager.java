@@ -1,7 +1,6 @@
 package JDBC;
 
 import java.sql.*;
-import java.time.LocalDate;
 import java.util.*;
 
 
@@ -18,7 +17,7 @@ public class JDBCAppointmentManager implements AppointmentManager {
     }
 
     @Override
-    public void insertAppointment(Appointment appointment) {
+    public boolean insertAppointment(Appointment appointment) {
         String sql = "INSERT INTO Appointment (type, date, price, turn, doctor_id, patient_id) VALUES (?, ?, ?, ?, ?, ?)";
 
         try (PreparedStatement p = c.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
@@ -42,10 +41,11 @@ public class JDBCAppointmentManager implements AppointmentManager {
                     throw new SQLException("Creating appointment failed, no ID obtained.");
                 }
             }
+            return true;
 
         } catch (SQLException e) {
             System.out.println("Database error during insertAppointment.");
-            e.printStackTrace();
+            return false;
         }
     }
 
@@ -67,7 +67,7 @@ public class JDBCAppointmentManager implements AppointmentManager {
                             Sex.valueOf(rs.getString("sex")),
                             rs.getString("email"),
                             rs.getString("specialty"),
-                            LocalDate.parse(rs.getString("dob")),
+                            JDBCDateUtils.parseLocalDate(rs.getString("dob")),
                             null,
                             null
                     );
@@ -93,7 +93,7 @@ public class JDBCAppointmentManager implements AppointmentManager {
                             Sex.valueOf(rs.getString("sex")),
                             rs.getString("name"),
                             rs.getString("surname"),
-                            LocalDate.parse(rs.getString("dob")),
+                            JDBCDateUtils.parseLocalDate(rs.getString("dob")),
                             rs.getInt("height"),
                             rs.getFloat("weight"),
                             rs.getBytes("photo"),
@@ -126,7 +126,7 @@ public class JDBCAppointmentManager implements AppointmentManager {
                     result = new Appointment(
                             rs.getInt("id"),
                             Type_of_appointment.valueOf(rs.getString("type")),
-                            LocalDate.parse(rs.getString("date")),
+                            JDBCDateUtils.parseLocalDate(rs.getString("date")),
                             Turn.valueOf(rs.getString("turn")),
                             rs.getDouble("price"),
                             doctor,
@@ -137,7 +137,6 @@ public class JDBCAppointmentManager implements AppointmentManager {
 
         } catch (SQLException e) {
             System.out.println("Database error during getAppointmentById.");
-            e.printStackTrace();
         }
 
         return result;
@@ -159,7 +158,7 @@ public class JDBCAppointmentManager implements AppointmentManager {
                 Appointment appointment = new Appointment(
                         rs.getInt("id"),
                         Type_of_appointment.valueOf(rs.getString("type")),
-                        LocalDate.parse(rs.getString("date")),
+                        JDBCDateUtils.parseLocalDate(rs.getString("date")),
                         Turn.valueOf(rs.getString("turn")),
                         rs.getDouble("price"),
                         doctor,
@@ -171,14 +170,13 @@ public class JDBCAppointmentManager implements AppointmentManager {
 
         } catch (SQLException e) {
             System.out.println("Database error during listAllAppointments.");
-            e.printStackTrace();
         }
 
         return list;
     }
 
     @Override
-    public void updateAppointment(Appointment appointment) {
+    public boolean updateAppointment(Appointment appointment) {
         String sql = "UPDATE Appointment SET type = ?, date = ?, price = ?, turn = ?, doctor_id = ?, patient_id = ? WHERE id = ?";
 
         try (PreparedStatement p = c.prepareStatement(sql)) {
@@ -195,23 +193,25 @@ public class JDBCAppointmentManager implements AppointmentManager {
             if (affectedRows == 0) {
                 throw new SQLException("Updating appointment failed, no rows affected.");
             }
+            return true;
 
         } catch (SQLException e) {
             System.out.println("Database error during updateAppointment.");
-            e.printStackTrace();
+            return false;
         }
     }
 
     @Override
-    public void deleteAppointment(int id) {
+    public boolean deleteAppointment(int id) {
         String sql = "DELETE FROM Appointment WHERE id = ?";
 
         try (PreparedStatement p = c.prepareStatement(sql)) {
             p.setInt(1, id);
-            p.executeUpdate();
+            int affectedRows = p.executeUpdate();
+            return affectedRows > 0;
         } catch (SQLException e) {
             System.out.println("Database error during deleteAppointment.");
-            e.printStackTrace();
+            return false;
         }
     }
     
@@ -232,7 +232,7 @@ public class JDBCAppointmentManager implements AppointmentManager {
                     Appointment appointment = new Appointment(
                             rs.getInt("id"),
                             Type_of_appointment.valueOf(rs.getString("type")),
-                            LocalDate.parse(rs.getString("date")),
+                            JDBCDateUtils.parseLocalDate(rs.getString("date")),
                             Turn.valueOf(rs.getString("turn")),
                             rs.getDouble("price"),
                             doctor,
@@ -245,7 +245,6 @@ public class JDBCAppointmentManager implements AppointmentManager {
 
         } catch (SQLException e) {
             System.out.println("Database error during listAppointmentsByDoctor.");
-            e.printStackTrace();
         }
 
         return list;
@@ -268,7 +267,7 @@ public class JDBCAppointmentManager implements AppointmentManager {
                     Appointment appointment = new Appointment(
                             rs.getInt("id"),
                             Type_of_appointment.valueOf(rs.getString("type")),
-                            LocalDate.parse(rs.getString("date")),
+                            JDBCDateUtils.parseLocalDate(rs.getString("date")),
                             Turn.valueOf(rs.getString("turn")),
                             rs.getDouble("price"),
                             doctor,
@@ -281,7 +280,6 @@ public class JDBCAppointmentManager implements AppointmentManager {
 
         } catch (SQLException e) {
             System.out.println("Database error during listAppointmentsByPatient.");
-            e.printStackTrace();
         }
 
         return list;

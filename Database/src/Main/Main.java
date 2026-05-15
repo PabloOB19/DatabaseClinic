@@ -1,17 +1,20 @@
 package Main;
 
 import java.sql.Connection;
-import Enums.*;
-import java.util.*;
+
 import JDBC.*;
 import JPA.JPAUser;
+import POJOS.Role;
+import POJOS.User;
 import ifaces.*;
 import xml.XmlManagerImplement;
-import POJOS.*;
-import Utils.Utils;
-
 
 public class Main {
+	private static final String ROLE_ADMIN = "Admin";
+	private static final String ROLE_DOCTOR = "Doctor";
+	private static final String ROLE_PATIENT = "Patient";
+	private static final String ADMIN_CODE = "1234abc";
+
 	private static JDBCDoctorManager doctorManager;
 	private static JDBCPatientManager patientManager;
 	private static JDBCAppointmentManager appointmentManager;
@@ -20,43 +23,183 @@ public class Main {
 	private static JPAUser userManager;
 	private static XmlManager xmlManager;
 	
-	public static void main(String[] args) {
-    	
-		JDBCConnectionManager connectionManager = new JDBCConnectionManager();
-		Connection c = connectionManager.manager();
+		public static void main(String[] args) {
+	    	
+			JDBCConnectionManager connectionManager = new JDBCConnectionManager();
+			Connection connection = connectionManager.manager();
 
-		doctorManager = new JDBCDoctorManager(c);
-		patientManager = new JDBCPatientManager(c);
-		appointmentManager = new JDBCAppointmentManager(c);
-		surgeryManager = new JDBCSurgeryManager(c);
-		equipmentManager = new JDBCEquipmentManager(c);
+			try {
+				initializeManagers(connection);
+
+				boolean appRunning = true;
+				System.out.println("\n\n╔══════════════════════════════╗");
+				System.out.println("║            WELCOME           ║");
+				System.out.println("╚══════════════════════════════╝");
+				while (appRunning) {
+					    Utils.printMainMenu();
+					    int option = InputOutput.askInt("\n Choose an option: ");
+					    
+					    switch(option) {
+					    	 case 1:
+					    		    login();
+					    		    break;
+					    	 case 2:
+					    		    register();
+					    		    break;
+
+					    	 case 3:
+					    		    forgotPassword();
+					    		    break;
+
+					    	 case 0:
+					    		    appRunning = false;
+					    		    System.out.println("Exit");
+					    		    break;
+					    	 default:
+					    		    System.out.println("Invalid option.");
+					    		    break;
+					     }}} finally {
+				if (userManager != null) {
+					userManager.close();
+				}
+				connectionManager.closeConnection();
+				}}
+
+	private static void initializeManagers(Connection connection) {
+		doctorManager = new JDBCDoctorManager(connection);
+		patientManager = new JDBCPatientManager(connection);
+		appointmentManager = new JDBCAppointmentManager(connection);
+		surgeryManager = new JDBCSurgeryManager(connection);
+		equipmentManager = new JDBCEquipmentManager(connection);
 		xmlManager = new XmlManagerImplement();
 		userManager = new JPAUser();
-		boolean run = true;
-		System.out.println("\n\n╔══════════════════════════╗");
-		System.out.println("║            WELCOME           ║");
-		System.out.println("╚══════════════════════════════╝");
-		while (run) {
-			 System.out.println("\nOPTIONS:");
-			    System.out.println(" 1-LOGIN ");
-			    System.out.println(" 2-REGISTER");
-			    System.out.println(" 3-FORGOT PASSWORD?");
-			    System.out.println(" 0-Exit");
-			    int op = InputOutput.askInt("\n Choose an option: ");
-			    
-			    switch(op) {
-			    case 1:
-			    	InputOutput.Impresion();
-			    	 int op2 = InputOutput.askInt("\nChoose an option: ");
-			    	 switch(op2) {
-			    	 case 1:
-			    		 
-			    	 }
-			    	 
-			    	
-			    }
-			    
-			    
+	}
+
+
+	private static void login() {
+		String username = InputOutput.askText("Introduce your username:");
+		String password = InputOutput.askPassword("Introduce your password:");
+		User loggedUser = userManager.login(username, password);
+
+		if (loggedUser == null) {
+			System.out.println("Incorrect username or password.");
+		} else if (loggedUser.getRole() == null) {
+			System.out.println("This user does not have a role assigned.");
+		} else {
+			openMenuByRole(loggedUser);
+		}
+	}
+
+	private static void openMenuByRole(User loggedUser) {
+		String roleName = loggedUser.getRole().getName();
+
+		switch (roleName) {
+			case ROLE_ADMIN:
+				adminMenu();
+				break;
+			case ROLE_DOCTOR:
+				doctorMenu(loggedUser);
+				break;
+			case ROLE_PATIENT:
+				patientMenu(loggedUser);
+				break;
+			default:
+				System.out.println("Unknown role: " + roleName);
+				break;
+		}
+	}
+
+	private static void register() {
+		String roleName = askRoleNameForRegister();
+
+		if (roleName == null) {
+			return;
+		}
+
+		String username = InputOutput.askText("Introduce username:");
+		String email = InputOutput.askEmail("Introduce email:");
+		String password = InputOutput.askPassword("Introduce password:");
+
+		User newUser = new User(username, password, email);
+		userManager.register(newUser);
+
+		User savedUser = userManager.getUser(username, email);
+
+		if (savedUser == null) {
+			System.out.println("User could not be registered. Username or email may already exist.");
+			return;
+		}
+
+		Role role = userManager.getRole(roleName);
+
+		if (role == null) {
+			System.out.println("Role not found.");
+			return;
+		}
+
+		userManager.assignRole(savedUser, role);
+
+		System.out.println("User registered successfully as " + roleName + ".");
+	}
+
+	private static String askRoleNameForRegister() {
+		Utils.ImpresionRoles();
+		int roleOption = InputOutput.askInt("Choose role:");
+
+		switch (roleOption) {
+			case 1:
+				String adminCode = InputOutput.askPassword("Enter admin creation code:");
+
+				if (!adminCode.equals(ADMIN_CODE)) {
+					System.out.println("Incorrect admin code. Admin user was not created.");
+					return null;
+				}
+
+				return ROLE_ADMIN;
+			case 2:
+				return ROLE_DOCTOR;
+			case 3:
+				return ROLE_PATIENT;
+			default:
+				System.out.println("Invalid role option.");
+				return null;
+		}
+	}
+
+	private static void forgotPassword() {
+		String username = InputOutput.askText("Introduce your username:");
+		String email = InputOutput.askEmail("Introduce your email:");
+
+		User user = userManager.getUser(username, email);
+
+		if (user == null) {
+			System.out.println("No user found with that username and email.");
+			return;
+		}
+
+		String password = InputOutput.askPassword("Introduce your new password:");
+		userManager.updatePassword(user, password);
+		System.out.println("Password updated successfully.");
+	}
+		
+	private static void adminMenu() {
+	    AdminMenu adminMenu = new AdminMenu(doctorManager, patientManager, appointmentManager, surgeryManager,
+	    		equipmentManager, userManager, xmlManager);
+	    adminMenu.run();
+	}
+
+	private static void doctorMenu(User loggedUser) {
+	    DoctorMenu doctorMenu = new DoctorMenu(loggedUser, doctorManager, patientManager, appointmentManager, surgeryManager, equipmentManager);
+	    doctorMenu.run();
+	}
+
+	private static void patientMenu(User loggedUser) {
+	    PatientMenu patientMenu = new PatientMenu(loggedUser, doctorManager, patientManager, appointmentManager, surgeryManager);
+	    patientMenu.run();
+	}
+
+		
+
+		
 
 	}
-}}

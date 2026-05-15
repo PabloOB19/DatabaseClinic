@@ -20,7 +20,6 @@ public class JDBCConnectionManager {
             return c;
         } catch (Exception e) {
             System.out.println("Database access error");
-            e.printStackTrace();
             return null;
         }
         
@@ -31,7 +30,6 @@ public class JDBCConnectionManager {
             c.close();
         } catch (Exception e) {
             System.out.println("Database error.");
-            e.printStackTrace();
         }
     }
 
@@ -118,7 +116,6 @@ public class JDBCConnectionManager {
 
         } catch (Exception e) {
             System.out.println("Database access error");
-            e.printStackTrace();
         }
     }
 }
