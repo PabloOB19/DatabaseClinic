@@ -299,12 +299,14 @@ public class AdminMenu {
             }
         }
 
-        int patientId = InputOutput.askPositiveInt("Introduce patient ID:");
-        Patient patient = patientManager.getPatientById(patientId);
+        Patient patient = null;
+        while (patient == null) {
+            int patientId = InputOutput.askPositiveInt("Introduce patient ID:");
+            patient = patientManager.getPatientById(patientId);
 
-        if (patient == null) {
-            System.out.println("Patient not found.");
-            return;
+            if (patient == null) {
+                System.out.println("Patient not found.");
+            }
         }
         Appointment appointment = new Appointment(0, type, date, turn, price, doctor, patient);
         if (appointmentManager.insertAppointment(appointment)) {
@@ -445,23 +447,27 @@ public class AdminMenu {
         }
 
         if (InputOutput.askYesNo("Do you want to update the doctor?")) {
-            int doctorId = InputOutput.askPositiveInt("Introduce new doctor ID:");
-            Doctor doctor = doctorManager.getDoctorById(doctorId);
+            Doctor doctor = null;
+            while (doctor == null) {
+                int doctorId = InputOutput.askOptionalPositiveInt("Introduce new doctor ID:", appointment.getDoctor().getId());
+                doctor = doctorManager.getDoctorById(doctorId);
 
-            if (doctor == null) {
-                System.out.println("Doctor not found.");
-                return;
+                if (doctor == null) {
+                    System.out.println("Doctor not found.");
+                }
             }
             appointment.setDoctor(doctor);
         }
 
         if (InputOutput.askYesNo("Do you want to update the patient?")) {
-            int patientId = InputOutput.askPositiveInt("Introduce new patient ID:");
-            Patient patient = patientManager.getPatientById(patientId);
+            Patient patient = null;
+            while (patient == null) {
+                int patientId = InputOutput.askOptionalPositiveInt("Introduce new patient ID:", appointment.getPatient().getId());
+                patient = patientManager.getPatientById(patientId);
 
-            if (patient == null) {
-                System.out.println("Patient not found.");
-                return;
+                if (patient == null) {
+                    System.out.println("Patient not found.");
+                }
             }
             appointment.setPatient(patient);
         }
