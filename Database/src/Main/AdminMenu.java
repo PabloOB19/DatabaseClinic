@@ -15,6 +15,7 @@ public class AdminMenu {
     private JDBCAppointmentManager appointmentManager;
     private JDBCSurgeryManager surgeryManager;
     private JDBCEquipmentManager equipmentManager;
+    private UserManager userManager;
     private XmlAdmin xmlAdmin;
 
     public AdminMenu(JDBCDoctorManager doctorManager, JDBCPatientManager patientManager,
@@ -25,6 +26,7 @@ public class AdminMenu {
         this.appointmentManager = appointmentManager;
         this.surgeryManager = surgeryManager;
         this.equipmentManager = equipmentManager;
+        this.userManager = userManager;
         this.xmlAdmin = new XmlAdmin(doctorManager, patientManager, appointmentManager, surgeryManager,
                 equipmentManager, userManager, xmlManager);
     }
@@ -122,6 +124,7 @@ public class AdminMenu {
 
     private void deleteMenu() {
         Utils.ImpresionEntity();
+        System.out.println("6- User");
         int op = InputOutput.askInt("\n Choose an option: ");
 
         switch (op) {
@@ -139,6 +142,9 @@ public class AdminMenu {
                 break;
             case 5:
                 deleteEquipmentByScreen();
+                break;
+            case 6:
+                deleteUserByScreen();
                 break;
             default:
                 System.out.println("Invalid entity option.");
@@ -656,6 +662,30 @@ public class AdminMenu {
             System.out.println("Equipment deleted successfully.");
         } else {
             System.out.println("Equipment could not be deleted.");
+        }
+    }
+
+    private void deleteUserByScreen() {
+        String username = InputOutput.askText("Introduce username:");
+        String email = InputOutput.askEmail("Introduce email:");
+        User user = userManager.getUser(username, email);
+
+        if (user == null) {
+            System.out.println("User not found.");
+            return;
+        }
+
+        if (!InputOutput.askYesNo("Are you sure you want to delete this user?")) {
+            System.out.println("Delete cancelled.");
+            return;
+        }
+
+        userManager.deleteUser(user);
+
+        if (userManager.getUser(username, email) == null) {
+            System.out.println("User deleted successfully.");
+        } else {
+            System.out.println("User could not be deleted.");
         }
     }
 
