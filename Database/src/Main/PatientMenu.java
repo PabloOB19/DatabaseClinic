@@ -110,20 +110,10 @@ public class PatientMenu {
     }
 
     private void getSurgeryById() {
-        Surgery surgery = null;
-        int attempts = 0;
-        while (surgery == null) {
-            int surgeryId = InputOutput.askPositiveInt("Introduce surgery ID:");
-            surgery = surgeryManager.getSurgeryById(surgeryId);
-
-            if (surgery == null) {
-                attempts++;
-                if (attempts == 3) {
-                    System.out.println("Límite de IDs superado, pase por administracion");
-                    return;
-                }
-                System.out.println("Surgery not found.");
-            }
+        Surgery surgery = Common.askExistingId("Enter surgery ID:", surgeryManager::getSurgeryById,
+                "Surgery not found.");
+        if (surgery == null) {
+            return;
         }
 
         if (surgery.getPatient() == null || surgery.getPatient().getId() != currentPatient.getId()) {
@@ -135,20 +125,10 @@ public class PatientMenu {
     }
 
     private void getAppointmentById() {
-        Appointment appointment = null;
-        int attempts = 0;
-        while (appointment == null) {
-            int appointmentId = InputOutput.askPositiveInt("Introduce appointment ID:");
-            appointment = appointmentManager.getAppointmentById(appointmentId);
-
-            if (appointment == null) {
-                attempts++;
-                if (attempts == 3) {
-                    System.out.println("Límite de IDs superado, pase por administracion");
-                    return;
-                }
-                System.out.println("Appointment not found.");
-            }
+        Appointment appointment = Common.askExistingId("Enter appointment ID:",
+                appointmentManager::getAppointmentById, "Appointment not found.");
+        if (appointment == null) {
+            return;
         }
 
         if (appointment.getPatient() == null || appointment.getPatient().getId() != currentPatient.getId()) {
