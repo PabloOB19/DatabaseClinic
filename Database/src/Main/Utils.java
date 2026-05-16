@@ -64,6 +64,8 @@ public class Utils {
 	        System.out.println("1- Get patient by ID");
 	        System.out.println("2- Get doctor by ID");
 	        System.out.println("3- Get equipment by ID");
+	        System.out.println("4- Get appointment by ID");
+	        System.out.println("5- Get surgery by ID");
 	    }
 
 		public static void printAssignMenu() {
@@ -122,7 +124,8 @@ public class Utils {
 
 		public static void printPatientGetMenu() {
 	        System.out.println("1- Get my surgery by ID");
-	        System.out.println("2- Get my patient data");
+	        System.out.println("2- Get my appointment by ID");
+	        System.out.println("3- Get my patient data");
 	    }
 
 		public static void printList(List<?> list, String emptyMessage) {

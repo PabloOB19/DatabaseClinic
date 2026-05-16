@@ -4,6 +4,7 @@ import JDBC.JDBCAppointmentManager;
 import JDBC.JDBCDoctorManager;
 import JDBC.JDBCPatientManager;
 import JDBC.JDBCSurgeryManager;
+import POJOS.Appointment;
 import POJOS.Patient;
 import POJOS.Surgery;
 import POJOS.User;
@@ -83,6 +84,9 @@ public class PatientMenu {
                 getSurgeryById();
                 break;
             case 2:
+                getAppointmentById();
+                break;
+            case 3:
                 getCurrentPatientById();
                 break;
             default:
@@ -128,6 +132,31 @@ public class PatientMenu {
         }
 
         System.out.println(surgery);
+    }
+
+    private void getAppointmentById() {
+        Appointment appointment = null;
+        int attempts = 0;
+        while (appointment == null) {
+            int appointmentId = InputOutput.askPositiveInt("Introduce appointment ID:");
+            appointment = appointmentManager.getAppointmentById(appointmentId);
+
+            if (appointment == null) {
+                attempts++;
+                if (attempts == 3) {
+                    System.out.println("Límite de IDs superado, pase por administracion");
+                    return;
+                }
+                System.out.println("Appointment not found.");
+            }
+        }
+
+        if (appointment.getPatient() == null || appointment.getPatient().getId() != currentPatient.getId()) {
+            System.out.println("You cannot see this appointment.");
+            return;
+        }
+
+        System.out.println(appointment);
     }
 
     private void listSurgeriesByCurrentPatient() {

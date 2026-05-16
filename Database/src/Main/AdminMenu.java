@@ -201,6 +201,12 @@ public class AdminMenu {
             case 3:
                 Common.getEquipmentById(equipmentManager);
                 break;
+            case 4:
+                Common.getAppointmentById(appointmentManager);
+                break;
+            case 5:
+                Common.getSurgeryById(surgeryManager);
+                break;
             default:
                 System.out.println("Invalid get option.");
                 break;

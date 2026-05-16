@@ -68,6 +68,46 @@ public class Common {
         System.out.println(equipment);
     }
 
+    public static void getAppointmentById(JDBCAppointmentManager appointmentManager) {
+        Appointment appointment = null;
+        int attempts = 0;
+        while (appointment == null) {
+            int id = InputOutput.askPositiveInt("Introduce appointment ID:");
+            appointment = appointmentManager.getAppointmentById(id);
+
+            if (appointment == null) {
+                attempts++;
+                if (attempts == MAX_ID_ATTEMPTS) {
+                    System.out.println(ID_LIMIT_MESSAGE);
+                    return;
+                }
+                System.out.println("Appointment not found.");
+            }
+        }
+
+        System.out.println(appointment);
+    }
+
+    public static void getSurgeryById(JDBCSurgeryManager surgeryManager) {
+        Surgery surgery = null;
+        int attempts = 0;
+        while (surgery == null) {
+            int id = InputOutput.askPositiveInt("Introduce surgery ID:");
+            surgery = surgeryManager.getSurgeryById(id);
+
+            if (surgery == null) {
+                attempts++;
+                if (attempts == MAX_ID_ATTEMPTS) {
+                    System.out.println(ID_LIMIT_MESSAGE);
+                    return;
+                }
+                System.out.println("Surgery not found.");
+            }
+        }
+
+        System.out.println(surgery);
+    }
+
     public static void listDoctorsBySpecialty(JDBCDoctorManager doctorManager) {
         String specialty = InputOutput.askString("Introduce doctor's specialty:");
         Utils.printList(doctorManager.listDoctorsBySpecialty(specialty), "There are no doctors with that specialty.");
