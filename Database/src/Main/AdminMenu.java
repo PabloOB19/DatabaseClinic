@@ -16,17 +16,19 @@ public class AdminMenu {
     private JDBCSurgeryManager surgeryManager;
     private JDBCEquipmentManager equipmentManager;
     private UserManager userManager;
+    private User currentAdmin;
     private XmlAdmin xmlAdmin;
 
     public AdminMenu(JDBCDoctorManager doctorManager, JDBCPatientManager patientManager,
             JDBCAppointmentManager appointmentManager, JDBCSurgeryManager surgeryManager,
-            JDBCEquipmentManager equipmentManager, UserManager userManager, XmlManager xmlManager) {
+            JDBCEquipmentManager equipmentManager, UserManager userManager, XmlManager xmlManager, User currentAdmin) {
         this.doctorManager = doctorManager;
         this.patientManager = patientManager;
         this.appointmentManager = appointmentManager;
         this.surgeryManager = surgeryManager;
         this.equipmentManager = equipmentManager;
         this.userManager = userManager;
+        this.currentAdmin = currentAdmin;
         this.xmlAdmin = new XmlAdmin(doctorManager, patientManager, appointmentManager, surgeryManager,
                 equipmentManager, userManager, xmlManager);
     }
@@ -241,11 +243,11 @@ public class AdminMenu {
 
 
     private void addDoctorByScreen() {
-        String name = InputOutput.askString("Introduce doctor's name:");
-        String surname = InputOutput.askString("Introduce doctor's surname:");
-        String email = InputOutput.askEmail("Introduce doctor's email:");
-        String specialty = InputOutput.askString("Introduce doctor's specialty:");
-        LocalDate dob = InputOutput.askPastDate("Introduce doctor's date of birth:");
+        String name = InputOutput.askString("Enter doctor's name:");
+        String surname = InputOutput.askString("Enter doctor's surname:");
+        String email = InputOutput.askEmail("Enter doctor's email:");
+        String specialty = InputOutput.askString("Enter doctor's specialty:");
+        LocalDate dob = InputOutput.askPastDate("Enter doctor's date of birth:");
         Sex sex = InputOutput.askSex();
         if (sex == null) {
             return;
@@ -266,14 +268,14 @@ public class AdminMenu {
     }
 
     private void addPatientByScreen() {
-        String name = InputOutput.askString("Introduce patient's name:");
-        String surname = InputOutput.askString("Introduce patient's surname:");
-        String email = InputOutput.askEmail("Introduce patient's email:");
-        LocalDate dob = InputOutput.askPastDate("Introduce patient's date of birth:");
-        int height = InputOutput.askPositiveInt("Introduce patient's height (cm):");
-        double weightDouble = InputOutput.askPositiveDouble("Introduce patient's weight (Kg):");
+        String name = InputOutput.askString("Enter patient's name:");
+        String surname = InputOutput.askString("Enter patient's surname:");
+        String email = InputOutput.askEmail("Enter patient's email:");
+        LocalDate dob = InputOutput.askPastDate("Enter patient's date of birth:");
+        int height = InputOutput.askPositiveInt("Enter patient's height (cm):");
+        double weightDouble = InputOutput.askPositiveDouble("Enter patient's weight (Kg):");
         float weight = (float) weightDouble;
-        String info = InputOutput.askText("Introduce any relevant info about the patient:");
+        String info = InputOutput.askText("Enter any relevant info about the patient:");
         Sex sex = InputOutput.askSex();
         if (sex == null) {
             return;
@@ -298,30 +300,22 @@ public class AdminMenu {
         if (type == null) {
             return;
         }
-        LocalDate date = InputOutput.askFutureDate("Introduce appointment date:");
-        double price = InputOutput.askPositiveDouble("Introduce appointment price (€):");
+        LocalDate date = InputOutput.askFutureDate("Enter appointment date:");
+        double price = InputOutput.askPositiveDouble("Enter appointment price (€):");
         Turn turn = InputOutput.askTurn();
         if (turn == null) {
             return;
         }
-        Doctor doctor = null;
-        while (doctor == null) {
-            int doctorId = InputOutput.askPositiveInt("Introduce doctor ID:");
-            doctor = doctorManager.getDoctorById(doctorId);
-
-            if (doctor == null) {
-                System.out.println("Doctor not found.");
-            }
+        Doctor doctor = Common.askExistingId("Enter doctor ID:", doctorManager::getDoctorById,
+                "Doctor not found.");
+        if (doctor == null) {
+            return;
         }
 
-        Patient patient = null;
-        while (patient == null) {
-            int patientId = InputOutput.askPositiveInt("Introduce patient ID:");
-            patient = patientManager.getPatientById(patientId);
-
-            if (patient == null) {
-                System.out.println("Patient not found.");
-            }
+        Patient patient = Common.askExistingId("Enter patient ID:", patientManager::getPatientById,
+                "Patient not found.");
+        if (patient == null) {
+            return;
         }
         Appointment appointment = new Appointment(0, type, date, turn, price, doctor, patient);
         if (appointmentManager.insertAppointment(appointment)) {
@@ -336,20 +330,16 @@ public class AdminMenu {
         if (type == null) {
             return;
         }
-        LocalDate date = InputOutput.askFutureDate("Introduce surgery date:");
-        double price = InputOutput.askPositiveDouble("Introduce surgery price (€):");
+        LocalDate date = InputOutput.askFutureDate("Enter surgery date:");
+        double price = InputOutput.askPositiveDouble("Enter surgery price (€):");
         Turn turn = InputOutput.askTurn();
         if (turn == null) {
             return;
         }
-        Patient patient = null;
-        while (patient == null) {
-            int patientId = InputOutput.askPositiveInt("Introduce patient ID:");
-            patient = patientManager.getPatientById(patientId);
-
-            if (patient == null) {
-                System.out.println("Patient not found.");
-            }
+        Patient patient = Common.askExistingId("Enter patient ID:", patientManager::getPatientById,
+                "Patient not found.");
+        if (patient == null) {
+            return;
         }
         Surgery surgery = new Surgery(0, date, type, price, turn, patient, null, null);
         if (surgeryManager.insertSurgery(surgery)) {
@@ -360,14 +350,14 @@ public class AdminMenu {
     }
 
     private void addEquipmentByScreen() {
-        String name = InputOutput.askText("Introduce equipment name:");
+        String name = InputOutput.askText("Enter equipment name:");
         Category category = InputOutput.askCategory();
         if (category == null) {
             return;
         }
-        int quantity = InputOutput.askPositiveInt("Introduce equipment quantity:");
-        double price = InputOutput.askPositiveDouble("Introduce equipment price (€):");
-        LocalDate expirationDate = InputOutput.askFutureDate("Introduce equipment expiration date:");
+        int quantity = InputOutput.askPositiveInt("Enter equipment quantity:");
+        double price = InputOutput.askPositiveDouble("Enter equipment price (€):");
+        LocalDate expirationDate = InputOutput.askFutureDate("Enter equipment expiration date:");
         Equipment equipment = new Equipment(0, name, category, quantity, price, expirationDate, null);
         if (equipmentManager.insertEquipment(equipment)) {
             System.out.println("Equipment added successfully with ID: " + equipment.getId());
@@ -377,17 +367,16 @@ public class AdminMenu {
     }
 
     private void updateDoctorByScreen() {
-        int id = InputOutput.askPositiveInt("Introduce doctor ID:");
-        Doctor doctor = doctorManager.getDoctorById(id);
+        Doctor doctor = Common.askExistingId("Enter doctor ID:", doctorManager::getDoctorById,
+                "Doctor not found.");
         if (doctor == null) {
-            System.out.println("Doctor not found.");
             return;
         }
-        doctor.setName(InputOutput.askOptionalString("Introduce new doctor's name:", doctor.getName()));
-        doctor.setSurname(InputOutput.askOptionalString("Introduce new doctor's surname:", doctor.getSurname()));
-        doctor.setEmail(InputOutput.askOptionalEmail("Introduce new doctor's email:", doctor.getEmail()));
-        doctor.setSpecialty(InputOutput.askOptionalString("Introduce new doctor's specialty:", doctor.getSpecialty()));
-        doctor.setDob(InputOutput.askOptionalPastDate("Introduce new doctor's date of birth:", doctor.getDob()));
+        doctor.setName(InputOutput.askOptionalString("Enter new doctor's name:", doctor.getName()));
+        doctor.setSurname(InputOutput.askOptionalString("Enter new doctor's surname:", doctor.getSurname()));
+        doctor.setEmail(InputOutput.askOptionalEmail("Enter new doctor's email:", doctor.getEmail()));
+        doctor.setSpecialty(InputOutput.askOptionalString("Enter new doctor's specialty:", doctor.getSpecialty()));
+        doctor.setDob(InputOutput.askOptionalPastDate("Enter new doctor's date of birth:", doctor.getDob()));
         if (InputOutput.askYesNo("Do you want to update the sex?")) {
             doctor.setSex(InputOutput.askSex());
         }
@@ -406,24 +395,23 @@ public class AdminMenu {
     }
 
     private void updatePatientByScreen() {
-        int id = InputOutput.askPositiveInt("Introduce patient ID:");
-        Patient patient = patientManager.getPatientById(id);
+        Patient patient = Common.askExistingId("Enter patient ID:", patientManager::getPatientById,
+                "Patient not found.");
 
         if (patient == null) {
-            System.out.println("Patient not found.");
             return;
         }
 
-        patient.setName(InputOutput.askOptionalString("Introduce new patient's name:", patient.getName()));
-        patient.setSurname(InputOutput.askOptionalString("Introduce new patient's surname:", patient.getSurname()));
-        patient.setEmail(InputOutput.askOptionalEmail("Introduce new patient's email:", patient.getEmail()));
-        patient.setDob(InputOutput.askOptionalPastDate("Introduce new patient's date of birth:", patient.getDob()));
-        patient.setHeight(InputOutput.askOptionalPositiveInt("Introduce new patient's height:", patient.getHeight()));
+        patient.setName(InputOutput.askOptionalString("Enter new patient's name:", patient.getName()));
+        patient.setSurname(InputOutput.askOptionalString("Enter new patient's surname:", patient.getSurname()));
+        patient.setEmail(InputOutput.askOptionalEmail("Enter new patient's email:", patient.getEmail()));
+        patient.setDob(InputOutput.askOptionalPastDate("Enter new patient's date of birth:", patient.getDob()));
+        patient.setHeight(InputOutput.askOptionalPositiveInt("Enter new patient's height:", patient.getHeight()));
 
-        double weightDouble = InputOutput.askOptionalPositiveDouble("Introduce new patient's weight:", patient.getWeight());
+        double weightDouble = InputOutput.askOptionalPositiveDouble("Enter new patient's weight:", patient.getWeight());
         patient.setWeight((float) weightDouble);
 
-        patient.setInfo(InputOutput.askOptionalText("Introduce new patient's info:", patient.getInfo()));
+        patient.setInfo(InputOutput.askOptionalText("Enter new patient's info:", patient.getInfo()));
 
         if (InputOutput.askYesNo("Do you want to update the sex?")) {
             patient.setSex(InputOutput.askSex());
@@ -445,11 +433,10 @@ public class AdminMenu {
     }
 
     private void updateAppointmentByScreen() {
-        int id = InputOutput.askPositiveInt("Introduce appointment ID:");
-        Appointment appointment = appointmentManager.getAppointmentById(id);
+        Appointment appointment = Common.askExistingId("Enter appointment ID:",
+                appointmentManager::getAppointmentById, "Appointment not found.");
 
         if (appointment == null) {
-            System.out.println("Appointment not found.");
             return;
         }
 
@@ -457,35 +444,27 @@ public class AdminMenu {
             appointment.setType(InputOutput.askAppointmentType());
         }
 
-        appointment.setDate(InputOutput.askOptionalFutureDate("Introduce new appointment date:", appointment.getDate()));
-        appointment.setPrice(InputOutput.askOptionalPositiveDouble("Introduce new appointment price:", appointment.getPrice()));
+        appointment.setDate(InputOutput.askOptionalFutureDate("Enter new appointment date:", appointment.getDate()));
+        appointment.setPrice(InputOutput.askOptionalPositiveDouble("Enter new appointment price:", appointment.getPrice()));
 
         if (InputOutput.askYesNo("Do you want to update the turn?")) {
             appointment.setTurn(InputOutput.askTurn());
         }
 
         if (InputOutput.askYesNo("Do you want to update the doctor?")) {
-            Doctor doctor = null;
-            while (doctor == null) {
-                int doctorId = InputOutput.askOptionalPositiveInt("Introduce new doctor ID:", appointment.getDoctor().getId());
-                doctor = doctorManager.getDoctorById(doctorId);
-
-                if (doctor == null) {
-                    System.out.println("Doctor not found.");
-                }
+            Doctor doctor = Common.askOptionalExistingId("Enter new doctor ID:", appointment.getDoctor().getId(),
+                    doctorManager::getDoctorById, "Doctor not found.");
+            if (doctor == null) {
+                return;
             }
             appointment.setDoctor(doctor);
         }
 
         if (InputOutput.askYesNo("Do you want to update the patient?")) {
-            Patient patient = null;
-            while (patient == null) {
-                int patientId = InputOutput.askOptionalPositiveInt("Introduce new patient ID:", appointment.getPatient().getId());
-                patient = patientManager.getPatientById(patientId);
-
-                if (patient == null) {
-                    System.out.println("Patient not found.");
-                }
+            Patient patient = Common.askOptionalExistingId("Enter new patient ID:",
+                    appointment.getPatient().getId(), patientManager::getPatientById, "Patient not found.");
+            if (patient == null) {
+                return;
             }
             appointment.setPatient(patient);
         }
@@ -498,11 +477,10 @@ public class AdminMenu {
     }
 
     private void updateSurgeryByScreen() {
-        int id = InputOutput.askPositiveInt("Introduce surgery ID:");
-        Surgery surgery = surgeryManager.getSurgeryById(id);
+        Surgery surgery = Common.askExistingId("Enter surgery ID:", surgeryManager::getSurgeryById,
+                "Surgery not found.");
 
         if (surgery == null) {
-            System.out.println("Surgery not found.");
             return;
         }
 
@@ -510,22 +488,18 @@ public class AdminMenu {
             surgery.setType(InputOutput.askSurgeryType());
         }
 
-        surgery.setDate(InputOutput.askOptionalFutureDate("Introduce new surgery date:", surgery.getDate()));
-        surgery.setPrice(InputOutput.askOptionalPositiveDouble("Introduce new surgery price:", surgery.getPrice()));
+        surgery.setDate(InputOutput.askOptionalFutureDate("Enter new surgery date:", surgery.getDate()));
+        surgery.setPrice(InputOutput.askOptionalPositiveDouble("Enter new surgery price:", surgery.getPrice()));
 
         if (InputOutput.askYesNo("Do you want to update the turn?")) {
             surgery.setTurn(InputOutput.askTurn());
         }
 
         if (InputOutput.askYesNo("Do you want to update the patient?")) {
-            Patient patient = null;
-            while (patient == null) {
-                int patientId = InputOutput.askOptionalPositiveInt("Introduce new patient ID:", surgery.getPatient().getId());
-                patient = patientManager.getPatientById(patientId);
-
-                if (patient == null) {
-                    System.out.println("Patient not found.");
-                }
+            Patient patient = Common.askOptionalExistingId("Enter new patient ID:", surgery.getPatient().getId(),
+                    patientManager::getPatientById, "Patient not found.");
+            if (patient == null) {
+                return;
             }
             surgery.setPatient(patient);
         }
@@ -538,23 +512,22 @@ public class AdminMenu {
     }
 
     private void updateEquipmentByScreen() {
-        int id = InputOutput.askPositiveInt("Introduce equipment ID:");
-        Equipment equipment = equipmentManager.getEquipmentById(id);
+        Equipment equipment = Common.askExistingId("Enter equipment ID:", equipmentManager::getEquipmentById,
+                "Equipment not found.");
 
         if (equipment == null) {
-            System.out.println("Equipment not found.");
             return;
         }
 
-        equipment.setName(InputOutput.askOptionalText("Introduce new equipment name:", equipment.getName()));
+        equipment.setName(InputOutput.askOptionalText("Enter new equipment name:", equipment.getName()));
 
         if (InputOutput.askYesNo("Do you want to update the category?")) {
             equipment.setCategory(InputOutput.askCategory());
         }
 
-        equipment.setQuantity(InputOutput.askOptionalPositiveInt("Introduce new equipment quantity:", equipment.getQuantity()));
-        equipment.setPrice(InputOutput.askOptionalPositiveDouble("Introduce new equipment price:", equipment.getPrice()));
-        equipment.setExpiration_date(InputOutput.askOptionalFutureDate("Introduce new equipment expiration date:", equipment.getExpiration_date()));
+        equipment.setQuantity(InputOutput.askOptionalPositiveInt("Enter new equipment quantity:", equipment.getQuantity()));
+        equipment.setPrice(InputOutput.askOptionalPositiveDouble("Enter new equipment price:", equipment.getPrice()));
+        equipment.setExpiration_date(InputOutput.askOptionalFutureDate("Enter new equipment expiration date:", equipment.getExpiration_date()));
 
         if (equipmentManager.updateEquipment(equipment)) {
             System.out.println("Equipment updated successfully.");
@@ -564,11 +537,10 @@ public class AdminMenu {
     }
 
     private void deletePatientByScreen() {
-        int id = InputOutput.askPositiveInt("Introduce patient ID:");
-        Patient patient = patientManager.getPatientById(id);
+        Patient patient = Common.askExistingId("Enter patient ID:", patientManager::getPatientById,
+                "Patient not found.");
 
         if (patient == null) {
-            System.out.println("Patient not found.");
             return;
         }
 
@@ -577,7 +549,7 @@ public class AdminMenu {
             return;
         }
 
-        if (patientManager.deletePatient(id)) {
+        if (patientManager.deletePatient(patient.getId())) {
             System.out.println("Patient deleted successfully.");
         } else {
             System.out.println("Patient could not be deleted.");
@@ -585,11 +557,10 @@ public class AdminMenu {
     }
 
     private void deleteDoctorByScreen() {
-        int id = InputOutput.askPositiveInt("Introduce doctor ID:");
-        Doctor doctor = doctorManager.getDoctorById(id);
+        Doctor doctor = Common.askExistingId("Enter doctor ID:", doctorManager::getDoctorById,
+                "Doctor not found.");
 
         if (doctor == null) {
-            System.out.println("Doctor not found.");
             return;
         }
 
@@ -598,7 +569,7 @@ public class AdminMenu {
             return;
         }
 
-        if (doctorManager.deleteDoctor(id)) {
+        if (doctorManager.deleteDoctor(doctor.getId())) {
             System.out.println("Doctor deleted successfully.");
         } else {
             System.out.println("Doctor could not be deleted.");
@@ -606,11 +577,10 @@ public class AdminMenu {
     }
 
     private void deleteAppointmentByScreen() {
-        int id = InputOutput.askPositiveInt("Introduce appointment ID:");
-        Appointment appointment = appointmentManager.getAppointmentById(id);
+        Appointment appointment = Common.askExistingId("Enter appointment ID:",
+                appointmentManager::getAppointmentById, "Appointment not found.");
 
         if (appointment == null) {
-            System.out.println("Appointment not found.");
             return;
         }
 
@@ -619,7 +589,7 @@ public class AdminMenu {
             return;
         }
 
-        if (appointmentManager.deleteAppointment(id)) {
+        if (appointmentManager.deleteAppointment(appointment.getId())) {
             System.out.println("Appointment deleted successfully.");
         } else {
             System.out.println("Appointment could not be deleted.");
@@ -627,11 +597,10 @@ public class AdminMenu {
     }
 
     private void deleteSurgeryByScreen() {
-        int id = InputOutput.askPositiveInt("Introduce surgery ID:");
-        Surgery surgery = surgeryManager.getSurgeryById(id);
+        Surgery surgery = Common.askExistingId("Enter surgery ID:", surgeryManager::getSurgeryById,
+                "Surgery not found.");
 
         if (surgery == null) {
-            System.out.println("Surgery not found.");
             return;
         }
 
@@ -640,7 +609,7 @@ public class AdminMenu {
             return;
         }
 
-        if (surgeryManager.deleteSurgery(id)) {
+        if (surgeryManager.deleteSurgery(surgery.getId())) {
             System.out.println("Surgery deleted successfully.");
         } else {
             System.out.println("Surgery could not be deleted.");
@@ -648,11 +617,10 @@ public class AdminMenu {
     }
 
     private void deleteEquipmentByScreen() {
-        int id = InputOutput.askPositiveInt("Introduce equipment ID:");
-        Equipment equipment = equipmentManager.getEquipmentById(id);
+        Equipment equipment = Common.askExistingId("Enter equipment ID:", equipmentManager::getEquipmentById,
+                "Equipment not found.");
 
         if (equipment == null) {
-            System.out.println("Equipment not found.");
             return;
         }
 
@@ -661,7 +629,7 @@ public class AdminMenu {
             return;
         }
 
-        if (equipmentManager.deleteEquipment(id)) {
+        if (equipmentManager.deleteEquipment(equipment.getId())) {
             System.out.println("Equipment deleted successfully.");
         } else {
             System.out.println("Equipment could not be deleted.");
@@ -669,12 +637,17 @@ public class AdminMenu {
     }
 
     private void deleteUserByScreen() {
-        String username = InputOutput.askText("Introduce username:");
-        String email = InputOutput.askEmail("Introduce email:");
+        String username = InputOutput.askText("Enter username:");
+        String email = InputOutput.askEmail("Enter email:");
         User user = userManager.getUser(username, email);
 
         if (user == null) {
             System.out.println("User not found.");
+            return;
+        }
+
+        if (currentAdmin != null && currentAdmin.getUserId() != null && currentAdmin.getUserId().equals(user.getUserId())) {
+            System.out.println("You cannot delete your own admin user.");
             return;
         }
 
@@ -717,30 +690,24 @@ public class AdminMenu {
     }
 
     private void addDoctorToSurgeryByScreen() {
-        Doctor doctor = null;
-        int doctorId = 0;
-        while (doctor == null) {
-            doctorId = InputOutput.askPositiveInt("Introduce doctor ID:");
-            doctor = doctorManager.getDoctorById(doctorId);
-
-            if (doctor == null) {
-                System.out.println("Doctor not found.");
-            }
-        }
-
-        int surgeryId = InputOutput.askPositiveInt("Introduce surgery ID:");
-        Surgery surgery = surgeryManager.getSurgeryById(surgeryId);
-        if (surgery == null) {
-            System.out.println("Surgery not found.");
+        Doctor doctor = Common.askExistingId("Enter doctor ID:", doctorManager::getDoctorById,
+                "Doctor not found.");
+        if (doctor == null) {
             return;
         }
 
-        if (Common.isDoctorAlreadyInSurgery(doctorManager, doctorId, surgeryId)) {
+        Surgery surgery = Common.askExistingId("Enter surgery ID:", surgeryManager::getSurgeryById,
+                "Surgery not found.");
+        if (surgery == null) {
+            return;
+        }
+
+        if (Common.isDoctorAlreadyInSurgery(doctorManager, doctor.getId(), surgery.getId())) {
             System.out.println("This doctor is already assigned to that surgery.");
             return;
         }
 
-        if (surgeryManager.addDoctorToSurgery(doctorId, surgeryId)) {
+        if (surgeryManager.addDoctorToSurgery(doctor.getId(), surgery.getId())) {
             System.out.println("Doctor assigned to surgery successfully.");
         } else {
             System.out.println("Doctor could not be assigned to surgery.");

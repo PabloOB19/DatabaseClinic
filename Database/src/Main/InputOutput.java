@@ -445,10 +445,10 @@ public class InputOutput {
 		public static byte[] askPhoto() {
 		    while (true) {
 			    try {
-			        String photoPath = InputOutput.askText("Introduce photo path:");
+			        String photoPath = InputOutput.askText("Enter photo path:");
 			        return Utils.loadImage(photoPath);
 			    } catch (Exception e) {
-			        System.out.println("Could not load image. Please introduce a valid path.");
+			        System.out.println("Could not load image. Please enter a valid path.");
 			    }
 		    }
 		}
