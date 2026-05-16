@@ -118,6 +118,14 @@ public class Main {
 
 		String username = InputOutput.askText("Enter username:");
 		String email = InputOutput.askEmail("Enter email:");
+
+		for (User user : userManager.getAllUsers()) {
+			if (user.getUsername().equals(username) || user.getEmail().equals(email)) {
+				System.out.println("User could not be registered. Username or email may already exist.");
+				return;
+			}
+		}
+
 		String password = InputOutput.askPassword("Enter password:");
 
 		User newUser = new User(username, password, email);
