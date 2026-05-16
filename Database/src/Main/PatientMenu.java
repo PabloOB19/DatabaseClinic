@@ -4,6 +4,7 @@ import JDBC.JDBCAppointmentManager;
 import JDBC.JDBCDoctorManager;
 import JDBC.JDBCPatientManager;
 import JDBC.JDBCSurgeryManager;
+import POJOS.Appointment;
 import POJOS.Patient;
 import POJOS.Surgery;
 import POJOS.User;
@@ -83,6 +84,9 @@ public class PatientMenu {
                 getSurgeryById();
                 break;
             case 2:
+                getAppointmentById();
+                break;
+            case 3:
                 getCurrentPatientById();
                 break;
             default:
@@ -106,11 +110,9 @@ public class PatientMenu {
     }
 
     private void getSurgeryById() {
-        int surgeryId = InputOutput.askPositiveInt("Introduce surgery ID:");
-        Surgery surgery = surgeryManager.getSurgeryById(surgeryId);
-
+        Surgery surgery = Common.askExistingId("Enter surgery ID:", surgeryManager::getSurgeryById,
+                "Surgery not found.");
         if (surgery == null) {
-            System.out.println("Surgery not found.");
             return;
         }
 
@@ -120,6 +122,21 @@ public class PatientMenu {
         }
 
         System.out.println(surgery);
+    }
+
+    private void getAppointmentById() {
+        Appointment appointment = Common.askExistingId("Enter appointment ID:",
+                appointmentManager::getAppointmentById, "Appointment not found.");
+        if (appointment == null) {
+            return;
+        }
+
+        if (appointment.getPatient() == null || appointment.getPatient().getId() != currentPatient.getId()) {
+            System.out.println("You cannot see this appointment.");
+            return;
+        }
+
+        System.out.println(appointment);
     }
 
     private void listSurgeriesByCurrentPatient() {

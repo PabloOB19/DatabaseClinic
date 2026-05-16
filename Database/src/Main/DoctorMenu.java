@@ -94,12 +94,9 @@ public class DoctorMenu {
                 Common.listDoctorsBySurgery(doctorManager);
                 break;
             case 5:
-                Common.listDoctorsByAppointment(doctorManager);
-                break;
-            case 6:
                 Common.listEquipmentBySurgery(equipmentManager);
                 break;
-            case 7:
+            case 6:
                 Common.listEquipmentByCategory(equipmentManager);
                 break;
             default:
@@ -143,31 +140,29 @@ public class DoctorMenu {
     }
 
     private void addEquipmentToMySurgeryByScreen() {
-        int equipmentId = InputOutput.askPositiveInt("Introduce equipment ID:");
-        Equipment equipment = equipmentManager.getEquipmentById(equipmentId);
+        Equipment equipment = Common.askExistingId("Enter equipment ID:", equipmentManager::getEquipmentById,
+                "Equipment not found.");
         if (equipment == null) {
-            System.out.println("Equipment not found.");
             return;
         }
 
-        int surgeryId = InputOutput.askPositiveInt("Introduce surgery ID:");
-        Surgery surgery = surgeryManager.getSurgeryById(surgeryId);
+        Surgery surgery = Common.askExistingId("Enter surgery ID:", surgeryManager::getSurgeryById,
+                "Surgery not found.");
         if (surgery == null) {
-            System.out.println("Surgery not found.");
             return;
         }
 
-        if (!Common.isDoctorAlreadyInSurgery(doctorManager, currentDoctor.getId(), surgeryId)) {
+        if (!Common.isDoctorAlreadyInSurgery(doctorManager, currentDoctor.getId(), surgery.getId())) {
             System.out.println("You cannot add equipment to this surgery.");
             return;
         }
 
-        if (Common.isEquipmentAlreadyInSurgery(equipmentManager, equipmentId, surgeryId)) {
+        if (Common.isEquipmentAlreadyInSurgery(equipmentManager, equipment.getId(), surgery.getId())) {
             System.out.println("This equipment is already assigned to that surgery.");
             return;
         }
 
-        if (surgeryManager.addEquipmentToSurgery(equipmentId, surgeryId)) {
+        if (surgeryManager.addEquipmentToSurgery(equipment.getId(), surgery.getId())) {
             System.out.println("Equipment assigned to surgery successfully.");
         } else {
             System.out.println("Equipment could not be assigned to surgery.");

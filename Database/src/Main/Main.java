@@ -77,8 +77,8 @@ public class Main {
 
 
 	private static void login() {
-		String username = InputOutput.askText("Introduce your username:");
-		String password = InputOutput.askPassword("Introduce your password:");
+		String username = InputOutput.askText("Enter your username:");
+		String password = InputOutput.askPassword("Enter your password:");
 		User loggedUser = userManager.login(username, password);
 
 		if (loggedUser == null) {
@@ -95,7 +95,7 @@ public class Main {
 
 		switch (roleName) {
 			case ROLE_ADMIN:
-				adminMenu();
+				adminMenu(loggedUser);
 				break;
 			case ROLE_DOCTOR:
 				doctorMenu(loggedUser);
@@ -116,9 +116,17 @@ public class Main {
 			return;
 		}
 
-		String username = InputOutput.askText("Introduce username:");
-		String email = InputOutput.askEmail("Introduce email:");
-		String password = InputOutput.askPassword("Introduce password:");
+		String username = InputOutput.askText("Enter username:");
+		String email = InputOutput.askEmail("Enter email:");
+
+		for (User user : userManager.getAllUsers()) {
+			if (user.getUsername().equals(username) || user.getEmail().equals(email)) {
+				System.out.println("User could not be registered. Username or email may already exist.");
+				return;
+			}
+		}
+
+		String password = InputOutput.askPassword("Enter password:");
 
 		User newUser = new User(username, password, email);
 		userManager.register(newUser);
@@ -167,8 +175,8 @@ public class Main {
 	}
 
 	private static void forgotPassword() {
-		String username = InputOutput.askText("Introduce your username:");
-		String email = InputOutput.askEmail("Introduce your email:");
+		String username = InputOutput.askText("Enter your username:");
+		String email = InputOutput.askEmail("Enter your email:");
 
 		User user = userManager.getUser(username, email);
 
@@ -177,14 +185,14 @@ public class Main {
 			return;
 		}
 
-		String password = InputOutput.askPassword("Introduce your new password:");
+		String password = InputOutput.askPassword("Enter your new password:");
 		userManager.updatePassword(user, password);
 		System.out.println("Password updated successfully.");
 	}
 		
-	private static void adminMenu() {
+	private static void adminMenu(User loggedUser) {
 	    AdminMenu adminMenu = new AdminMenu(doctorManager, patientManager, appointmentManager, surgeryManager,
-	    		equipmentManager, userManager, xmlManager);
+	    		equipmentManager, userManager, xmlManager, loggedUser);
 	    adminMenu.run();
 	}
 

@@ -1,46 +1,177 @@
 package Main;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import Enums.Category;
 import JDBC.*;
 import POJOS.*;
 
 public class Common {
+    private static final int MAX_ID_ATTEMPTS = 3;
+    private static final String ID_LIMIT_MESSAGE = "ID limit exceeded, please go to administration";
+
+    public interface EntityFinder<T> {
+        T findById(int id);
+    }
+
+    public static <T> T askExistingId(String prompt, EntityFinder<T> finder, String notFoundMessage) {
+        int attempts = 0;
+
+        while (attempts < MAX_ID_ATTEMPTS) {
+            int id = InputOutput.askPositiveInt(prompt);
+            T entity = finder.findById(id);
+
+            if (entity != null) {
+                return entity;
+            }
+
+            attempts++;
+            if (attempts == MAX_ID_ATTEMPTS) {
+                System.out.println(ID_LIMIT_MESSAGE);
+                return null;
+            }
+
+            System.out.println(notFoundMessage);
+        }
+
+        return null;
+    }
+
+    public static <T> T askOptionalExistingId(String prompt, int currentId, EntityFinder<T> finder,
+            String notFoundMessage) {
+        int attempts = 0;
+
+        while (attempts < MAX_ID_ATTEMPTS) {
+            int id = InputOutput.askOptionalPositiveInt(prompt, currentId);
+            T entity = finder.findById(id);
+
+            if (entity != null) {
+                return entity;
+            }
+
+            attempts++;
+            if (attempts == MAX_ID_ATTEMPTS) {
+                System.out.println(ID_LIMIT_MESSAGE);
+                return null;
+            }
+
+            System.out.println(notFoundMessage);
+        }
+
+        return null;
+    }
 
     public static void getDoctorById(JDBCDoctorManager doctorManager) {
-        int id = InputOutput.askPositiveInt("Introduce doctor ID:");
-        Doctor doctor = doctorManager.getDoctorById(id);
-        Utils.printObject(doctor, "Doctor not found.");
+        Doctor doctor = askExistingId("Enter doctor ID:", doctorManager::getDoctorById, "Doctor not found.");
+
+        if (doctor != null) {
+            System.out.println(doctor);
+        }
     }
 
     public static void getPatientById(JDBCPatientManager patientManager) {
-        int id = InputOutput.askPositiveInt("Introduce patient ID:");
-        Patient patient = patientManager.getPatientById(id);
-        Utils.printObject(patient, "Patient not found.");
+        Patient patient = askExistingId("Enter patient ID:", patientManager::getPatientById, "Patient not found.");
+
+        if (patient != null) {
+            System.out.println(patient);
+        }
     }
 
     public static void getEquipmentById(JDBCEquipmentManager equipmentManager) {
-        int id = InputOutput.askPositiveInt("Introduce equipment ID:");
-        Equipment equipment = equipmentManager.getEquipmentById(id);
-        Utils.printObject(equipment, "Equipment not found.");
+        Equipment equipment = askExistingId("Enter equipment ID:", equipmentManager::getEquipmentById,
+                "Equipment not found.");
+
+        if (equipment != null) {
+            System.out.println(equipment);
+        }
+    }
+
+    public static void getAppointmentById(JDBCAppointmentManager appointmentManager) {
+        Appointment appointment = askExistingId("Enter appointment ID:", appointmentManager::getAppointmentById,
+                "Appointment not found.");
+
+        if (appointment != null) {
+            System.out.println(appointment);
+        }
+    }
+
+    public static void getSurgeryById(JDBCSurgeryManager surgeryManager) {
+        Surgery surgery = askExistingId("Enter surgery ID:", surgeryManager::getSurgeryById, "Surgery not found.");
+
+        if (surgery != null) {
+            System.out.println(surgery);
+        }
     }
 
     public static void listDoctorsBySpecialty(JDBCDoctorManager doctorManager) {
-        String specialty = InputOutput.askString("Introduce doctor's specialty:");
+        List<String> specialties = new ArrayList<>();
+
+        for (Doctor doctor : doctorManager.listAllDoctors()) {
+            String specialty = doctor.getSpecialty();
+
+            if (specialty != null && !specialty.trim().isEmpty() && !containsSpecialty(specialties, specialty)) {
+                specialties.add(specialty);
+            }
+        }
+
+        if (specialties.isEmpty()) {
+            System.out.println("There are no specialties available.");
+            return;
+        }
+
+        System.out.println("Choose specialty:");
+        for (int i = 0; i < specialties.size(); i++) {
+            System.out.println((i + 1) + "- " + specialties.get(i));
+        }
+
+        int option;
+        while (true) {
+            option = InputOutput.askInt("Choose specialty:");
+
+            if (option >= 1 && option <= specialties.size()) {
+                break;
+            }
+
+            System.out.println("Invalid specialty option.");
+        }
+
+        String specialty = specialties.get(option - 1);
         Utils.printList(doctorManager.listDoctorsBySpecialty(specialty), "There are no doctors with that specialty.");
     }
 
+    private static boolean containsSpecialty(List<String> specialties, String specialty) {
+        for (String existingSpecialty : specialties) {
+            if (existingSpecialty.equalsIgnoreCase(specialty)) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
     public static void listDoctorsBySurgery(JDBCDoctorManager doctorManager) {
-        int surgeryId = InputOutput.askPositiveInt("Introduce surgery ID:");
+        int surgeryId = InputOutput.askPositiveInt("Enter surgery ID:");
         Utils.printList(doctorManager.listDoctorsBySurgery(surgeryId), "There are no doctors for that surgery.");
     }
 
+    public static void listSurgeriesByDoctor(JDBCSurgeryManager surgeryManager) {
+        int doctorId = InputOutput.askPositiveInt("Enter doctor ID:");
+        Utils.printList(surgeryManager.listSurgeriesByDoctor(doctorId), "There are no surgeries for that doctor.");
+    }
+
     public static void listDoctorsByAppointment(JDBCDoctorManager doctorManager) {
-        int appointmentId = InputOutput.askPositiveInt("Introduce appointment ID:");
+        int appointmentId = InputOutput.askPositiveInt("Enter appointment ID:");
         Utils.printList(doctorManager.listDoctorsByAppointment(appointmentId), "There are no doctors for that appointment.");
     }
 
+    public static void listAppointmentsByDoctor(JDBCAppointmentManager appointmentManager) {
+        int doctorId = InputOutput.askPositiveInt("Enter doctor ID:");
+        Utils.printList(appointmentManager.listAppointmentsByDoctor(doctorId), "There are no appointments for that doctor.");
+    }
+
     public static void listEquipmentBySurgery(JDBCEquipmentManager equipmentManager) {
-        int surgeryId = InputOutput.askPositiveInt("Introduce surgery ID:");
+        int surgeryId = InputOutput.askPositiveInt("Enter surgery ID:");
         Utils.printList(equipmentManager.listEquipmentBySurgery(surgeryId), "There is no equipment for that surgery.");
     }
 
@@ -51,26 +182,23 @@ public class Common {
 
     public static void addEquipmentToSurgeryByScreen(JDBCEquipmentManager equipmentManager,
             JDBCSurgeryManager surgeryManager) {
-        int equipmentId = InputOutput.askPositiveInt("Introduce equipment ID:");
-        Equipment equipment = equipmentManager.getEquipmentById(equipmentId);
+        Equipment equipment = askExistingId("Enter equipment ID:", equipmentManager::getEquipmentById,
+                "Equipment not found.");
         if (equipment == null) {
-            System.out.println("Equipment not found.");
             return;
         }
 
-        int surgeryId = InputOutput.askPositiveInt("Introduce surgery ID:");
-        Surgery surgery = surgeryManager.getSurgeryById(surgeryId);
+        Surgery surgery = askExistingId("Enter surgery ID:", surgeryManager::getSurgeryById, "Surgery not found.");
         if (surgery == null) {
-            System.out.println("Surgery not found.");
             return;
         }
 
-        if (isEquipmentAlreadyInSurgery(equipmentManager, equipmentId, surgeryId)) {
+        if (isEquipmentAlreadyInSurgery(equipmentManager, equipment.getId(), surgery.getId())) {
             System.out.println("This equipment is already assigned to that surgery.");
             return;
         }
 
-        if (surgeryManager.addEquipmentToSurgery(equipmentId, surgeryId)) {
+        if (surgeryManager.addEquipmentToSurgery(equipment.getId(), surgery.getId())) {
             System.out.println("Equipment assigned to surgery successfully.");
         } else {
             System.out.println("Equipment could not be assigned to surgery.");

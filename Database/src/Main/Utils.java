@@ -54,16 +54,19 @@ public class Utils {
 	        System.out.println("4- List all surgeries");
 	        System.out.println("5- List all equipment");
 	        System.out.println("6- List doctors by specialty");
-	        System.out.println("7- List doctors by surgery");
-	        System.out.println("8- List doctors by appointment");
+	        System.out.println("7- List surgeries by doctor");
+	        System.out.println("8- List appointments by doctor");
 	        System.out.println("9- List equipment by surgery");
 	        System.out.println("10- List equipment by category");
+	        System.out.println("11- List all users");
 	    }
 
 		public static void printGetMenu() {
 	        System.out.println("1- Get patient by ID");
 	        System.out.println("2- Get doctor by ID");
 	        System.out.println("3- Get equipment by ID");
+	        System.out.println("4- Get appointment by ID");
+	        System.out.println("5- Get surgery by ID");
 	    }
 
 		public static void printAssignMenu() {
@@ -96,9 +99,8 @@ public class Utils {
 	        System.out.println("2- List my appointments");
 	        System.out.println("3- List doctors by specialty");
 	        System.out.println("4- List doctors by surgery");
-	        System.out.println("5- List doctors by appointment");
-	        System.out.println("6- List equipment by surgery");
-	        System.out.println("7- List equipment by category");
+	        System.out.println("5- List equipment by surgery");
+	        System.out.println("6- List equipment by category");
 	    }
 
 		public static void printDoctorGetMenu() {
@@ -122,7 +124,8 @@ public class Utils {
 
 		public static void printPatientGetMenu() {
 	        System.out.println("1- Get my surgery by ID");
-	        System.out.println("2- Get my patient data");
+	        System.out.println("2- Get my appointment by ID");
+	        System.out.println("3- Get my patient data");
 	    }
 
 		public static void printList(List<?> list, String emptyMessage) {
