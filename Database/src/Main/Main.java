@@ -121,12 +121,7 @@ public class Main {
 		String password = InputOutput.askPassword("Enter password:");
 
 		User newUser = new User(username, password, email);
-		boolean registered = userManager.register(newUser);
-
-		if (!registered) {
-			System.out.println("User could not be registered. Username or email may already exist.");
-			return;
-		}
+		userManager.register(newUser);
 
 		User savedUser = userManager.getUser(username, email);
 

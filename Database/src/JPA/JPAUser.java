@@ -75,18 +75,28 @@ public class JPAUser implements UserManager {
     }
 
     @Override
-    public boolean register(User user) {
+    public void register(User user) {
+        if (userExists(user.getUsername(), user.getEmail())) {
+            return;
+        }
+
         try {
             em.getTransaction().begin();
             String hashedPassword = hashPassword(user.getPassword());
             user.setPassword(hashedPassword);
             em.persist(user);
             em.getTransaction().commit();
-            return true;
         } catch (Exception e) {
             rollback();
-            return false;
         }
+    }
+
+    private boolean userExists(String username, String email) {
+        Query q = em.createNativeQuery("SELECT COUNT(*) FROM users WHERE username = ? OR email = ?");
+        q.setParameter(1, username);
+        q.setParameter(2, email);
+        Number count = (Number) q.getSingleResult();
+        return count.intValue() > 0;
     }
 
     @Override
