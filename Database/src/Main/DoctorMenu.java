@@ -94,12 +94,9 @@ public class DoctorMenu {
                 Common.listDoctorsBySurgery(doctorManager);
                 break;
             case 5:
-                Common.listDoctorsByAppointment(doctorManager);
-                break;
-            case 6:
                 Common.listEquipmentBySurgery(equipmentManager);
                 break;
-            case 7:
+            case 6:
                 Common.listEquipmentByCategory(equipmentManager);
                 break;
             default:

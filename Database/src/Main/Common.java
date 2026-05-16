@@ -1,5 +1,8 @@
 package Main;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import Enums.Category;
 import JDBC.*;
 import POJOS.*;
@@ -109,8 +112,49 @@ public class Common {
     }
 
     public static void listDoctorsBySpecialty(JDBCDoctorManager doctorManager) {
-        String specialty = InputOutput.askString("Introduce doctor's specialty:");
+        List<String> specialties = new ArrayList<>();
+
+        for (Doctor doctor : doctorManager.listAllDoctors()) {
+            String specialty = doctor.getSpecialty();
+
+            if (specialty != null && !specialty.trim().isEmpty() && !containsSpecialty(specialties, specialty)) {
+                specialties.add(specialty);
+            }
+        }
+
+        if (specialties.isEmpty()) {
+            System.out.println("There are no specialties available.");
+            return;
+        }
+
+        System.out.println("Choose specialty:");
+        for (int i = 0; i < specialties.size(); i++) {
+            System.out.println((i + 1) + "- " + specialties.get(i));
+        }
+
+        int option;
+        while (true) {
+            option = InputOutput.askInt("Choose specialty:");
+
+            if (option >= 1 && option <= specialties.size()) {
+                break;
+            }
+
+            System.out.println("Invalid specialty option.");
+        }
+
+        String specialty = specialties.get(option - 1);
         Utils.printList(doctorManager.listDoctorsBySpecialty(specialty), "There are no doctors with that specialty.");
+    }
+
+    private static boolean containsSpecialty(List<String> specialties, String specialty) {
+        for (String existingSpecialty : specialties) {
+            if (existingSpecialty.equalsIgnoreCase(specialty)) {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     public static void listDoctorsBySurgery(JDBCDoctorManager doctorManager) {
