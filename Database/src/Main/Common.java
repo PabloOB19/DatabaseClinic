@@ -5,23 +5,67 @@ import JDBC.*;
 import POJOS.*;
 
 public class Common {
+    private static final int MAX_ID_ATTEMPTS = 3;
+    private static final String ID_LIMIT_MESSAGE = "ID limit exceeded, please go to administration";
 
     public static void getDoctorById(JDBCDoctorManager doctorManager) {
-        int id = InputOutput.askPositiveInt("Introduce doctor ID:");
-        Doctor doctor = doctorManager.getDoctorById(id);
-        Utils.printObject(doctor, "Doctor not found.");
+        Doctor doctor = null;
+        int attempts = 0;
+        while (doctor == null) {
+            int id = InputOutput.askPositiveInt("Introduce doctor ID:");
+            doctor = doctorManager.getDoctorById(id);
+
+            if (doctor == null) {
+                attempts++;
+                if (attempts == MAX_ID_ATTEMPTS) {
+                    System.out.println(ID_LIMIT_MESSAGE);
+                    return;
+                }
+                System.out.println("Doctor not found.");
+            }
+        }
+
+        System.out.println(doctor);
     }
 
     public static void getPatientById(JDBCPatientManager patientManager) {
-        int id = InputOutput.askPositiveInt("Introduce patient ID:");
-        Patient patient = patientManager.getPatientById(id);
-        Utils.printObject(patient, "Patient not found.");
+        Patient patient = null;
+        int attempts = 0;
+        while (patient == null) {
+            int id = InputOutput.askPositiveInt("Introduce patient ID:");
+            patient = patientManager.getPatientById(id);
+
+            if (patient == null) {
+                attempts++;
+                if (attempts == MAX_ID_ATTEMPTS) {
+                    System.out.println(ID_LIMIT_MESSAGE);
+                    return;
+                }
+                System.out.println("Patient not found.");
+            }
+        }
+
+        System.out.println(patient);
     }
 
     public static void getEquipmentById(JDBCEquipmentManager equipmentManager) {
-        int id = InputOutput.askPositiveInt("Introduce equipment ID:");
-        Equipment equipment = equipmentManager.getEquipmentById(id);
-        Utils.printObject(equipment, "Equipment not found.");
+        Equipment equipment = null;
+        int attempts = 0;
+        while (equipment == null) {
+            int id = InputOutput.askPositiveInt("Introduce equipment ID:");
+            equipment = equipmentManager.getEquipmentById(id);
+
+            if (equipment == null) {
+                attempts++;
+                if (attempts == MAX_ID_ATTEMPTS) {
+                    System.out.println(ID_LIMIT_MESSAGE);
+                    return;
+                }
+                System.out.println("Equipment not found.");
+            }
+        }
+
+        System.out.println(equipment);
     }
 
     public static void listDoctorsBySpecialty(JDBCDoctorManager doctorManager) {

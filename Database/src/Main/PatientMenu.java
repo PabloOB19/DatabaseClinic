@@ -106,12 +106,20 @@ public class PatientMenu {
     }
 
     private void getSurgeryById() {
-        int surgeryId = InputOutput.askPositiveInt("Introduce surgery ID:");
-        Surgery surgery = surgeryManager.getSurgeryById(surgeryId);
+        Surgery surgery = null;
+        int attempts = 0;
+        while (surgery == null) {
+            int surgeryId = InputOutput.askPositiveInt("Introduce surgery ID:");
+            surgery = surgeryManager.getSurgeryById(surgeryId);
 
-        if (surgery == null) {
-            System.out.println("Surgery not found.");
-            return;
+            if (surgery == null) {
+                attempts++;
+                if (attempts == 3) {
+                    System.out.println("Límite de IDs superado, pase por administracion");
+                    return;
+                }
+                System.out.println("Surgery not found.");
+            }
         }
 
         if (surgery.getPatient() == null || surgery.getPatient().getId() != currentPatient.getId()) {

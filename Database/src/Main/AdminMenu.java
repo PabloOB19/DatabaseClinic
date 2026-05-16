@@ -327,11 +327,14 @@ public class AdminMenu {
         if (turn == null) {
             return;
         }
-        int patientId = InputOutput.askPositiveInt("Introduce patient ID:");
-        Patient patient = patientManager.getPatientById(patientId);
-        if (patient == null) {
-            System.out.println("Patient not found.");
-            return;
+        Patient patient = null;
+        while (patient == null) {
+            int patientId = InputOutput.askPositiveInt("Introduce patient ID:");
+            patient = patientManager.getPatientById(patientId);
+
+            if (patient == null) {
+                System.out.println("Patient not found.");
+            }
         }
         Surgery surgery = new Surgery(0, date, type, price, turn, patient, null, null);
         if (surgeryManager.insertSurgery(surgery)) {
@@ -500,12 +503,14 @@ public class AdminMenu {
         }
 
         if (InputOutput.askYesNo("Do you want to update the patient?")) {
-            int patientId = InputOutput.askPositiveInt("Introduce new patient ID:");
-            Patient patient = patientManager.getPatientById(patientId);
+            Patient patient = null;
+            while (patient == null) {
+                int patientId = InputOutput.askOptionalPositiveInt("Introduce new patient ID:", surgery.getPatient().getId());
+                patient = patientManager.getPatientById(patientId);
 
-            if (patient == null) {
-                System.out.println("Patient not found.");
-                return;
+                if (patient == null) {
+                    System.out.println("Patient not found.");
+                }
             }
             surgery.setPatient(patient);
         }
@@ -669,11 +674,15 @@ public class AdminMenu {
     }
 
     private void addDoctorToSurgeryByScreen() {
-        int doctorId = InputOutput.askPositiveInt("Introduce doctor ID:");
-        Doctor doctor = doctorManager.getDoctorById(doctorId);
-        if (doctor == null) {
-            System.out.println("Doctor not found.");
-            return;
+        Doctor doctor = null;
+        int doctorId = 0;
+        while (doctor == null) {
+            doctorId = InputOutput.askPositiveInt("Introduce doctor ID:");
+            doctor = doctorManager.getDoctorById(doctorId);
+
+            if (doctor == null) {
+                System.out.println("Doctor not found.");
+            }
         }
 
         int surgeryId = InputOutput.askPositiveInt("Introduce surgery ID:");
