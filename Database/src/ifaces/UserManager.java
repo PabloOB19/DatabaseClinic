@@ -7,7 +7,7 @@ import POJOS.User;
 
 public interface UserManager {
 
-    void register(User user);
+    boolean register(User user);
 
     void createRole(Role role);
 

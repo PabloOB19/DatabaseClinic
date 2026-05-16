@@ -75,16 +75,17 @@ public class JPAUser implements UserManager {
     }
 
     @Override
-    public void register(User user) {
+    public boolean register(User user) {
         try {
             em.getTransaction().begin();
             String hashedPassword = hashPassword(user.getPassword());
             user.setPassword(hashedPassword);
             em.persist(user);
             em.getTransaction().commit();
+            return true;
         } catch (Exception e) {
             rollback();
-            System.out.println("Username or email already exists");
+            return false;
         }
     }
 
