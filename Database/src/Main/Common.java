@@ -118,9 +118,19 @@ public class Common {
         Utils.printList(doctorManager.listDoctorsBySurgery(surgeryId), "There are no doctors for that surgery.");
     }
 
+    public static void listSurgeriesByDoctor(JDBCSurgeryManager surgeryManager) {
+        int doctorId = InputOutput.askPositiveInt("Introduce doctor ID:");
+        Utils.printList(surgeryManager.listSurgeriesByDoctor(doctorId), "There are no surgeries for that doctor.");
+    }
+
     public static void listDoctorsByAppointment(JDBCDoctorManager doctorManager) {
         int appointmentId = InputOutput.askPositiveInt("Introduce appointment ID:");
         Utils.printList(doctorManager.listDoctorsByAppointment(appointmentId), "There are no doctors for that appointment.");
+    }
+
+    public static void listAppointmentsByDoctor(JDBCAppointmentManager appointmentManager) {
+        int doctorId = InputOutput.askPositiveInt("Introduce doctor ID:");
+        Utils.printList(appointmentManager.listAppointmentsByDoctor(doctorId), "There are no appointments for that doctor.");
     }
 
     public static void listEquipmentBySurgery(JDBCEquipmentManager equipmentManager) {

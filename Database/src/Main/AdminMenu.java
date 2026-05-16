@@ -170,10 +170,10 @@ public class AdminMenu {
                 Common.listDoctorsBySpecialty(doctorManager);
                 break;
             case 7:
-                Common.listDoctorsBySurgery(doctorManager);
+                Common.listSurgeriesByDoctor(surgeryManager);
                 break;
             case 8:
-                Common.listDoctorsByAppointment(doctorManager);
+                Common.listAppointmentsByDoctor(appointmentManager);
                 break;
             case 9:
                 Common.listEquipmentBySurgery(equipmentManager);
