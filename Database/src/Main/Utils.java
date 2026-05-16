@@ -58,6 +58,7 @@ public class Utils {
 	        System.out.println("8- List appointments by doctor");
 	        System.out.println("9- List equipment by surgery");
 	        System.out.println("10- List equipment by category");
+	        System.out.println("11- List all users");
 	    }
 
 		public static void printGetMenu() {

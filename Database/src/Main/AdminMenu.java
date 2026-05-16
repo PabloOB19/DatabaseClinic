@@ -187,6 +187,9 @@ public class AdminMenu {
             case 10:
                 Common.listEquipmentByCategory(equipmentManager);
                 break;
+            case 11:
+                listAllUsers();
+                break;
             default:
                 System.out.println("Invalid list option.");
                 break;
@@ -707,6 +710,10 @@ public class AdminMenu {
 
     private void listAllEquipment() {
         Utils.printList(equipmentManager.listAllEquipments(), "There is no equipment.");
+    }
+
+    private void listAllUsers() {
+        Utils.printList(userManager.getAllUsers(), "There are no users.");
     }
 
     private void addDoctorToSurgeryByScreen() {
