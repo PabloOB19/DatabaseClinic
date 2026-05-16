@@ -255,10 +255,10 @@ public class AdminMenu {
         String surname = InputOutput.askString("Introduce patient's surname:");
         String email = InputOutput.askEmail("Introduce patient's email:");
         LocalDate dob = InputOutput.askPastDate("Introduce patient's date of birth:");
-        int height = InputOutput.askPositiveInt("Introduce patient's height:");
-        double weightDouble = InputOutput.askPositiveDouble("Introduce patient's weight:");
+        int height = InputOutput.askPositiveInt("Introduce patient's height (cm):");
+        double weightDouble = InputOutput.askPositiveDouble("Introduce patient's weight (Kg):");
         float weight = (float) weightDouble;
-        String info = InputOutput.askText("Introduce patient's info:");
+        String info = InputOutput.askText("Introduce any relevant info about the patient:");
         Sex sex = InputOutput.askSex();
         if (sex == null) {
             return;
@@ -284,17 +284,19 @@ public class AdminMenu {
             return;
         }
         LocalDate date = InputOutput.askFutureDate("Introduce appointment date:");
-        double price = InputOutput.askPositiveDouble("Introduce appointment price:");
+        double price = InputOutput.askPositiveDouble("Introduce appointment price (€):");
         Turn turn = InputOutput.askTurn();
         if (turn == null) {
             return;
         }
-        int doctorId = InputOutput.askPositiveInt("Introduce doctor ID:");
-        Doctor doctor = doctorManager.getDoctorById(doctorId);
+        Doctor doctor = null;
+        while (doctor == null) {
+            int doctorId = InputOutput.askPositiveInt("Introduce doctor ID:");
+            doctor = doctorManager.getDoctorById(doctorId);
 
-        if (doctor == null) {
-            System.out.println("Doctor not found.");
-            return;
+            if (doctor == null) {
+                System.out.println("Doctor not found.");
+            }
         }
 
         int patientId = InputOutput.askPositiveInt("Introduce patient ID:");
@@ -318,7 +320,7 @@ public class AdminMenu {
             return;
         }
         LocalDate date = InputOutput.askFutureDate("Introduce surgery date:");
-        double price = InputOutput.askPositiveDouble("Introduce surgery price:");
+        double price = InputOutput.askPositiveDouble("Introduce surgery price (€):");
         Turn turn = InputOutput.askTurn();
         if (turn == null) {
             return;
@@ -344,7 +346,7 @@ public class AdminMenu {
             return;
         }
         int quantity = InputOutput.askPositiveInt("Introduce equipment quantity:");
-        double price = InputOutput.askPositiveDouble("Introduce equipment price:");
+        double price = InputOutput.askPositiveDouble("Introduce equipment price (€):");
         LocalDate expirationDate = InputOutput.askFutureDate("Introduce equipment expiration date:");
         Equipment equipment = new Equipment(0, name, category, quantity, price, expirationDate, null);
         if (equipmentManager.insertEquipment(equipment)) {
