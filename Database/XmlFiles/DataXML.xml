@@ -87,6 +87,12 @@
         <price>250.0</price>
         <turn>EARLY_AFTERNOON</turn>
     </appointment>
+    <appointment id="5">
+        <type>FOLLOW_UP</type>
+        <date>2026-10-10</date>
+        <price>450.0</price>
+        <turn>LATE_MORNING</turn>
+    </appointment>
     <surgery id="1">
         <type>LIPOSUCTION</type>
         <date>2026-10-15</date>
@@ -168,5 +174,9 @@
     <user userId="30">
         <username>p</username>
         <email>p@gmai.com</email>
+    </user>
+    <user userId="31">
+        <username>pn</username>
+        <email>pn@gmail.com</email>
     </user>
 </DataBase>
